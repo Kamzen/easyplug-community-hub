@@ -1,194 +1,144 @@
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Heart, MapPin, Star, MessageCircle, Video, Clock, Zap } from "lucide-react";
+import { Star, MapPin, Clock } from "lucide-react";
 
 const listings = [
   {
     id: 1,
-    title: "Samsung Galaxy S21 - Like New",
-    price: "R3,500",
-    negotiable: true,
+    title: "iPhone 14 Pro Max",
+    price: "R15,999",
     location: "Polokwane Central",
-    distance: "2.3km",
-    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
-    seller: "Thabo M.",
     rating: 4.8,
-    reviews: 24,
-    category: "Electronics",
-    condition: "used",
-    postedTime: "2 hours ago",
-    featured: true
+    reviews: 124,
+    image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop",
+    timeAgo: "2 hours ago",
+    verified: true,
+    category: "Electronics"
   },
   {
     id: 2,
-    title: "Fresh Vegetables & Herbs",
-    price: "R50-R200",
-    negotiable: false,
-    location: "Moletjie",
-    distance: "5.1km",
-    image: "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=400&h=300&fit=crop",
-    seller: "Mama's Garden",
-    rating: 5.0,
-    reviews: 18,
-    category: "Food",
-    condition: "new",
-    postedTime: "1 day ago",
-    featured: false
+    title: "Cozy 2-Bedroom Apartment",
+    price: "R8,500/month",
+    location: "Bendor Park",
+    rating: 4.9,
+    reviews: 89,
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop",
+    timeAgo: "4 hours ago",
+    verified: true,
+    category: "Property"
   },
   {
     id: 3,
-    title: "Professional Plumbing Services",
-    price: "R200/hour",
-    negotiable: true,
-    location: "Ga-Rampuru",
-    distance: "8.7km",
-    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop",
-    seller: "Pro Fix Solutions",
-    rating: 4.9,
-    reviews: 42,
-    category: "Services",
-    condition: "service",
-    postedTime: "30 minutes ago",
-    featured: true
+    title: "Honda Civic 2020",
+    price: "R285,000",
+    location: "Mankweng",
+    rating: 4.7,
+    reviews: 67,
+    image: "https://images.unsplash.com/photo-1549399760-3d4e5c4aaed8?w=400&h=300&fit=crop",
+    timeAgo: "6 hours ago",
+    verified: false,
+    category: "Vehicles"
   },
   {
     id: 4,
-    title: "Kids Clothing Bundle (Size 4-6)",
-    price: "FREE",
-    negotiable: false,
-    location: "Polokwane",
-    distance: "3.2km",
-    image: "https://images.unsplash.com/photo-1514090458221-65bb69cf63e6?w=400&h=300&fit=crop",
-    seller: "Sarah K.",
-    rating: 4.7,
-    reviews: 12,
-    category: "Baby & Kids",
-    condition: "free",
-    postedTime: "4 hours ago",
-    featured: false
+    title: "Professional Photography",
+    price: "R1,200/session",
+    location: "Polokwane CBD",
+    rating: 5.0,
+    reviews: 156,
+    image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=300&fit=crop",
+    timeAgo: "1 day ago",
+    verified: true,
+    category: "Services"
+  },
+  {
+    id: 5,
+    title: "Gaming Setup - RTX 4080",
+    price: "R45,999",
+    location: "Polokwane Central",
+    rating: 4.6,
+    reviews: 43,
+    image: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=300&fit=crop",
+    timeAgo: "1 day ago",
+    verified: true,
+    category: "Electronics"
+  },
+  {
+    id: 6,
+    title: "Fresh Organic Vegetables",
+    price: "R25/kg",
+    location: "Seshego",
+    rating: 4.5,
+    reviews: 78,
+    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop",
+    timeAgo: "2 days ago",
+    verified: false,
+    category: "Food"
   }
 ];
 
 export const FeaturedListings = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {listings.map((listing, index) => (
-        <Card 
-          key={listing.id} 
-          className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer border-border/30 hover:border-primary/30 bg-background/80 backdrop-blur-sm transform hover:scale-105"
-          style={{animationDelay: `${index * 100}ms`}}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {listings.map((listing) => (
+        <div
+          key={listing.id}
+          className="group relative bg-card rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-border/50"
         >
-          <div className="relative overflow-hidden">
-            <img 
-              src={listing.image} 
+          {/* Image Container */}
+          <div className="relative h-48 overflow-hidden">
+            <img
+              src={listing.image}
               alt={listing.title}
-              className="w-full h-48 lg:h-52 object-cover group-hover:scale-110 transition-transform duration-500"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
             />
-            
-            {/* Gradient overlay with enhanced styling */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="absolute bottom-4 left-4 right-4 flex space-x-2">
-                <Button size="sm" className="flex-1 bg-white/90 hover:bg-white text-black text-sm font-medium rounded-xl shadow-lg">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Chat Now
-                </Button>
-                <Button size="sm" className="bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl shadow-lg">
-                  <Video className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Enhanced top badges */}
-            <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-              <div className="flex flex-col space-y-2">
-                {listing.condition === "free" && (
-                  <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0 text-xs font-bold rounded-full shadow-lg">
-                    <Heart className="w-3 h-3 mr-1 fill-current" />
-                    FREE
-                  </Badge>
-                )}
-                {listing.condition === "new" && (
-                  <Badge className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 text-xs font-bold rounded-full shadow-lg">
-                    <Zap className="w-3 h-3 mr-1" />
-                    NEW
-                  </Badge>
-                )}
-                {listing.featured && (
-                  <Badge className="bg-gradient-to-r from-primary to-accent text-primary-foreground border-0 text-xs font-bold rounded-full shadow-lg animate-pulse-glow">
-                    ⭐ FEATURED
-                  </Badge>
-                )}
-              </div>
-              
-              <Button
-                size="sm"
-                variant="ghost"
-                className="bg-white/80 hover:bg-white/90 p-2 h-9 w-9 rounded-full shadow-lg backdrop-blur-sm"
-              >
-                <Heart className="w-4 h-4 text-red-500 hover:fill-current transition-all" />
-              </Button>
-            </div>
-          </div>
-          
-          <CardContent className="p-4 space-y-4">
-            {/* Title and Price with enhanced styling */}
-            <div>
-              <h3 className="font-bold text-base text-foreground group-hover:gradient-text transition-all line-clamp-2 mb-3">
-                {listing.title}
-              </h3>
-              <div className="flex items-center justify-between">
-                <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                  {listing.price}
-                </span>
-                {listing.negotiable && (
-                  <Badge variant="outline" className="text-xs border-primary/40 text-primary bg-primary/5 rounded-full">
-                    Negotiable
-                  </Badge>
-                )}
-              </div>
-            </div>
-
-            {/* Location with enhanced design */}
-            <div className="flex items-center text-sm text-muted-foreground bg-muted/30 rounded-full px-3 py-1">
-              <MapPin className="w-4 h-4 mr-2 text-primary" />
-              <span>{listing.location}</span>
-              <span className="mx-2">•</span>
-              <span className="font-medium">{listing.distance}</span>
-            </div>
-
-            {/* Seller Info with enhanced styling */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center shadow-md">
-                  <span className="text-sm font-bold text-primary-foreground">
-                    {listing.seller.charAt(0)}
-                  </span>
-                </div>
-                <span className="text-sm font-semibold text-foreground">{listing.seller}</span>
-              </div>
-              
-              <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-full">
-                <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                <span className="text-sm font-medium text-yellow-700">
-                  {listing.rating}
-                </span>
-              </div>
-            </div>
-
-            {/* Time and Category with enhanced design */}
-            <div className="flex items-center justify-between text-xs pt-3 border-t border-border/50">
-              <div className="flex items-center text-muted-foreground">
-                <Clock className="w-3 h-3 mr-1" />
-                {listing.postedTime}
-              </div>
-              <Badge variant="secondary" className="text-xs bg-gradient-to-r from-muted to-muted/80 rounded-full">
+            <div className="absolute top-3 left-3">
+              <Badge variant="secondary" className="bg-white/90 text-primary font-medium">
                 {listing.category}
               </Badge>
             </div>
-          </CardContent>
-        </Card>
+            {listing.verified && (
+              <div className="absolute top-3 right-3">
+                <Badge className="bg-green-500 text-white font-medium">
+                  Verified Local
+                </Badge>
+              </div>
+            )}
+            <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs flex items-center">
+              <Clock className="w-3 h-3 mr-1" />
+              {listing.timeAgo}
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-5">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-bold text-lg line-clamp-2 text-foreground group-hover:text-primary transition-colors">
+                {listing.title}
+              </h3>
+            </div>
+            
+            <div className="flex items-center mb-3">
+              <div className="flex items-center bg-amber-50 px-2 py-1 rounded-full mr-3">
+                <Star className="w-4 h-4 text-amber-500 fill-current mr-1" />
+                <span className="text-sm font-medium text-amber-700">{listing.rating}</span>
+                <span className="text-xs text-amber-600 ml-1">({listing.reviews})</span>
+              </div>
+            </div>
+
+            <div className="flex items-center text-muted-foreground mb-4">
+              <MapPin className="w-4 h-4 mr-1" />
+              <span className="text-sm">{listing.location}</span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-2xl font-bold text-primary">{listing.price}</span>
+              <button className="bg-gradient-to-r from-primary to-accent text-white px-4 py-2 rounded-full text-sm font-medium hover:shadow-lg transition-all transform hover:scale-105">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
       ))}
     </div>
   );

@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, User, Plus, Sparkles, Zap } from "lucide-react";
+import { Search, MapPin, User, Plus, Sparkles, Zap, ChevronDown } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { FeaturedListings } from "@/components/FeaturedListings";
@@ -13,7 +14,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+    <div className="min-h-screen bg-white">
       {/* Floating Header */}
       <header className="fixed top-4 left-4 right-4 z-50 bg-background/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-lg">
         <div className="px-4 py-3">
@@ -37,10 +38,26 @@ const Index = () => {
                 selectedLocation={selectedLocation}
                 onLocationChange={setSelectedLocation}
               />
-              <Button size="sm" className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md">
-                <User className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Join</span>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="sm" className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md">
+                    <User className="w-4 h-4 mr-1" />
+                    <span className="hidden sm:inline">Join</span>
+                    <ChevronDown className="w-3 h-3 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40">
+                  <DropdownMenuItem>
+                    Login
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    Register
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    Start Selling
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
