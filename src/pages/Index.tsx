@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, User, Plus, Sparkles, Zap } from "lucide-react";
-import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { FeaturedListings } from "@/components/FeaturedListings";
@@ -67,7 +66,7 @@ const Index = () => {
       </header>
 
       {/* Main Content with top padding for fixed header */}
-      <div className="pt-32">
+      <div className="pt-32 pb-8">
         {/* Hero Section */}
         <HeroSection />
 
@@ -122,9 +121,6 @@ const Index = () => {
           </section>
         </main>
       </div>
-
-      {/* Bottom Navigation */}
-      <Navigation />
     </div>
   );
 };
