@@ -1,66 +1,85 @@
 
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Users, ShoppingBag, Star } from "lucide-react";
+import { MapPin, Users, ShoppingBag, Star, Sparkles, Heart } from "lucide-react";
 
 export const HeroSection = () => {
   return (
-    <section className="bg-gradient-to-br from-primary/5 via-accent/5 to-primary/10 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+    <section className="relative overflow-hidden py-16">
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-20 h-20 bg-primary/20 rounded-full blur-xl animate-float"></div>
+        <div className="absolute top-32 right-16 w-32 h-32 bg-accent/20 rounded-full blur-2xl animate-float" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-16 h-16 bg-primary/30 rounded-full blur-lg animate-float" style={{animationDelay: '2s'}}></div>
+      </div>
       
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12 relative">
+      <div className="container mx-auto px-4 relative">
         <div className="text-center max-w-4xl mx-auto">
-          <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground leading-tight">
-              Connect, Buy & Sell with Your
-              <span className="block text-primary">Local Community</span>
+          <div className="space-y-6 mb-12">
+            <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-accent/10 px-4 py-2 rounded-full border border-primary/20">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-primary">South Africa's Local Marketplace</span>
+            </div>
+            
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+              Connect & Trade with
+              <span className="block gradient-text">Your Community</span>
             </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              EasyPlug connects local South African communities. Trade with verified neighbors, 
-              support local SMMEs, and build stronger relationships.
+            
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Join thousands of locals buying, selling, and supporting each other. 
+              From fresh produce to professional services - discover it all nearby.
             </p>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-6 lg:gap-8 max-w-2xl mx-auto mb-6 sm:mb-8">
-            <div className="bg-background/80 backdrop-blur-sm rounded-2xl p-3 sm:p-4 lg:p-6 shadow-sm border border-border/50 hover:shadow-md transition-shadow">
-              <div className="bg-primary/10 rounded-full w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                <Users className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-primary" />
+          {/* Stats Cards with new design */}
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-3xl mx-auto mb-12">
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl blur-md group-hover:blur-lg transition-all"></div>
+              <div className="relative bg-background/90 backdrop-blur-sm rounded-3xl p-6 border border-border/50 hover:border-primary/30 transition-all transform hover:scale-105">
+                <div className="bg-gradient-to-br from-primary to-accent rounded-2xl w-12 h-12 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Users className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <div className="text-2xl font-bold gradient-text">5K+</div>
+                <div className="text-sm text-muted-foreground">Active Locals</div>
               </div>
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">1,000+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Local Traders</div>
             </div>
             
-            <div className="bg-background/80 backdrop-blur-sm rounded-2xl p-3 sm:p-4 lg:p-6 shadow-sm border border-border/50 hover:shadow-md transition-shadow">
-              <div className="bg-accent/10 rounded-full w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-accent" />
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-primary/20 rounded-3xl blur-md group-hover:blur-lg transition-all"></div>
+              <div className="relative bg-background/90 backdrop-blur-sm rounded-3xl p-6 border border-border/50 hover:border-accent/30 transition-all transform hover:scale-105">
+                <div className="bg-gradient-to-br from-accent to-primary rounded-2xl w-12 h-12 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <ShoppingBag className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <div className="text-2xl font-bold gradient-text">15K+</div>
+                <div className="text-sm text-muted-foreground">Items Listed</div>
               </div>
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">5,000+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Items Listed</div>
             </div>
             
-            <div className="bg-background/80 backdrop-blur-sm rounded-2xl p-3 sm:p-4 lg:p-6 shadow-sm border border-border/50 hover:shadow-md transition-shadow">
-              <div className="bg-primary/10 rounded-full w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                <MapPin className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-primary" />
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl blur-md group-hover:blur-lg transition-all"></div>
+              <div className="relative bg-background/90 backdrop-blur-sm rounded-3xl p-6 border border-border/50 hover:border-primary/30 transition-all transform hover:scale-105">
+                <div className="bg-gradient-to-br from-primary to-accent rounded-2xl w-12 h-12 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <MapPin className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <div className="text-2xl font-bold gradient-text">100+</div>
+                <div className="text-sm text-muted-foreground">Local Areas</div>
               </div>
-              <div className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">50+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Local Areas</div>
             </div>
           </div>
 
-          {/* Trust Badges */}
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            <Badge variant="secondary" className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 px-3 py-1">
-              <Star className="w-3 h-3 mr-1 fill-current" />
+          {/* Trust Badges with enhanced design */}
+          <div className="flex flex-wrap justify-center gap-3">
+            <Badge className="bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 text-emerald-700 border-emerald-200 hover:from-emerald-500/20 hover:to-emerald-600/20 px-4 py-2 rounded-full">
+              <Star className="w-4 h-4 mr-2 fill-current" />
               Verified Locals
             </Badge>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 px-3 py-1">
-              <MapPin className="w-3 h-3 mr-1" />
+            <Badge className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 text-blue-700 border-blue-200 hover:from-blue-500/20 hover:to-blue-600/20 px-4 py-2 rounded-full">
+              <MapPin className="w-4 h-4 mr-2" />
               Safe Meetups
             </Badge>
-            <Badge variant="secondary" className="bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100 px-3 py-1">
-              <Users className="w-3 h-3 mr-1" />
-              Community Driven
+            <Badge className="bg-gradient-to-r from-purple-500/10 to-purple-600/10 text-purple-700 border-purple-200 hover:from-purple-500/20 hover:to-purple-600/20 px-4 py-2 rounded-full">
+              <Heart className="w-4 h-4 mr-2" />
+              Community First
             </Badge>
           </div>
         </div>

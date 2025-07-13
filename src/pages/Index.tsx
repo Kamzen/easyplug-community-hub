@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, User, Plus } from "lucide-react";
+import { Search, MapPin, User, Plus, Sparkles, Zap } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
@@ -14,19 +14,22 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile-First Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+      {/* Floating Header */}
+      <header className="fixed top-4 left-4 right-4 z-50 bg-background/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-lg">
+        <div className="px-4 py-3">
           {/* Top Header Row */}
-          <div className="flex items-center justify-between py-3 sm:py-4">
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-sm">
-                <span className="text-primary-foreground font-bold text-sm sm:text-base">EP</span>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg animate-pulse-glow">
+                  <Sparkles className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-ping"></div>
               </div>
               <div>
-                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">EasyPlug</h1>
-                <p className="text-xs text-muted-foreground hidden sm:block">Local Community Hub</p>
+                <h1 className="text-xl font-bold gradient-text">EasyPlug</h1>
+                <p className="text-xs text-muted-foreground">Connect Locally</p>
               </div>
             </div>
             
@@ -35,84 +38,90 @@ const Index = () => {
                 selectedLocation={selectedLocation}
                 onLocationChange={setSelectedLocation}
               />
-              <Button variant="outline" size="sm" className="hidden sm:flex">
+              <Button size="sm" className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md">
                 <User className="w-4 h-4 mr-1" />
-                Login
-              </Button>
-              <Button variant="ghost" size="sm" className="sm:hidden">
-                <User className="w-5 h-5" />
+                <span className="hidden sm:inline">Join</span>
               </Button>
             </div>
           </div>
 
           {/* Search Bar */}
-          <div className="pb-3 sm:pb-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input
-                placeholder="Search items, services, or businesses..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 h-10 sm:h-11 w-full bg-muted/30 border-muted-foreground/20 focus:bg-background"
-              />
+          <div className="relative">
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+              <Search className="w-5 h-5" />
             </div>
+            <Input
+              placeholder="Discover amazing local finds..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-12 pr-4 h-12 bg-gradient-to-r from-background to-muted/50 border-2 border-primary/20 rounded-xl focus:border-primary/50 transition-all"
+            />
+            <Button 
+              size="sm" 
+              className="absolute right-2 top-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-lg"
+            >
+              <Zap className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <HeroSection />
+      {/* Main Content with top padding for fixed header */}
+      <div className="pt-32">
+        {/* Hero Section */}
+        <HeroSection />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8 space-y-6 sm:space-y-8">
-        {/* Quick Actions */}
-        <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-2xl mx-auto">
-            <Button 
-              size="lg" 
-              className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground h-12 sm:h-14 text-base font-semibold shadow-md hover:shadow-lg transition-all"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Sell Something
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-primary/20 text-primary hover:bg-primary/5 h-12 sm:h-14 text-base font-semibold"
-            >
-              <Search className="w-5 h-5 mr-2" />
-              Browse Items
-            </Button>
-          </div>
-        </section>
+        {/* Main Content */}
+        <main className="container mx-auto px-4 py-8 space-y-12">
+          {/* Quick Actions */}
+          <section className="text-center">
+            <div className="max-w-md mx-auto space-y-4">
+              <Button 
+                size="lg" 
+                className="w-full h-14 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold text-lg rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all animate-float"
+              >
+                <Plus className="w-6 h-6 mr-3" />
+                Start Selling Now
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="w-full h-14 border-2 border-primary/30 text-primary hover:bg-primary/10 font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+              >
+                <Search className="w-6 h-6 mr-3" />
+                Explore Marketplace
+              </Button>
+            </div>
+          </section>
 
-        {/* Categories */}
-        <section>
-          <div className="text-center sm:text-left mb-4 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2">
-              Shop by Category
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              Discover local products and services
-            </p>
-          </div>
-          <CategoryGrid />
-        </section>
+          {/* Categories */}
+          <section>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-3">
+                <span className="gradient-text">Shop by Category</span>
+              </h2>
+              <p className="text-muted-foreground text-lg">
+                Find exactly what you're looking for
+              </p>
+            </div>
+            <CategoryGrid />
+          </section>
 
-        {/* Featured Listings */}
-        <section>
-          <div className="text-center sm:text-left mb-4 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2">
-              Recommended in {selectedLocation}
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground flex items-center justify-center sm:justify-start">
-              <MapPin className="w-4 h-4 mr-1" />
-              Within 10km of your location
-            </p>
-          </div>
-          <FeaturedListings />
-        </section>
-      </main>
+          {/* Featured Listings */}
+          <section>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-3">
+                <span className="gradient-text">Trending in {selectedLocation}</span>
+              </h2>
+              <p className="text-muted-foreground text-lg flex items-center justify-center">
+                <MapPin className="w-5 h-5 mr-2" />
+                Popular picks near you
+              </p>
+            </div>
+            <FeaturedListings />
+          </section>
+        </main>
+      </div>
 
       {/* Bottom Navigation */}
       <Navigation />

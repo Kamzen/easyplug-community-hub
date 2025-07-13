@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MapPin, Star, MessageCircle, Video, Clock } from "lucide-react";
+import { Heart, MapPin, Star, MessageCircle, Video, Clock, Zap } from "lucide-react";
 
 const listings = [
   {
@@ -73,45 +73,51 @@ const listings = [
 
 export const FeaturedListings = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-      {listings.map((listing) => (
-        <Card key={listing.id} className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-border/50 hover:border-primary/20 bg-background/80 backdrop-blur-sm overflow-hidden">
-          <div className="relative">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {listings.map((listing, index) => (
+        <Card 
+          key={listing.id} 
+          className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer border-border/30 hover:border-primary/30 bg-background/80 backdrop-blur-sm transform hover:scale-105"
+          style={{animationDelay: `${index * 100}ms`}}
+        >
+          <div className="relative overflow-hidden">
             <img 
               src={listing.image} 
               alt={listing.title}
-              className="w-full h-40 sm:h-48 lg:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-48 lg:h-52 object-cover group-hover:scale-110 transition-transform duration-500"
             />
             
-            {/* Overlay with actions */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="absolute bottom-3 left-3 right-3 flex space-x-2">
-                <Button size="sm" className="flex-1 bg-white/90 text-black hover:bg-white text-xs">
-                  <MessageCircle className="w-3 h-3 mr-1" />
-                  Chat
+            {/* Gradient overlay with enhanced styling */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute bottom-4 left-4 right-4 flex space-x-2">
+                <Button size="sm" className="flex-1 bg-white/90 hover:bg-white text-black text-sm font-medium rounded-xl shadow-lg">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Chat Now
                 </Button>
-                <Button size="sm" variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30 text-xs">
-                  <Video className="w-3 h-3" />
+                <Button size="sm" className="bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl shadow-lg">
+                  <Video className="w-4 h-4" />
                 </Button>
               </div>
             </div>
 
-            {/* Top badges */}
-            <div className="absolute top-2 left-2 right-2 flex justify-between items-start">
-              <div className="flex flex-col space-y-1">
+            {/* Enhanced top badges */}
+            <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+              <div className="flex flex-col space-y-2">
                 {listing.condition === "free" && (
-                  <Badge className="bg-green-600/90 text-white border-0 text-xs">
+                  <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0 text-xs font-bold rounded-full shadow-lg">
+                    <Heart className="w-3 h-3 mr-1 fill-current" />
                     FREE
                   </Badge>
                 )}
                 {listing.condition === "new" && (
-                  <Badge className="bg-blue-600/90 text-white border-0 text-xs">
+                  <Badge className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0 text-xs font-bold rounded-full shadow-lg">
+                    <Zap className="w-3 h-3 mr-1" />
                     NEW
                   </Badge>
                 )}
                 {listing.featured && (
-                  <Badge className="bg-primary/90 text-primary-foreground border-0 text-xs">
-                    FEATURED
+                  <Badge className="bg-gradient-to-r from-primary to-accent text-primary-foreground border-0 text-xs font-bold rounded-full shadow-lg animate-pulse-glow">
+                    ⭐ FEATURED
                   </Badge>
                 )}
               </div>
@@ -119,65 +125,65 @@ export const FeaturedListings = () => {
               <Button
                 size="sm"
                 variant="ghost"
-                className="bg-white/80 hover:bg-white/90 p-2 h-8 w-8"
+                className="bg-white/80 hover:bg-white/90 p-2 h-9 w-9 rounded-full shadow-lg backdrop-blur-sm"
               >
-                <Heart className="w-4 h-4 text-red-500" />
+                <Heart className="w-4 h-4 text-red-500 hover:fill-current transition-all" />
               </Button>
             </div>
           </div>
           
-          <CardContent className="p-3 sm:p-4 space-y-3">
-            {/* Title and Price */}
+          <CardContent className="p-4 space-y-4">
+            {/* Title and Price with enhanced styling */}
             <div>
-              <h3 className="font-semibold text-sm sm:text-base text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+              <h3 className="font-bold text-base text-foreground group-hover:gradient-text transition-all line-clamp-2 mb-3">
                 {listing.title}
               </h3>
               <div className="flex items-center justify-between">
-                <span className="text-lg sm:text-xl font-bold text-primary">
+                <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   {listing.price}
                 </span>
                 {listing.negotiable && (
-                  <Badge variant="outline" className="text-xs border-primary/30 text-primary">
+                  <Badge variant="outline" className="text-xs border-primary/40 text-primary bg-primary/5 rounded-full">
                     Negotiable
                   </Badge>
                 )}
               </div>
             </div>
 
-            {/* Location */}
-            <div className="flex items-center text-xs sm:text-sm text-muted-foreground">
-              <MapPin className="w-3 h-3 mr-1" />
+            {/* Location with enhanced design */}
+            <div className="flex items-center text-sm text-muted-foreground bg-muted/30 rounded-full px-3 py-1">
+              <MapPin className="w-4 h-4 mr-2 text-primary" />
               <span>{listing.location}</span>
               <span className="mx-2">•</span>
-              <span>{listing.distance}</span>
+              <span className="font-medium">{listing.distance}</span>
             </div>
 
-            {/* Seller Info */}
+            {/* Seller Info with enhanced styling */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-                  <span className="text-xs font-semibold text-primary-foreground">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-sm font-bold text-primary-foreground">
                     {listing.seller.charAt(0)}
                   </span>
                 </div>
-                <span className="text-xs sm:text-sm text-foreground font-medium">{listing.seller}</span>
+                <span className="text-sm font-semibold text-foreground">{listing.seller}</span>
               </div>
               
-              <div className="flex items-center space-x-1">
-                <Star className="w-3 h-3 text-yellow-500 fill-current" />
-                <span className="text-xs sm:text-sm text-muted-foreground">
-                  {listing.rating} ({listing.reviews})
+              <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-full">
+                <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                <span className="text-sm font-medium text-yellow-700">
+                  {listing.rating}
                 </span>
               </div>
             </div>
 
-            {/* Time and Category */}
-            <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border/50">
-              <div className="flex items-center">
+            {/* Time and Category with enhanced design */}
+            <div className="flex items-center justify-between text-xs pt-3 border-t border-border/50">
+              <div className="flex items-center text-muted-foreground">
                 <Clock className="w-3 h-3 mr-1" />
                 {listing.postedTime}
               </div>
-              <Badge variant="secondary" className="text-xs">
+              <Badge variant="secondary" className="text-xs bg-gradient-to-r from-muted to-muted/80 rounded-full">
                 {listing.category}
               </Badge>
             </div>

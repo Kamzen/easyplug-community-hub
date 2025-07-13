@@ -33,25 +33,25 @@ export const LocationSelector = ({ selectedLocation, onLocationChange }: Locatio
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-background/80 backdrop-blur-sm border-border/50 hover:bg-muted/50 text-xs sm:text-sm max-w-[120px] sm:max-w-[160px]"
+          className="bg-gradient-to-r from-background/80 to-muted/50 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5 text-sm max-w-[140px] rounded-full shadow-md transition-all"
         >
-          <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" />
-          <span className="truncate">{selectedLocation}</span>
-          <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1 flex-shrink-0" />
+          <MapPin className="w-4 h-4 mr-2 flex-shrink-0 text-primary" />
+          <span className="truncate font-medium">{selectedLocation}</span>
+          <ChevronDown className="w-4 h-4 ml-1 flex-shrink-0 text-primary" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-48 sm:w-56 bg-background/95 backdrop-blur-md border-border/50 shadow-xl z-50"
+        className="w-56 bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl rounded-2xl z-50 p-2"
       >
         {locations.map((location) => (
           <DropdownMenuItem 
             key={location}
             onClick={() => onLocationChange(location)}
-            className="hover:bg-muted/50 focus:bg-muted/50 cursor-pointer"
+            className="hover:bg-primary/10 focus:bg-primary/10 cursor-pointer rounded-xl p-3 transition-all"
           >
-            <MapPin className="w-4 h-4 mr-2 text-muted-foreground" />
-            <span className="text-sm">{location}</span>
+            <MapPin className="w-4 h-4 mr-3 text-primary" />
+            <span className="font-medium">{location}</span>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
