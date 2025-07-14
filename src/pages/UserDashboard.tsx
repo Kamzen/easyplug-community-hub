@@ -1,106 +1,58 @@
 
-import React from 'react';
-import { Box, Container, Typography, Grid, Card, CardContent, Button, Avatar, Chip } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { ShoppingBag, Heart, MessageCircle, Settings, LogOut, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { Box, Container, Typography, Grid, Card, CardContent } from '@mui/material';
+import { TopNavigation } from '../components/TopNavigation';
+import { SideDrawer } from '../components/SideDrawer';
+import { CategoryGrid } from '../components/CategoryGrid';
+import { FeaturedListings } from '../components/FeaturedListings';
 
 const UserDashboard = () => {
-  const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [selectedLocation, setSelectedLocation] = useState('Polokwane');
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/');
+  const handleDrawerToggle = () => {
+    setDrawerOpen(!drawerOpen);
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar sx={{ width: 60, height: 60, bgcolor: '#ff6b35', mr: 2 }}>
-              <User size={30} />
-            </Avatar>
-            <Box>
-              <Typography variant="h4" fontWeight="bold">
-                Welcome back, {user.name}!
-              </Typography>
-              <Chip label="Regular User" color="primary" size="small" />
-            </Box>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+      <TopNavigation 
+        onMenuToggle={handleDrawerToggle}
+        userType="user"
+      />
+      
+      <SideDrawer 
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        userType="user"
+      />
+
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          mt: 8,
+          ml: drawerOpen ? '240px' : 0,
+          transition: 'margin-left 0.3s ease',
+        }}
+      >
+        <Container maxWidth="xl">
+          <Typography variant="h4" gutterBottom fontWeight="bold" color="primary">
+            Explore Categories
+          </Typography>
+          
+          <CategoryGrid />
+
+          <Box sx={{ mt: 4, mb: 2 }}>
+            <Typography variant="h5" gutterBottom fontWeight="bold">
+              Featured Items
+            </Typography>
           </Box>
-          <Button 
-            variant="outlined" 
-            startIcon={<LogOut />}
-            onClick={handleLogout}
-            sx={{ color: '#ff6b35', borderColor: '#ff6b35' }}
-          >
-            Logout
-          </Button>
-        </Box>
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
-            <Card sx={{ borderRadius: 4, height: '100%' }}>
-              <CardContent sx={{ textAlign: 'center', p: 4 }}>
-                <ShoppingBag size={48} color="#ff6b35" style={{ marginBottom: 16 }} />
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
-                  My Orders
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Track your purchases and order history
-                </Typography>
-                <Button variant="contained" sx={{ bgcolor: '#ff6b35' }}>
-                  View Orders
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Card sx={{ borderRadius: 4, height: '100%' }}>
-              <CardContent sx={{ textAlign: 'center', p: 4 }}>
-                <Heart size={48} color="#ff6b35" style={{ marginBottom: 16 }} />
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
-                  Wishlist
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Items you've saved for later
-                </Typography>
-                <Button variant="contained" sx={{ bgcolor: '#ff6b35' }}>
-                  View Wishlist
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Card sx={{ borderRadius: 4, height: '100%' }}>
-              <CardContent sx={{ textAlign: 'center', p: 4 }}>
-                <MessageCircle size={48} color="#ff6b35" style={{ marginBottom: 16 }} />
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
-                  Messages
-                </Typography>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  Chat with sellers and support
-                </Typography>
-                <Button variant="contained" sx={{ bgcolor: '#ff6b35' }}>
-                  View Messages
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        <Box sx={{ mt: 4, textAlign: 'center' }}>
-          <Button 
-            variant="outlined" 
-            onClick={() => navigate('/')}
-            sx={{ color: '#ff6b35', borderColor: '#ff6b35' }}
-          >
-            Back to Marketplace
-          </Button>
-        </Box>
-      </Container>
+          
+          <FeaturedListings />
+        </Container>
+      </Box>
     </Box>
   );
 };
