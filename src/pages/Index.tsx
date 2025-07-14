@@ -1,18 +1,35 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, User, Plus, Sparkles, Zap, ChevronDown } from "lucide-react";
+import { Search, MapPin, User, Plus, Sparkles, Zap, ChevronDown, ShoppingCart, Bell } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { FeaturedListings } from "@/components/FeaturedListings";
 import { LocationSelector } from "@/components/LocationSelector";
+import { AuthModal } from "@/components/AuthModal";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState("Polokwane");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
+
+  // Mock user state - replace with actual auth
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const isLoggedIn = !!user;
+
+  const handleProfileAction = (action: string) => {
+    navigate(`/profile?tab=${action}`);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.location.reload();
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -39,26 +56,60 @@ const Index = () => {
                 selectedLocation={selectedLocation}
                 onLocationChange={setSelectedLocation}
               />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button size="sm" className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md">
-                    <User className="w-4 h-4 mr-1" />
-                    <span className="hidden sm:inline">Join</span>
-                    <ChevronDown className="w-3 h-3 ml-1" />
+              
+              {isLoggedIn ? (
+                <>
+                  <Button size="sm" className="relative mr-2">
+                    <ShoppingCart className="w-4 h-4" />
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem onClick={() => navigate('/login')}>
-                    Login
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/register')}>
-                    Register
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/start-selling')}>
-                    Start Selling
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="sm" className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md">
+                        <User className="w-4 h-4 mr-1" />
+                        <span className="hidden sm:inline">{user.name}</span>
+                        <ChevronDown className="w-3 h-3 ml-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => handleProfileAction('personal-details')}>
+                        Personal Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleProfileAction('cart')}>
+                        Cart
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleProfileAction('wishlist')}>
+                        Wishlist
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleProfileAction('orders')}>
+                        Orders
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleProfileAction('invoices')}>
+                        Invoices
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleProfileAction('returns')}>
+                        Returns
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleProfileAction('reviews')}>
+                        Product Reviews
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleLogout}>
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              ) : (
+                <Button 
+                  size="sm" 
+                  onClick={() => setShowAuthModal(true)}
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md"
+                >
+                  <User className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline">Join</span>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -82,6 +133,9 @@ const Index = () => {
           </div>
         </div>
       </header>
+
+      {/* Auth Modal */}
+      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
 
       {/* Main Content with top padding for fixed header */}
       <div className="pt-32 pb-8">

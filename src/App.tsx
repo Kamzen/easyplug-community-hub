@@ -13,8 +13,8 @@ import RegisterPage from "./pages/RegisterPage";
 import StartSellingPage from "./pages/StartSellingPage";
 import CategoryPage from "./pages/CategoryPage";
 import ItemDetailPage from "./pages/ItemDetailPage";
-import UserDashboard from "./pages/UserDashboard";
-import SellerDashboard from "./pages/SellerDashboard";
+import ProfilePage from "./pages/ProfilePage";
+import SellerDashboardNew from "./pages/SellerDashboardNew";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
@@ -58,8 +58,8 @@ const App = () => (
               <Route path="/start-selling" element={<StartSellingPage />} />
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/item/:id" element={<ItemDetailPage />} />
-              <Route path="/user-dashboard" element={<UserDashboard />} />
-              <Route path="/seller-dashboard" element={<SellerDashboard />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/seller-dashboard" element={<SellerDashboardNew />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
