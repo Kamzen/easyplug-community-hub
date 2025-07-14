@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Box, Container, Card, CardContent, Typography, TextField, Button, Grid, Paper } from '@mui/material';
+import { Box, Container, Card, CardContent, Typography, TextField, Button, Grid2, Paper } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
@@ -46,8 +46,8 @@ const StartSellingPage = () => {
           Back to Home
         </Button>
         
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+        <Grid2 container spacing={4}>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <Box sx={{ color: 'white', mb: 4 }}>
               <Typography variant="h3" fontWeight="bold" gutterBottom>
                 Start Selling Today
@@ -65,9 +65,9 @@ const StartSellingPage = () => {
                 ))}
               </Box>
             </Box>
-          </Grid>
+          </Grid2>
           
-          <Grid item xs={12} md={6}>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <Card sx={{ borderRadius: 4, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
               <CardContent sx={{ p: 4 }}>
                 <Box sx={{ textAlign: 'center', mb: 4 }}>
@@ -178,8 +178,8 @@ const StartSellingPage = () => {
                 </Formik>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Container>
     </Box>
   );
