@@ -1,6 +1,6 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 import { 
   Wrench, 
   Utensils, 
@@ -18,6 +18,7 @@ import {
 const categories = [
   {
     name: "Services",
+    slug: "services",
     icon: Wrench,
     gradient: "from-blue-500 to-blue-600",
     bgGradient: "from-blue-500/10 to-blue-600/10",
@@ -27,6 +28,7 @@ const categories = [
   },
   {
     name: "Food & Fresh",
+    slug: "food",
     icon: Utensils,
     gradient: "from-green-500 to-emerald-600",
     bgGradient: "from-green-500/10 to-emerald-600/10",
@@ -36,6 +38,7 @@ const categories = [
   },
   {
     name: "Fashion",
+    slug: "fashion",
     icon: Shirt,
     gradient: "from-purple-500 to-pink-600",
     bgGradient: "from-purple-500/10 to-pink-600/10",
@@ -45,6 +48,7 @@ const categories = [
   },
   {
     name: "Home & Garden",
+    slug: "home",
     icon: Home,
     gradient: "from-orange-500 to-red-500",
     bgGradient: "from-orange-500/10 to-red-500/10",
@@ -54,6 +58,7 @@ const categories = [
   },
   {
     name: "Baby & Kids",
+    slug: "baby",
     icon: Baby,
     gradient: "from-pink-500 to-rose-600",
     bgGradient: "from-pink-500/10 to-rose-600/10",
@@ -63,6 +68,7 @@ const categories = [
   },
   {
     name: "Electronics",
+    slug: "electronics",
     icon: Laptop,
     gradient: "from-indigo-500 to-purple-600",
     bgGradient: "from-indigo-500/10 to-purple-600/10",
@@ -72,6 +78,7 @@ const categories = [
   },
   {
     name: "Transport",
+    slug: "transport",
     icon: Car,
     gradient: "from-red-500 to-orange-600",
     bgGradient: "from-red-500/10 to-orange-600/10",
@@ -81,6 +88,7 @@ const categories = [
   },
   {
     name: "Free Items",
+    slug: "free",
     icon: Gift,
     gradient: "from-emerald-500 to-green-600",
     bgGradient: "from-emerald-500/10 to-green-600/10",
@@ -91,6 +99,8 @@ const categories = [
 ];
 
 export const CategoryGrid = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
       {categories.map((category, index) => {
@@ -100,6 +110,7 @@ export const CategoryGrid = () => {
             key={category.name} 
             className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer border-border/30 hover:border-primary/30 bg-background/60 backdrop-blur-sm transform hover:scale-105"
             style={{animationDelay: `${index * 100}ms`}}
+            onClick={() => navigate(`/category/${category.slug}`)}
           >
             {/* Animated background gradient */}
             <div className={`absolute inset-0 bg-gradient-to-br ${category.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,10 +7,12 @@ import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { FeaturedListings } from "@/components/FeaturedListings";
 import { LocationSelector } from "@/components/LocationSelector";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState("Polokwane");
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-white">
@@ -47,13 +48,13 @@ const Index = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/login')}>
                     Login
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/register')}>
                     Register
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/start-selling')}>
                     Start Selling
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -94,6 +95,7 @@ const Index = () => {
             <div className="max-w-md mx-auto space-y-4">
               <Button 
                 size="lg" 
+                onClick={() => navigate('/start-selling')}
                 className="w-full h-14 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold text-lg rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all animate-float"
               >
                 <Plus className="w-6 h-6 mr-3" />
