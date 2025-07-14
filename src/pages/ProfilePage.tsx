@@ -16,6 +16,15 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
+import { 
+  User, 
+  ShoppingCart, 
+  Heart, 
+  Package, 
+  FileText, 
+  RotateCcw, 
+  Star 
+} from "lucide-react";
 
 const ProfilePage = () => {
   const [searchParams] = useSearchParams();
@@ -58,263 +67,294 @@ const ProfilePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-8">My Profile</h1>
         
-        <Tabs value={activeTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="personal-details">Personal</TabsTrigger>
-            <TabsTrigger value="cart">Cart</TabsTrigger>
-            <TabsTrigger value="wishlist">Wishlist</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
-            <TabsTrigger value="invoices">Invoices</TabsTrigger>
-            <TabsTrigger value="returns">Returns</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          </TabsList>
+        <div className="flex gap-6">
+          {/* Sidebar with vertical tabs */}
+          <div className="w-64 flex-shrink-0">
+            <Tabs value={activeTab} orientation="vertical" className="w-full">
+              <TabsList className="grid w-full grid-rows-7 h-auto p-1 bg-muted">
+                <TabsTrigger value="personal-details" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <User className="w-4 h-4" />
+                  Personal Details
+                </TabsTrigger>
+                <TabsTrigger value="cart" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <ShoppingCart className="w-4 h-4" />
+                  Cart
+                </TabsTrigger>
+                <TabsTrigger value="wishlist" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <Heart className="w-4 h-4" />
+                  Wishlist
+                </TabsTrigger>
+                <TabsTrigger value="orders" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <Package className="w-4 h-4" />
+                  Orders
+                </TabsTrigger>
+                <TabsTrigger value="invoices" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <FileText className="w-4 h-4" />
+                  Invoices
+                </TabsTrigger>
+                <TabsTrigger value="returns" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <RotateCcw className="w-4 h-4" />
+                  Returns
+                </TabsTrigger>
+                <TabsTrigger value="reviews" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <Star className="w-4 h-4" />
+                  Reviews
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
 
-          <TabsContent value="personal-details">
-            <Card>
-              <CardHeader>
-                <CardTitle>Personal Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" defaultValue="John" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" defaultValue="Doe" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" defaultValue="john.doe@example.com" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input id="phone" defaultValue="+27 123 456 789" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
-                  <Textarea id="address" defaultValue="123 Market Street, Polokwane, 0700" />
-                </div>
-                <Button>Save Changes</Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="cart">
-            <Card>
-              <CardHeader>
-                <CardTitle>Shopping Cart</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Quantity</TableHead>
-                      <TableHead>Total</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {cartData.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.name}</TableCell>
-                        <TableCell>{item.price}</TableCell>
-                        <TableCell>{item.quantity}</TableCell>
-                        <TableCell>{item.price}</TableCell>
-                        <TableCell>
-                          <Button variant="destructive" size="sm">Remove</Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="wishlist">
-            <Card>
-              <CardHeader>
-                <CardTitle>Wishlist</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {wishlistData.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.name}</TableCell>
-                        <TableCell>{item.price}</TableCell>
-                        <TableCell>
-                          <div className="space-x-2">
-                            <Button size="sm">Add to Cart</Button>
-                            <Button variant="outline" size="sm">Remove</Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="orders">
-            <Card>
-              <CardHeader>
-                <CardTitle>Order History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Total</TableHead>
-                      <TableHead>Items</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {orderData.map((order) => (
-                      <TableRow key={order.id}>
-                        <TableCell>{order.id}</TableCell>
-                        <TableCell>{order.date}</TableCell>
-                        <TableCell>{order.total}</TableCell>
-                        <TableCell>{order.items}</TableCell>
-                        <TableCell>
-                          <Badge variant={order.status === 'Delivered' ? 'default' : 'secondary'}>
-                            {order.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="invoices">
-            <Card>
-              <CardHeader>
-                <CardTitle>Invoices</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Invoice ID</TableHead>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {invoiceData.map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell>{invoice.id}</TableCell>
-                        <TableCell>{invoice.orderId}</TableCell>
-                        <TableCell>{invoice.date}</TableCell>
-                        <TableCell>{invoice.amount}</TableCell>
-                        <TableCell>
-                          <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'}>
-                            {invoice.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Button size="sm">Download</Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="returns">
-            <Card>
-              <CardHeader>
-                <CardTitle>Returns & Refunds</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Return ID</TableHead>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Reason</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Date</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {returnData.map((returnItem) => (
-                      <TableRow key={returnItem.id}>
-                        <TableCell>{returnItem.id}</TableCell>
-                        <TableCell>{returnItem.orderId}</TableCell>
-                        <TableCell>{returnItem.product}</TableCell>
-                        <TableCell>{returnItem.reason}</TableCell>
-                        <TableCell>
-                          <Badge variant={returnItem.status === 'Approved' ? 'default' : 'secondary'}>
-                            {returnItem.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{returnItem.date}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="reviews">
-            <Card>
-              <CardHeader>
-                <CardTitle>Product Reviews</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {reviewData.map((review) => (
-                    <div key={review.id} className="border p-4 rounded-lg">
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-semibold">{review.product}</h4>
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <span key={i} className={i < review.rating ? "text-yellow-500" : "text-gray-300"}>
-                              ★
-                            </span>
-                          ))}
-                        </div>
+          {/* Main content area */}
+          <div className="flex-1">
+            <Tabs value={activeTab} className="w-full">
+              <TabsContent value="personal-details">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Personal Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input id="firstName" defaultValue="John" />
                       </div>
-                      <p className="text-gray-600 mb-2">{review.review}</p>
-                      <p className="text-sm text-gray-500">{review.date}</p>
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input id="lastName" defaultValue="Doe" />
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" defaultValue="john.doe@example.com" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone</Label>
+                      <Input id="phone" defaultValue="+27 123 456 789" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Address</Label>
+                      <Textarea id="address" defaultValue="123 Market Street, Polokwane, 0700" />
+                    </div>
+                    <Button>Save Changes</Button>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="cart">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Shopping Cart</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Quantity</TableHead>
+                          <TableHead>Total</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {cartData.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.price}</TableCell>
+                            <TableCell>{item.quantity}</TableCell>
+                            <TableCell>{item.price}</TableCell>
+                            <TableCell>
+                              <Button variant="destructive" size="sm">Remove</Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="wishlist">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Wishlist</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {wishlistData.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.price}</TableCell>
+                            <TableCell>
+                              <div className="space-x-2">
+                                <Button size="sm">Add to Cart</Button>
+                                <Button variant="outline" size="sm">Remove</Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="orders">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Order History</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Order ID</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Total</TableHead>
+                          <TableHead>Items</TableHead>
+                          <TableHead>Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {orderData.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell>{order.id}</TableCell>
+                            <TableCell>{order.date}</TableCell>
+                            <TableCell>{order.total}</TableCell>
+                            <TableCell>{order.items}</TableCell>
+                            <TableCell>
+                              <Badge variant={order.status === 'Delivered' ? 'default' : 'secondary'}>
+                                {order.status}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="invoices">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Invoices</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Invoice ID</TableHead>
+                          <TableHead>Order ID</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {invoiceData.map((invoice) => (
+                          <TableRow key={invoice.id}>
+                            <TableCell>{invoice.id}</TableCell>
+                            <TableCell>{invoice.orderId}</TableCell>
+                            <TableCell>{invoice.date}</TableCell>
+                            <TableCell>{invoice.amount}</TableCell>
+                            <TableCell>
+                              <Badge variant={invoice.status === 'Paid' ? 'default' : 'secondary'}>
+                                {invoice.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Button size="sm">Download</Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="returns">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Returns & Refunds</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Return ID</TableHead>
+                          <TableHead>Order ID</TableHead>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Reason</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Date</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {returnData.map((returnItem) => (
+                          <TableRow key={returnItem.id}>
+                            <TableCell>{returnItem.id}</TableCell>
+                            <TableCell>{returnItem.orderId}</TableCell>
+                            <TableCell>{returnItem.product}</TableCell>
+                            <TableCell>{returnItem.reason}</TableCell>
+                            <TableCell>
+                              <Badge variant={returnItem.status === 'Approved' ? 'default' : 'secondary'}>
+                                {returnItem.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{returnItem.date}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="reviews">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Product Reviews</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {reviewData.map((review) => (
+                        <div key={review.id} className="border p-4 rounded-lg">
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-semibold">{review.product}</h4>
+                            <div className="flex">
+                              {[...Array(5)].map((_, i) => (
+                                <span key={i} className={i < review.rating ? "text-yellow-500" : "text-gray-300"}>
+                                  ★
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground mb-2">{review.review}</p>
+                          <p className="text-sm text-muted-foreground">{review.date}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
       </div>
     </div>
   );

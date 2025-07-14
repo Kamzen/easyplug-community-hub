@@ -9,7 +9,32 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { User, ChevronDown, Package, BarChart3, Settings, FileText, ShoppingBag } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { 
+  User, 
+  ChevronDown, 
+  Package, 
+  BarChart3, 
+  Settings, 
+  FileText, 
+  ShoppingBag,
+  Store,
+  TrendingUp,
+  DollarSign,
+  Users,
+  Eye
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   LineChart, 
@@ -49,6 +74,19 @@ const SellerDashboardNew = () => {
     { name: 'Sports', value: 100, color: '#ffb84d' },
   ];
 
+  const productsData = [
+    { id: 1, name: 'iPhone 14 Pro', price: 'R 18,999', stock: 15, sales: 45, status: 'Active' },
+    { id: 2, name: 'Samsung Galaxy Watch', price: 'R 3,499', stock: 8, sales: 32, status: 'Active' },
+    { id: 3, name: 'AirPods Pro', price: 'R 4,299', stock: 22, sales: 28, status: 'Active' },
+    { id: 4, name: 'MacBook Pro', price: 'R 32,999', stock: 3, sales: 12, status: 'Low Stock' },
+  ];
+
+  const ordersData = [
+    { id: 'ORD001', customer: 'John Doe', product: 'iPhone 14 Pro', amount: 'R 18,999', status: 'Shipped', date: '2024-01-15' },
+    { id: 'ORD002', customer: 'Jane Smith', product: 'AirPods Pro', amount: 'R 4,299', status: 'Processing', date: '2024-01-14' },
+    { id: 'ORD003', customer: 'Mike Johnson', product: 'Samsung Watch', amount: 'R 3,499', status: 'Delivered', date: '2024-01-13' },
+  ];
+
   const handleUserTypeChange = (type: 'user' | 'seller') => {
     setUserType(type);
     if (type === 'user') {
@@ -62,9 +100,9 @@ const SellerDashboardNew = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Top Navigation */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-card shadow-sm border-b">
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <h1 className="text-2xl font-bold text-primary">EasyPlug Seller</h1>
@@ -107,29 +145,29 @@ const SellerDashboardNew = () => {
       </header>
 
       <div className="flex">
-        {/* Sidebar */}
-        <div className="w-64 bg-white shadow-sm min-h-screen">
+        {/* Sidebar with vertical tabs */}
+        <div className="w-64 bg-card shadow-sm min-h-screen border-r">
           <div className="p-6">
             <Tabs defaultValue="dashboard" orientation="vertical" className="w-full">
-              <TabsList className="grid w-full grid-rows-5 h-auto">
-                <TabsTrigger value="dashboard" className="w-full justify-start">
-                  <BarChart3 className="w-4 h-4 mr-2" />
+              <TabsList className="grid w-full grid-rows-5 h-auto p-1 bg-muted">
+                <TabsTrigger value="dashboard" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <BarChart3 className="w-4 h-4" />
                   Dashboard
                 </TabsTrigger>
-                <TabsTrigger value="products" className="w-full justify-start">
-                  <Package className="w-4 h-4 mr-2" />
+                <TabsTrigger value="products" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <Package className="w-4 h-4" />
                   Products
                 </TabsTrigger>
-                <TabsTrigger value="orders" className="w-full justify-start">
-                  <ShoppingBag className="w-4 h-4 mr-2" />
+                <TabsTrigger value="orders" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <ShoppingBag className="w-4 h-4" />
                   Orders
                 </TabsTrigger>
-                <TabsTrigger value="reports" className="w-full justify-start">
-                  <FileText className="w-4 h-4 mr-2" />
+                <TabsTrigger value="reports" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <FileText className="w-4 h-4" />
                   Reports
                 </TabsTrigger>
-                <TabsTrigger value="settings" className="w-full justify-start">
-                  <Settings className="w-4 h-4 mr-2" />
+                <TabsTrigger value="settings" className="w-full justify-start gap-2 data-[state=active]:bg-background">
+                  <Settings className="w-4 h-4" />
                   Settings
                 </TabsTrigger>
               </TabsList>
@@ -147,7 +185,10 @@ const SellerDashboardNew = () => {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <DollarSign className="w-4 h-4" />
+                      Total Revenue
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">R 15,420</div>
@@ -157,7 +198,10 @@ const SellerDashboardNew = () => {
                 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <ShoppingBag className="w-4 h-4" />
+                      Total Orders
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">126</div>
@@ -167,7 +211,10 @@ const SellerDashboardNew = () => {
                 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Active Products</CardTitle>
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <Package className="w-4 h-4" />
+                      Active Products
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">45</div>
@@ -177,7 +224,10 @@ const SellerDashboardNew = () => {
                 
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4" />
+                      Conversion Rate
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">3.2%</div>
@@ -234,48 +284,188 @@ const SellerDashboardNew = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="products">
+            <TabsContent value="products" className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-bold">Product Management</h2>
+                <Button>Add New Product</Button>
+              </div>
+              
               <Card>
                 <CardHeader>
-                  <CardTitle>Product Management</CardTitle>
+                  <CardTitle>Your Products</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>Product management interface would go here...</p>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Product Name</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Stock</TableHead>
+                        <TableHead>Sales</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {productsData.map((product) => (
+                        <TableRow key={product.id}>
+                          <TableCell className="font-medium">{product.name}</TableCell>
+                          <TableCell>{product.price}</TableCell>
+                          <TableCell>{product.stock}</TableCell>
+                          <TableCell>{product.sales}</TableCell>
+                          <TableCell>
+                            <Badge variant={product.status === 'Active' ? 'default' : 'destructive'}>
+                              {product.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              <Button size="sm" variant="outline">Edit</Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="orders">
+            <TabsContent value="orders" className="space-y-6">
+              <h2 className="text-3xl font-bold">Order Management</h2>
+              
               <Card>
                 <CardHeader>
-                  <CardTitle>Order Management</CardTitle>
+                  <CardTitle>Recent Orders</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>Order management interface would go here...</p>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Order ID</TableHead>
+                        <TableHead>Customer</TableHead>
+                        <TableHead>Product</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {ordersData.map((order) => (
+                        <TableRow key={order.id}>
+                          <TableCell className="font-medium">{order.id}</TableCell>
+                          <TableCell>{order.customer}</TableCell>
+                          <TableCell>{order.product}</TableCell>
+                          <TableCell>{order.amount}</TableCell>
+                          <TableCell>
+                            <Badge variant={
+                              order.status === 'Delivered' ? 'default' : 
+                              order.status === 'Shipped' ? 'secondary' : 'outline'
+                            }>
+                              {order.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{order.date}</TableCell>
+                          <TableCell>
+                            <Button size="sm" variant="outline">Update</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </CardContent>
               </Card>
             </TabsContent>
 
-            <TabsContent value="reports">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Reports & Analytics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Reports and analytics would go here...</p>
-                </CardContent>
-              </Card>
+            <TabsContent value="reports" className="space-y-6">
+              <h2 className="text-3xl font-bold">Reports & Analytics</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Monthly Sales Report</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={250}>
+                      <BarChart data={salesData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="sales" fill="#ff6b35" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Export Reports</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Button className="w-full" variant="outline">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Download Sales Report
+                    </Button>
+                    <Button className="w-full" variant="outline">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Download Inventory Report
+                    </Button>
+                    <Button className="w-full" variant="outline">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Download Customer Report
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
-            <TabsContent value="settings">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Account Settings</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Account settings would go here...</p>
-                </CardContent>
-              </Card>
+            <TabsContent value="settings" className="space-y-6">
+              <h2 className="text-3xl font-bold">Account Settings</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Store Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="storeName">Store Name</Label>
+                      <Input id="storeName" defaultValue="My Electronics Store" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="storeDescription">Store Description</Label>
+                      <Textarea id="storeDescription" defaultValue="We sell quality electronics and accessories." />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="contactEmail">Contact Email</Label>
+                      <Input id="contactEmail" defaultValue="store@example.com" />
+                    </div>
+                    <Button>Save Store Settings</Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Payment Settings</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="bankAccount">Bank Account</Label>
+                      <Input id="bankAccount" defaultValue="**** **** **** 1234" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="taxNumber">Tax Number</Label>
+                      <Input id="taxNumber" defaultValue="TAX123456789" />
+                    </div>
+                    <Button>Update Payment Info</Button>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
