@@ -4,7 +4,7 @@ import {
   Box, 
   Container, 
   Typography, 
-  Grid, 
+  Grid2 as Grid, 
   Card, 
   CardContent, 
   Paper 
@@ -132,7 +132,7 @@ const SellerDashboard = () => {
           
           <Grid container spacing={3}>
             {/* Sales Overview */}
-            <Grid item xs={12} md={8}>
+            <Grid xs={12} md={8}>
               <Paper sx={{ p: 3, borderRadius: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight="bold">
                   Sales Overview
@@ -152,9 +152,9 @@ const SellerDashboard = () => {
             </Grid>
 
             {/* Quick Stats */}
-            <Grid item xs={12} md={4}>
+            <Grid xs={12} md={4}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <Card sx={{ borderRadius: 3, bgcolor: '#ff6b35', color: 'white' }}>
                     <CardContent>
                       <Typography variant="h4" fontWeight="bold">R 15,420</Typography>
@@ -162,7 +162,7 @@ const SellerDashboard = () => {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <Card sx={{ borderRadius: 3, bgcolor: '#f7931e', color: 'white' }}>
                     <CardContent>
                       <Typography variant="h4" fontWeight="bold">126</Typography>
@@ -170,7 +170,7 @@ const SellerDashboard = () => {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <Card sx={{ borderRadius: 3, bgcolor: '#ffa500', color: 'white' }}>
                     <CardContent>
                       <Typography variant="h4" fontWeight="bold">45</Typography>
@@ -182,7 +182,7 @@ const SellerDashboard = () => {
             </Grid>
 
             {/* Category Distribution */}
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Paper sx={{ p: 3, borderRadius: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight="bold">
                   Sales by Category
@@ -208,7 +208,7 @@ const SellerDashboard = () => {
             </Grid>
 
             {/* Top Products */}
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Paper sx={{ p: 3, borderRadius: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight="bold">
                   Top Selling Products
