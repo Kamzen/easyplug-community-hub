@@ -4,7 +4,7 @@ import {
   Box, 
   Container, 
   Typography, 
-  Grid2 as Grid, 
+  Grid, 
   Card, 
   CardContent, 
   Paper 
@@ -88,7 +88,7 @@ const AdminDashboard = () => {
           
           <Grid container spacing={3}>
             {/* Platform Stats */}
-            <Grid xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Card sx={{ borderRadius: 3, bgcolor: '#ff6b35', color: 'white' }}>
                 <CardContent>
                   <Typography variant="h4" fontWeight="bold">2,450</Typography>
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Card sx={{ borderRadius: 3, bgcolor: '#f7931e', color: 'white' }}>
                 <CardContent>
                   <Typography variant="h4" fontWeight="bold">420</Typography>
@@ -104,7 +104,7 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Card sx={{ borderRadius: 3, bgcolor: '#ffa500', color: 'white' }}>
                 <CardContent>
                   <Typography variant="h4" fontWeight="bold">8,650</Typography>
@@ -112,7 +112,7 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid xs={12} md={3}>
+            <Grid size={{ xs: 12, md: 3 }}>
               <Card sx={{ borderRadius: 3, bgcolor: '#ffb84d', color: 'white' }}>
                 <CardContent>
                   <Typography variant="h4" fontWeight="bold">R 2.4M</Typography>
@@ -122,7 +122,7 @@ const AdminDashboard = () => {
             </Grid>
 
             {/* User Growth Chart */}
-            <Grid xs={12} md={8}>
+            <Grid size={{ xs: 12, md: 8 }}>
               <Paper sx={{ p: 3, borderRadius: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight="bold">
                   User Growth Trends
@@ -156,7 +156,7 @@ const AdminDashboard = () => {
             </Grid>
 
             {/* Platform Revenue */}
-            <Grid xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Paper sx={{ p: 3, borderRadius: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight="bold">
                   Weekly Revenue
@@ -180,7 +180,7 @@ const AdminDashboard = () => {
             </Grid>
 
             {/* Category Performance */}
-            <Grid xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Paper sx={{ p: 3, borderRadius: 3 }}>
                 <Typography variant="h6" gutterBottom fontWeight="bold">
                   Category Performance

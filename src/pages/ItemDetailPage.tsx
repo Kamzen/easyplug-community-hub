@@ -59,7 +59,7 @@ const ItemDetailPage = () => {
         
         <Grid container spacing={4}>
           {/* Image Gallery */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card sx={{ borderRadius: 4, overflow: 'hidden', mb: 2 }}>
               <CardMedia
                 component="img"
@@ -71,7 +71,7 @@ const ItemDetailPage = () => {
             
             <Grid container spacing={1}>
               {item.images.map((image, index) => (
-                <Grid item xs={4} key={index}>
+                <Grid size={{ xs: 4 }} key={index}>
                   <Card 
                     sx={{ 
                       cursor: 'pointer',
@@ -93,7 +93,7 @@ const ItemDetailPage = () => {
           </Grid>
 
           {/* Item Details */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Paper sx={{ p: 4, borderRadius: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <Chip
@@ -143,7 +143,7 @@ const ItemDetailPage = () => {
               </Box>
 
               <Grid container spacing={2} sx={{ mb: 4 }}>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Button
                     fullWidth
                     variant="contained"
@@ -160,7 +160,7 @@ const ItemDetailPage = () => {
                     Chat Now
                   </Button>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Button
                     fullWidth
                     variant="outlined"
@@ -238,7 +238,7 @@ const ItemDetailPage = () => {
           </Typography>
           <Grid container spacing={1}>
             {item.features.map((feature, index) => (
-              <Grid item xs={12} sm={6} key={index}>
+              <Grid size={{ xs: 12, sm: 6 }} key={index}>
                 <Typography variant="body2" sx={{ mb: 1 }}>
                   • {feature}
                 </Typography>
