@@ -1,225 +1,338 @@
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  Chip,
+  useMediaQuery,
+  TextField,
+  InputAdornment,
+  FormControl,
+  Select,
+  MenuItem,
+  IconButton,
+  Menu,
+  MenuList,
+  Divider
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import StarIcon from "@mui/icons-material/Star";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SearchIcon from "@mui/icons-material/Search";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import { Input } from "@/components/ui/input";
+import { Search, Zap } from "lucide-react";
+// Import the listings array from FeaturedListings
+import { listings as allListings } from "../components/FeaturedListings";
+import { Button as MuiButton } from "@mui/material";
+import { Button } from "@/components/ui/button";
+import { NavBar } from "../components/NavBar";
 
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Card, CardMedia, CardContent, Chip, Button } from '@mui/material';
-import { ArrowLeft, MapPin, Star, Clock, MessageCircle } from 'lucide-react';
-
-// Mock data for different categories
-const categoryItems = {
-  'services': [
-    {
-      id: 1,
-      title: "Professional House Cleaning",
-      price: "R350/session",
-      location: "Polokwane Central",
-      rating: 4.9,
-      reviews: 47,
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
-      timeAgo: "2 hours ago",
-      verified: true,
-      seller: "CleanPro Services"
-    },
-    {
-      id: 2,
-      title: "Garden Maintenance & Landscaping",
-      price: "R500/day",
-      location: "Bendor Park",
-      rating: 4.7,
-      reviews: 23,
-      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop",
-      timeAgo: "4 hours ago",
-      verified: true,
-      seller: "Green Gardens"
-    }
-  ],
-  'electronics': [
-    {
-      id: 3,
-      title: "iPhone 14 Pro Max 256GB",
-      price: "R18,999",
-      location: "Polokwane Central",
-      rating: 4.8,
-      reviews: 12,
-      image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop",
-      timeAgo: "1 hour ago",
-      verified: true,
-      seller: "TechHub Store"
-    }
-  ],
-  'fashion': [
-    {
-      id: 4,
-      title: "Designer Winter Jacket",
-      price: "R899",
-      location: "Mankweng",
-      rating: 4.6,
-      reviews: 8,
-      image: "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=400&h=300&fit=crop",
-      timeAgo: "3 hours ago",
-      verified: false,
-      seller: "Fashion Forward"
-    }
-  ]
-};
+const categories = [
+  {
+    name: "Electronics",
+    subcategories: ["Smartphones", "Laptops", "Tablets", "Gaming", "Audio"]
+  },
+  {
+    name: "Vehicles",
+    subcategories: ["Cars", "Motorcycles", "Trucks", "Parts", "Accessories"]
+  },
+  {
+    name: "Property",
+    subcategories: ["Houses", "Apartments", "Land", "Commercial", "Rentals"]
+  },
+  {
+    name: "Services",
+    subcategories: [
+      "Cleaning",
+      "Tutoring",
+      "Photography",
+      "Repair",
+      "Consulting"
+    ]
+  },
+  {
+    name: "Food",
+    subcategories: ["Fresh Produce", "Bakery", "Beverages", "Snacks", "Organic"]
+  }
+];
 
 const CategoryPage = () => {
   const { category } = useParams();
   const navigate = useNavigate();
-  const [hoveredItem, setHoveredItem] = React.useState<number | null>(null);
-  
-  const items = categoryItems[category as keyof typeof categoryItems] || [];
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  // State for NavBar
+  const [selectedLocation, setSelectedLocation] = useState("Polokwane");
+  const [searchValue, setSearchValue] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const isLoggedIn = !!user;
+
+  // Filter listings by category param (case-insensitive)
+  const filteredListings = allListings.filter(
+    (item) =>
+      item.category.toLowerCase() === (category || "").toLowerCase() &&
+      item.title.toLowerCase().includes(searchValue.toLowerCase())
+  );
   const categoryName = category?.charAt(0).toUpperCase() + category?.slice(1);
 
+  const handleProfileAction = (action: string) => {
+    navigate(`/profile?tab=${action}`);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'white' }}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Button 
-          startIcon={<ArrowLeft />}
-          onClick={() => navigate('/')}
-          sx={{ mb: 4, color: '#ff6b35' }}
-        >
-          Back to Home
-        </Button>
-        
+    <Box sx={{ minHeight: "100vh", bgcolor: "white" }}>
+      <NavBar
+        selectedLocation={selectedLocation}
+        onLocationChange={setSelectedLocation}
+        searchQuery={searchValue}
+        onSearchChange={setSearchValue}
+        isLoggedIn={isLoggedIn}
+        user={user}
+        showAuthModal={showAuthModal}
+        onShowAuthModal={setShowAuthModal}
+        onProfileAction={handleProfileAction}
+        onLogout={handleLogout}
+      />
+      <Container maxWidth="lg" sx={{ py: 4, pt: 16 }}>
+        <Box sx={{ mb: 4, mt: 8 }}>
+          <MuiButton
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate("/")}
+            sx={{ color: "#ff6b35" }}
+          >
+            Back to Home
+          </MuiButton>
+        </Box>
         <Typography variant="h3" fontWeight="bold" color="#ff6b35" gutterBottom>
           {categoryName}
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
-          {items.length} items available in your area
+          {filteredListings.length} items available in this category
         </Typography>
-
         <Grid container spacing={3}>
-          {items.map((item) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.id}>
-              <Card 
-                sx={{ 
-                  borderRadius: 4,
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.15)'
-                  }
+          {filteredListings.map((listing) => (
+            <Grid size={{ xs: 6, md: 4 }} key={listing.id}>
+              <Paper
+                elevation={4}
+                sx={{
+                  borderRadius: 1,
+                  overflow: "hidden",
+                  position: "relative",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "box-shadow 0.3s, transform 0.3s",
+                  boxShadow: 3,
+                  "&:hover": {
+                    boxShadow: 8,
+                    transform: "translateY(-8px)"
+                  },
+                  border: "1px solid",
+                  borderColor: "divider",
+                  bgcolor: "background.paper"
                 }}
-                onMouseEnter={() => setHoveredItem(item.id)}
-                onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => navigate(`/item/${item.id}`)}
               >
-                <Box sx={{ position: 'relative' }}>
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={item.image}
-                    alt={item.title}
+                {/* Image */}
+                <Box
+                  sx={{
+                    position: "relative",
+                    height: isMobile ? 140 : 192,
+                    overflow: "hidden"
+                  }}
+                >
+                  <img
+                    src={listing.image}
+                    alt={listing.title}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      transition: "transform 0.3s"
+                    }}
                   />
-                  
-                  {item.verified && (
+                  <Chip
+                    label={listing.category}
+                    size="small"
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      left: 8,
+                      bgcolor: "background.paper",
+                      color: "primary.main",
+                      fontWeight: 500,
+                      opacity: 0.95,
+                      fontSize: isMobile ? 10 : 13
+                    }}
+                  />
+                  {listing.verified && (
                     <Chip
+                      icon={
+                        <CheckCircleIcon
+                          sx={{ color: "white", fontSize: isMobile ? 14 : 18 }}
+                        />
+                      }
                       label="Verified Local"
                       size="small"
                       sx={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 12,
-                        bgcolor: '#4CAF50',
-                        color: 'white',
-                        fontWeight: 'bold'
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
+                        bgcolor: "success.main",
+                        color: "white",
+                        fontWeight: 500,
+                        fontSize: isMobile ? 10 : 13
                       }}
                     />
                   )}
-                  
                   <Box
                     sx={{
-                      position: 'absolute',
-                      bottom: 12,
-                      left: 12,
-                      bgcolor: 'rgba(0,0,0,0.7)',
-                      color: 'white',
-                      px: 1,
-                      py: 0.5,
+                      position: "absolute",
+                      bottom: 8,
+                      right: 8,
+                      bgcolor: "rgba(0,0,0,0.7)",
+                      color: "white",
+                      px: 1.2,
+                      py: 0.3,
                       borderRadius: 2,
-                      fontSize: '0.75rem',
-                      display: 'flex',
-                      alignItems: 'center'
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: isMobile ? 10 : 12
                     }}
                   >
-                    <Clock size={12} style={{ marginRight: 4 }} />
-                    {item.timeAgo}
+                    <AccessTimeIcon
+                      sx={{ fontSize: isMobile ? 13 : 16, mr: 0.5 }}
+                    />
+                    {listing.timeAgo}
                   </Box>
-
-                  {/* Chat button that appears on hover */}
-                  {hoveredItem === item.id && (
-                    <Button
-                      variant="contained"
-                      startIcon={<MessageCircle size={16} />}
+                </Box>
+                {/* Price */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    px: 2,
+                    pt: 1.5,
+                    pb: 0,
+                    gap: 1
+                  }}
+                >
+                  <Typography
+                    variant={isMobile ? "h6" : "h5"}
+                    color="primary"
+                    fontWeight={700}
+                    sx={{ fontSize: isMobile ? 16 : 24 }}
+                  >
+                    {listing.price}
+                  </Typography>
+                </Box>
+                {/* Content */}
+                <Box
+                  sx={{
+                    p: isMobile ? 1 : 2,
+                    pt: isMobile ? 0.5 : 2,
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between"
+                  }}
+                >
+                  <Box>
+                    <Typography
+                      variant={isMobile ? "subtitle1" : "h6"}
+                      fontWeight={700}
                       sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
-                        borderRadius: 3,
-                        textTransform: 'none',
-                        fontWeight: 'bold',
-                        animation: 'fadeIn 0.3s ease',
-                        '@keyframes fadeIn': {
-                          from: { opacity: 0, scale: 0.8 },
-                          to: { opacity: 1, scale: 1 }
-                        }
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        alert(`Starting chat with ${item.seller}`);
+                        mb: 0.5,
+                        lineHeight: 1.2,
+                        minHeight: isMobile ? 28 : 48,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        fontSize: isMobile ? 14 : 20
                       }}
                     >
-                      Chat
-                    </Button>
-                  )}
-                </Box>
-
-                <CardContent sx={{ p: 3 }}>
-                  <Typography variant="h6" fontWeight="bold" gutterBottom>
-                    {item.title}
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Box sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      bgcolor: '#FFF3E0',
-                      px: 1,
-                      py: 0.5,
-                      borderRadius: 2,
-                      mr: 2
-                    }}>
-                      <Star size={16} color="#ff6b35" fill="#ff6b35" />
-                      <Typography variant="body2" sx={{ ml: 0.5, fontWeight: 'bold' }}>
-                        {item.rating}
-                      </Typography>
-                      <Typography variant="body2" sx={{ ml: 0.5, color: 'text.secondary' }}>
-                        ({item.reviews})
+                      {listing.title}
+                    </Typography>
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", mb: 0.5 }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          bgcolor: "#FEF3C7",
+                          px: 1,
+                          py: 0.3,
+                          borderRadius: 2,
+                          mr: 1
+                        }}
+                      >
+                        <StarIcon
+                          sx={{
+                            color: "#F59E42",
+                            fontSize: isMobile ? 13 : 18,
+                            mr: 0.5
+                          }}
+                        />
+                        <Typography
+                          variant="body2"
+                          fontWeight={500}
+                          sx={{ fontSize: isMobile ? 11 : 14 }}
+                        >
+                          {listing.rating}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            ml: 0.5,
+                            color: "#B45309",
+                            fontSize: isMobile ? 9 : 12
+                          }}
+                        >
+                          ({listing.reviews})
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "text.secondary",
+                        mb: 1
+                      }}
+                    >
+                      <LocationOnIcon
+                        sx={{ fontSize: isMobile ? 13 : 18, mr: 0.5 }}
+                      />
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: isMobile ? 11 : 14,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: isMobile ? 100 : 180
+                        }}
+                      >
+                        {listing.location}
                       </Typography>
                     </Box>
                   </Box>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <MapPin size={16} color="#666" />
-                    <Typography variant="body2" sx={{ ml: 1, color: 'text.secondary' }}>
-                      {item.location}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h5" fontWeight="bold" color="#ff6b35">
-                      {item.price}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      by {item.seller}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
+                </Box>
+              </Paper>
             </Grid>
           ))}
         </Grid>
