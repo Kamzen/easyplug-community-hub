@@ -14,6 +14,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
+import GoogleIcon from "@mui/icons-material/Google";
 
 interface LoginCredentials {
   email: string;
@@ -103,6 +104,24 @@ const LoginPage = () => {
         >
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ textAlign: "center", mb: 4 }}>
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<GoogleIcon />}
+                sx={{
+                  mb: 2,
+                  borderRadius: 3,
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  bgcolor: "white",
+                  color: "#4285F4",
+                  borderColor: "#4285F4",
+                  "&:hover": { bgcolor: "#f5f5f5", borderColor: "#4285F4" }
+                }}
+                onClick={() => alert("Google login coming soon!")}
+              >
+                Login with Google
+              </Button>
               <Box
                 sx={{
                   display: "inline-flex",
