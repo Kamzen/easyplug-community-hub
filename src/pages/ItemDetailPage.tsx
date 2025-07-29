@@ -1,12 +1,48 @@
-
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Card, CardMedia, Button, Chip, Avatar, Paper, Divider } from '@mui/material';
-import { ArrowLeft, MapPin, Star, Clock, MessageCircle, Phone, Shield, Heart } from 'lucide-react';
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardMedia,
+  Button,
+  Chip,
+  Avatar,
+  Paper,
+  Divider
+} from "@mui/material";
+import {
+  ArrowLeft,
+  MapPin,
+  Star,
+  Clock,
+  MessageCircle,
+  Phone,
+  Shield,
+  Heart
+} from "lucide-react";
+import { NavBar } from "../components/NavBar";
 
 const ItemDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // State for NavBar
+  const [selectedLocation, setSelectedLocation] = React.useState("Polokwane");
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const isLoggedIn = !!user;
+
+  const handleProfileAction = (action: string) => {
+    navigate(`/profile?tab=${action}`);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
 
   // Mock item data - in a real app, you'd fetch this based on the ID
   const item = {
@@ -26,12 +62,14 @@ const ItemDetailPage = () => {
     verified: true,
     seller: {
       name: "TechHub Store",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
       rating: 4.9,
       totalSales: 156,
       memberSince: "2022"
     },
-    description: "Brand new iPhone 14 Pro Max in Deep Purple. Still sealed in original packaging. Comes with all accessories including Lightning cable, documentation, and Apple stickers. 256GB storage capacity perfect for all your photos, videos, and apps.",
+    description:
+      "Brand new iPhone 14 Pro Max in Deep Purple. Still sealed in original packaging. Comes with all accessories including Lightning cable, documentation, and Apple stickers. 256GB storage capacity perfect for all your photos, videos, and apps.",
     features: [
       "6.7-inch Super Retina XDR display",
       "A16 Bionic chip",
@@ -47,20 +85,32 @@ const ItemDetailPage = () => {
   const [selectedImage, setSelectedImage] = React.useState(0);
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Button 
+    <Box sx={{ minHeight: "100vh", bgcolor: "#f5f5f5" }}>
+      <NavBar
+        selectedLocation={selectedLocation}
+        onLocationChange={setSelectedLocation}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        isLoggedIn={isLoggedIn}
+        user={user}
+        showAuthModal={showAuthModal}
+        onShowAuthModal={setShowAuthModal}
+        onProfileAction={handleProfileAction}
+        onLogout={handleLogout}
+      />
+      <Container maxWidth="lg" sx={{ py: 4, pt: 16 }}>
+        <Button
           startIcon={<ArrowLeft />}
           onClick={() => navigate(-1)}
-          sx={{ mb: 4, color: '#ff6b35' }}
+          sx={{ mb: 4, color: "#ff6b35" }}
         >
           Back
         </Button>
-        
+
         <Grid container spacing={4}>
           {/* Image Gallery */}
           <Grid size={{ xs: 12, md: 6 }}>
-            <Card sx={{ borderRadius: 4, overflow: 'hidden', mb: 2 }}>
+            <Card sx={{ borderRadius: 4, overflow: "hidden", mb: 2 }}>
               <CardMedia
                 component="img"
                 height="400"
@@ -68,14 +118,15 @@ const ItemDetailPage = () => {
                 alt={item.title}
               />
             </Card>
-            
+
             <Grid container spacing={1}>
               {item.images.map((image, index) => (
                 <Grid size={{ xs: 4 }} key={index}>
-                  <Card 
-                    sx={{ 
-                      cursor: 'pointer',
-                      border: selectedImage === index ? '3px solid #ff6b35' : 'none',
+                  <Card
+                    sx={{
+                      cursor: "pointer",
+                      border:
+                        selectedImage === index ? "3px solid #ff6b35" : "none",
                       borderRadius: 2
                     }}
                     onClick={() => setSelectedImage(index)}
@@ -95,18 +146,18 @@ const ItemDetailPage = () => {
           {/* Item Details */}
           <Grid size={{ xs: 12, md: 6 }}>
             <Paper sx={{ p: 4, borderRadius: 4 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Chip
                   label={item.category}
                   size="small"
-                  sx={{ mr: 2, bgcolor: '#FFF3E0', color: '#ff6b35' }}
+                  sx={{ mr: 2, bgcolor: "#FFF3E0", color: "#ff6b35" }}
                 />
                 {item.verified && (
                   <Chip
                     label="Verified Local"
                     size="small"
                     icon={<Shield size={14} />}
-                    sx={{ bgcolor: '#4CAF50', color: 'white' }}
+                    sx={{ bgcolor: "#4CAF50", color: "white" }}
                   />
                 )}
               </Box>
@@ -115,29 +166,46 @@ const ItemDetailPage = () => {
                 {item.title}
               </Typography>
 
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h3" fontWeight="bold" color="#ff6b35" sx={{ mr: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                <Typography
+                  variant="h3"
+                  fontWeight="bold"
+                  color="#ff6b35"
+                  sx={{ mr: 2 }}
+                >
                   {item.price}
                 </Typography>
-                <Typography variant="h6" sx={{ textDecoration: 'line-through', color: 'text.secondary' }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    textDecoration: "line-through",
+                    color: "text.secondary"
+                  }}
+                >
                   {item.originalPrice}
                 </Typography>
               </Box>
 
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Star size={20} color="#ff6b35" fill="#ff6b35" />
-                <Typography variant="body1" sx={{ ml: 1, fontWeight: 'bold' }}>
+                <Typography variant="body1" sx={{ ml: 1, fontWeight: "bold" }}>
                   {item.rating} ({item.reviews} reviews)
                 </Typography>
               </Box>
 
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <MapPin size={20} color="#666" />
-                <Typography variant="body1" sx={{ ml: 1, color: 'text.secondary' }}>
+                <Typography
+                  variant="body1"
+                  sx={{ ml: 1, color: "text.secondary" }}
+                >
                   {item.location}
                 </Typography>
                 <Clock size={16} color="#666" style={{ marginLeft: 16 }} />
-                <Typography variant="body2" sx={{ ml: 1, color: 'text.secondary' }}>
+                <Typography
+                  variant="body2"
+                  sx={{ ml: 1, color: "text.secondary" }}
+                >
                   {item.timeAgo}
                 </Typography>
               </Box>
@@ -150,11 +218,11 @@ const ItemDetailPage = () => {
                     size="large"
                     startIcon={<MessageCircle />}
                     sx={{
-                      background: 'linear-gradient(135deg, #ff6b35, #f7931e)',
+                      background: "linear-gradient(135deg, #ff6b35, #f7931e)",
                       borderRadius: 3,
                       py: 1.5,
-                      textTransform: 'none',
-                      fontWeight: 'bold'
+                      textTransform: "none",
+                      fontWeight: "bold"
                     }}
                   >
                     Chat Now
@@ -167,15 +235,15 @@ const ItemDetailPage = () => {
                     size="large"
                     startIcon={<Phone />}
                     sx={{
-                      borderColor: '#ff6b35',
-                      color: '#ff6b35',
+                      borderColor: "#ff6b35",
+                      color: "#ff6b35",
                       borderRadius: 3,
                       py: 1.5,
-                      textTransform: 'none',
-                      fontWeight: 'bold',
-                      '&:hover': {
-                        borderColor: '#e55a2e',
-                        backgroundColor: '#fff3f0'
+                      textTransform: "none",
+                      fontWeight: "bold",
+                      "&:hover": {
+                        borderColor: "#e55a2e",
+                        backgroundColor: "#fff3f0"
                       }
                     }}
                   >
@@ -189,10 +257,10 @@ const ItemDetailPage = () => {
                 variant="outlined"
                 startIcon={<Heart />}
                 sx={{
-                  borderColor: '#ddd',
-                  color: '#666',
+                  borderColor: "#ddd",
+                  color: "#666",
                   borderRadius: 3,
-                  textTransform: 'none'
+                  textTransform: "none"
                 }}
               >
                 Save to Wishlist
@@ -204,16 +272,20 @@ const ItemDetailPage = () => {
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Seller Information
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar src={item.seller.avatar} sx={{ width: 50, height: 50, mr: 2 }} />
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Avatar
+                  src={item.seller.avatar}
+                  sx={{ width: 50, height: 50, mr: 2 }}
+                />
                 <Box>
                   <Typography variant="body1" fontWeight="bold">
                     {item.seller.name}
                   </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
                     <Star size={16} color="#ff6b35" fill="#ff6b35" />
                     <Typography variant="body2" sx={{ ml: 0.5 }}>
-                      {item.seller.rating} • {item.seller.totalSales} sales • Member since {item.seller.memberSince}
+                      {item.seller.rating} • {item.seller.totalSales} sales •
+                      Member since {item.seller.memberSince}
                     </Typography>
                   </Box>
                 </Box>
@@ -246,7 +318,7 @@ const ItemDetailPage = () => {
             ))}
           </Grid>
 
-          <Box sx={{ mt: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 2 }}>
+          <Box sx={{ mt: 3, p: 2, bgcolor: "#f5f5f5", borderRadius: 2 }}>
             <Typography variant="body2" fontWeight="bold">
               Condition: {item.condition}
             </Typography>
