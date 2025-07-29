@@ -12,7 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import VerifiedIcon from "@mui/icons-material/Verified";
 
 export const listings = [
   {
@@ -233,154 +233,161 @@ export const FeaturedListings = () => {
   return (
     <>
       {isMobile ? (
-        <Box sx={{ width: "100vw", mx: -2 }}>
+        <Grid container spacing={2} sx={{ width: "100vw", mx: -2, p: 2 }}>
           {listings.map((listing) => (
-            <Paper
-              key={listing.id}
-              elevation={2}
-              sx={{
-                mb: 0,
-                borderRadius: 0,
-                overflow: "hidden",
-                boxShadow: 2,
-                border: "1px solid",
-                borderColor: "divider",
-                bgcolor: "background.paper",
-                display: "flex",
-                flexDirection: "column",
-                cursor: "pointer",
-                transition: "box-shadow 0.2s",
-                "&:active": { boxShadow: 4 },
-                width: "100%",
-                mx: 0,
-                px: 0
-              }}
-            >
-              <Box sx={{ position: "relative", width: "100%", height: 240 }}>
-                <img
-                  src={listing.image}
-                  alt={listing.title}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-                <Chip
-                  label={listing.category}
-                  size="small"
-                  sx={{
-                    position: "absolute",
-                    top: 10,
-                    left: 10,
-                    bgcolor: "background.paper",
-                    color: "primary.main",
-                    fontWeight: 500,
-                    opacity: 0.95,
-                    fontSize: 11,
-                    zIndex: 2
-                  }}
-                />
-                {listing.verified && (
+            <Grid size={{ xs: 6 }} key={listing.id}>
+              <Paper
+                elevation={2}
+                sx={{
+                  mb: 0,
+                  borderRadius: 1,
+                  overflow: "hidden",
+                  boxShadow: 2,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  bgcolor: "background.paper",
+                  display: "flex",
+                  flexDirection: "column",
+                  cursor: "pointer",
+                  transition: "box-shadow 0.2s",
+                  "&:active": { boxShadow: 4 },
+                  width: "100%",
+                  mx: 0,
+                  px: 0
+                }}
+              >
+                <Box sx={{ position: "relative", width: "100%", height: 180 }}>
+                  <img
+                    src={listing.image}
+                    alt={listing.title}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover"
+                    }}
+                  />
                   <Chip
-                    icon={
-                      <CheckCircleIcon sx={{ color: "white", fontSize: 14 }} />
-                    }
-                    label="Verified Local"
+                    label={listing.category}
                     size="small"
                     sx={{
                       position: "absolute",
                       top: 10,
-                      right: 10,
-                      bgcolor: "success.main",
-                      color: "white",
+                      left: 10,
+                      bgcolor: "background.paper",
+                      color: "primary.main",
                       fontWeight: 500,
+                      opacity: 0.95,
                       fontSize: 11,
                       zIndex: 2
                     }}
                   />
-                )}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: 10,
-                    right: 10,
-                    bgcolor: "rgba(0,0,0,0.7)",
-                    color: "white",
-                    px: 1.2,
-                    py: 0.3,
-                    borderRadius: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: 11,
-                    zIndex: 2
-                  }}
-                >
-                  <AccessTimeIcon sx={{ fontSize: 13, mr: 0.5 }} />
-                  {listing.timeAgo}
-                </Box>
-              </Box>
-              <Box sx={{ px: 2, pt: 1.5, pb: 0 }}>
-                <Typography
-                  variant="h6"
-                  color="primary"
-                  fontWeight={700}
-                  sx={{ fontSize: 18 }}
-                >
-                  {listing.price}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  fontWeight={700}
-                  sx={{
-                    mb: 0.5,
-                    lineHeight: 1.2,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    fontSize: 15,
-                    minHeight: 24
-                  }}
-                >
-                  {listing.title}
-                </Typography>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
-                  <StarIcon sx={{ color: "#F59E42", fontSize: 14, mr: 0.5 }} />
-                  <Typography
-                    variant="body2"
-                    fontWeight={500}
-                    sx={{ fontSize: 12 }}
-                  >
-                    {listing.rating}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    sx={{ ml: 0.5, color: "#B45309", fontSize: 10 }}
-                  >
-                    ({listing.reviews})
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    color: "text.secondary",
-                    mb: 1
-                  }}
-                >
-                  <LocationOnIcon sx={{ fontSize: 13, mr: 0.5 }} />
-                  <Typography
-                    variant="body2"
+                  {listing.verified && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 10,
+                        right: 10,
+                        bgcolor: "success.main",
+                        borderRadius: "50%",
+                        width: 22,
+                        height: 22,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 2
+                      }}
+                    >
+                      <VerifiedIcon sx={{ color: "white", fontSize: 16 }} />
+                    </Box>
+                  )}
+                  <Box
                     sx={{
-                      fontSize: 12,
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      maxWidth: 120
+                      position: "absolute",
+                      bottom: 10,
+                      right: 10,
+                      bgcolor: "rgba(0,0,0,0.7)",
+                      color: "white",
+                      px: 1.2,
+                      py: 0.3,
+                      borderRadius: 2,
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: 11,
+                      zIndex: 2
                     }}
                   >
-                    {listing.location}
-                  </Typography>
+                    <AccessTimeIcon sx={{ fontSize: 13, mr: 0.5 }} />
+                    {listing.timeAgo}
+                  </Box>
                 </Box>
-              </Box>
-            </Paper>
+                <Box sx={{ px: 1, pt: 1, pb: 0 }}>
+                  <Typography
+                    variant="h6"
+                    color="primary"
+                    fontWeight={700}
+                    sx={{ fontSize: 16 }}
+                  >
+                    {listing.price}
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight={700}
+                    sx={{
+                      mb: 0.5,
+                      lineHeight: 1.2,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      fontSize: 13,
+                      minHeight: 20
+                    }}
+                  >
+                    {listing.title}
+                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+                    <StarIcon
+                      sx={{ color: "#F59E42", fontSize: 12, mr: 0.5 }}
+                    />
+                    <Typography
+                      variant="body2"
+                      fontWeight={500}
+                      sx={{ fontSize: 11 }}
+                    >
+                      {listing.rating}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ ml: 0.5, color: "#B45309", fontSize: 9 }}
+                    >
+                      ({listing.reviews})
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      color: "text.secondary",
+                      mb: 1
+                    }}
+                  >
+                    <LocationOnIcon sx={{ fontSize: 11, mr: 0.5 }} />
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontSize: 10,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: 80
+                      }}
+                    >
+                      {listing.location}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
           ))}
-        </Box>
+        </Grid>
       ) : (
         <Grid container spacing={3}>
           {listings.map((listing) => (
@@ -437,24 +444,23 @@ export const FeaturedListings = () => {
                     }}
                   />
                   {listing.verified && (
-                    <Chip
-                      icon={
-                        <CheckCircleIcon
-                          sx={{ color: "white", fontSize: 18 }}
-                        />
-                      }
-                      label="Verified Local"
-                      size="small"
+                    <Box
                       sx={{
                         position: "absolute",
                         top: 8,
                         right: 8,
                         bgcolor: "success.main",
-                        color: "white",
-                        fontWeight: 500,
-                        fontSize: 13
+                        borderRadius: "50%",
+                        width: 26,
+                        height: 26,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 2
                       }}
-                    />
+                    >
+                      <VerifiedIcon sx={{ color: "white", fontSize: 18 }} />
+                    </Box>
                   )}
                   <Box
                     sx={{
