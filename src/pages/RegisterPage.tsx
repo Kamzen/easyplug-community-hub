@@ -16,6 +16,15 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
+import GoogleIcon from "@mui/icons-material/Google";
+
+type RegisterFormValues = {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  userType: string;
+};
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -34,7 +43,7 @@ const validationSchema = Yup.object({
 const RegisterPage = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: RegisterFormValues) => {
     console.log("Registration data:", values);
     // In a real app, you'd send this to your backend
     alert("Registration successful! Please login.");
@@ -66,6 +75,24 @@ const RegisterPage = () => {
         >
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ textAlign: "center", mb: 4 }}>
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<GoogleIcon />}
+                sx={{
+                  mb: 2,
+                  borderRadius: 3,
+                  fontWeight: "bold",
+                  textTransform: "none",
+                  bgcolor: "white",
+                  color: "#4285F4",
+                  borderColor: "#4285F4",
+                  "&:hover": { bgcolor: "#f5f5f5", borderColor: "#4285F4" }
+                }}
+                onClick={() => alert("Google registration coming soon!")}
+              >
+                Register with Google
+              </Button>
               <Box
                 sx={{
                   display: "inline-flex",
