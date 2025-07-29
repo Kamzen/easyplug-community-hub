@@ -1,51 +1,85 @@
-# EasyPlug Community Hub - Design Prototype
+<div align="center">
+  <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">
+    EasyPlug Community Hub
+  </h1>
+  <p style="color: #6b7280; font-size: 1.25rem; margin-top: 0;">Design Prototype Documentation</p>
+</div>
 
-## Project Overview
-This is a **design prototype** of the EasyPlug Community Hub, a local marketplace platform built with React, TypeScript, and Material-UI. The application is a **frontend-only demonstration** that showcases the UI/UX design and user flows using mock data.
+## 🎨 Design System
 
-## Key Features (Demonstration Only)
+<div style="background: white; border-radius: 12px; padding: 2rem; margin: 2rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+    <div>
+      <h3 style="color: #4f46e5; margin-top: 0;">Colors</h3>
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+        <div style="width: 40px; height: 40px; border-radius: 8px; background: #667eea;"></div>
+        <div style="width: 40px; height: 40px; border-radius: 8px; background: #764ba2;"></div>
+      </div>
+      <p>Primary gradient: #667eea to #764ba2</p>
+    </div>
+    
+    <div>
+      <h3 style="color: #4f46e5; margin-top: 0;">Typography</h3>
+      <p>System fonts with Material-UI typography scale</p>
+    </div>
+    
+    <div>
+      <h3 style="color: #4f46e5; margin-top: 0;">Spacing</h3>
+      <p>8px base unit system</p>
+    </div>
+  </div>
+</div>
 
-### User Authentication
-- Login/Registration screens with form validation
-- Role-based access (User, Seller, Admin)
-- **Note**: Authentication is simulated with dummy credentials
+## ✨ Key Features
 
-### Main Pages
-- **Homepage**: Featured listings and categories
-- **Category Pages**: Filtered product listings
-- **Item Detail Pages**: Product information and seller details
-- **User Profile**: Mock order history and account management
-- **Seller Dashboard**: Sales analytics and inventory management (demo data)
-- **Admin Dashboard**: Platform metrics and user management (demo data)
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <h3 style="color: #4f46e5; margin-top: 0;">🔐 Authentication</h3>
+    <ul>
+      <li>Login/Registration</li>
+      <li>Role-based access</li>
+      <li>Form validation</li>
+    </ul>
+  </div>
 
-### Technical Implementation
-- Built with React 18 and TypeScript
-- UI Components from Material-UI and shadcn/ui
-- Form handling with Formik and Yup validation
-- Responsive design using CSS-in-JS (sx prop)
-- Client-side routing with React Router
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <h3 style="color: #4f46e5; margin-top: 0;">📱 Main Pages</h3>
+    <ul>
+      <li>Homepage</li>
+      <li>Category/Product pages</li>
+      <li>User/Seller dashboards</li>
+    </ul>
+  </div>
+</div>
 
-## Important Notes
-- **No Backend Integration**: All data is hardcoded or stored in localStorage
-- **Dummy Data**: All listings, user profiles, and analytics are for demonstration
-- **Form Submissions**: Forms will simulate success but don't persist data
-- **Authentication**: Uses localStorage to maintain session state
+## 🔑 Dummy Credentials
 
-## Development Setup
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
-4. Access the app at `http://localhost:5173`
+<div style="background: #f0f9ff; border-radius: 12px; padding: 1.5rem; margin: 2rem 0; border: 1px solid #bae6fd;">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+    <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #4f46e5;">
+      <h4 style="margin: 0 0 0.5rem; color: #4f46e5;">👤 User</h4>
+      <p style="margin: 0.25rem 0; font-family: monospace;">user@example.com</p>
+      <p style="margin: 0.25rem 0 0; font-family: monospace;">user123</p>
+    </div>
+    
+    <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #7c3aed;">
+      <h4 style="margin: 0 0 0.5rem; color: #7c3aed;">🏪 Seller</h4>
+      <p style="margin: 0.25rem 0; font-family: monospace;">seller@example.com</p>
+      <p style="margin: 0.25rem 0 0; font-family: monospace;">seller123</p>
+    </div>
+  </div>
+</div>
 
-## Design System
-- **Colors**: Primary purple/indigo gradient (#667eea to #764ba2)
-- **Typography**: System fonts with Material-UI typography scale
-- **Spacing**: 8px base unit
-- **Breakpoints**: Mobile-first responsive design
+## 🚀 Getting Started
 
-## Dummy Credentials
-- User: user@example.com / user123
-- Seller: seller@example.com / seller123
-- Admin: admin@example.com / admin123
+```bash
+# Install dependencies
+npm install
 
-This prototype serves as a visual and interactive demonstration of the EasyPlug Community Hub concept, focusing on the user interface and experience design.
+# Run development server
+npm run dev
+```
+
+Access the app at: [http://localhost:5173](http://localhost:5173)
+
+> **Note**: This is a frontend-only prototype with mock data. All form submissions are simulated.
