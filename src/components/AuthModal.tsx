@@ -1,8 +1,12 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 
@@ -14,31 +18,31 @@ interface AuthModalProps {
 export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-    confirmPassword: ''
+    email: "",
+    password: "",
+    name: "",
+    confirmPassword: ""
   });
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Mock authentication
     const userData = {
-      id: '1',
-      name: formData.name || 'John Doe',
+      id: "1",
+      name: formData.name || "John Doe",
       email: formData.email,
-      role: 'user'
+      role: "user"
     };
-    
-    localStorage.setItem('user', JSON.stringify(userData));
+
+    localStorage.setItem("user", JSON.stringify(userData));
     onOpenChange(false);
     window.location.reload();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
@@ -48,9 +52,9 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{isLogin ? 'Login' : 'Register'}</DialogTitle>
+          <DialogTitle>{isLogin ? "Login" : "Register"}</DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div className="space-y-2">
@@ -66,7 +70,7 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
               />
             </div>
           )}
-          
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -79,7 +83,7 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
@@ -92,7 +96,7 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
               required
             />
           </div>
-          
+
           {!isLogin && (
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
@@ -107,11 +111,11 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
               />
             </div>
           )}
-          
+
           <Button type="submit" className="w-full">
-            {isLogin ? 'Login' : 'Register'}
+            {isLogin ? "Login" : "Register"}
           </Button>
-          
+
           <div className="text-center">
             <Button
               type="button"
@@ -119,7 +123,9 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm"
             >
-              {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
+              {isLogin
+                ? "Don't have an account? Register"
+                : "Already have an account? Login"}
             </Button>
           </div>
         </form>
