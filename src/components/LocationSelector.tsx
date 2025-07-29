@@ -1,16 +1,19 @@
-
-import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
-import { MapPin, ChevronDown } from "lucide-react";
+import React from "react";
+import {
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery
+} from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { useTheme } from "@mui/material/styles";
 
 const locations = [
   "Polokwane",
-  "Moletjie", 
+  "Moletjie",
   "Ga-Rampuru",
   "Seshego",
   "Lebowakgomo",
@@ -26,35 +29,87 @@ interface LocationSelectorProps {
   onLocationChange: (location: string) => void;
 }
 
-export const LocationSelector = ({ selectedLocation, onLocationChange }: LocationSelectorProps) => {
+export const LocationSelector: React.FC<LocationSelectorProps> = ({
+  selectedLocation,
+  onLocationChange
+}) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSelect = (location: string) => {
+    onLocationChange(location);
+    handleClose();
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="bg-gradient-to-r from-background/80 to-muted/50 backdrop-blur-sm border-primary/20 hover:border-primary/40 hover:bg-primary/5 text-sm max-w-[140px] rounded-full shadow-md transition-all"
+    <>
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={handleClick}
+        startIcon={<LocationOnIcon color="primary" />}
+        endIcon={<ArrowDropDownIcon color="primary" />}
+        sx={{
+          textTransform: "none",
+          maxWidth: 140,
+          borderRadius: "999px",
+          fontWeight: 500,
+          boxShadow: 1,
+          height: 32 // add this line to match IconButton height
+        }}
+      >
+        <span
+          style={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap"
+          }}
         >
-          <MapPin className="w-4 h-4 mr-2 flex-shrink-0 text-primary" />
-          <span className="truncate font-medium">{selectedLocation}</span>
-          <ChevronDown className="w-4 h-4 ml-1 flex-shrink-0 text-primary" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end" 
-        className="w-56 bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl rounded-2xl z-50 p-2"
+          {isMobile ? selectedLocation.slice(0, 3) : selectedLocation}
+        </span>
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            width: 220,
+            borderRadius: 3,
+            boxShadow: 6,
+            p: 1
+          }
+        }}
       >
         {locations.map((location) => (
-          <DropdownMenuItem 
+          <MenuItem
             key={location}
-            onClick={() => onLocationChange(location)}
-            className="hover:bg-primary/10 focus:bg-primary/10 cursor-pointer rounded-xl p-3 transition-all"
+            onClick={() => handleSelect(location)}
+            sx={{
+              borderRadius: 2,
+              px: 2,
+              py: 1,
+              fontWeight: 500
+            }}
           >
-            <MapPin className="w-4 h-4 mr-3 text-primary" />
-            <span className="font-medium">{location}</span>
-          </DropdownMenuItem>
+            <ListItemIcon>
+              <LocationOnIcon color="primary" fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary={location} />
+          </MenuItem>
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </Menu>
+    </>
   );
 };
