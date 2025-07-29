@@ -1,25 +1,55 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, User, Plus, Sparkles, Zap, ChevronDown, ShoppingCart, Bell } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Search,
+  MapPin,
+  User,
+  Plus,
+  Sparkles,
+  Zap,
+  ChevronDown,
+  ShoppingCart,
+  Bell
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { FeaturedListings } from "@/components/FeaturedListings";
 import { LocationSelector } from "@/components/LocationSelector";
 import { AuthModal } from "@/components/AuthModal";
 import { useNavigate } from "react-router-dom";
+import {
+  Button as MuiButton,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState("Polokwane");
   const [searchQuery, setSearchQuery] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   // Mock user state - replace with actual auth
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const user = JSON.parse(localStorage.getItem("user") || "null");
   const isLoggedIn = !!user;
 
   const handleProfileAction = (action: string) => {
@@ -27,7 +57,7 @@ const Index = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
     window.location.reload();
   };
 
@@ -50,59 +80,85 @@ const Index = () => {
                 <p className="text-xs text-muted-foreground">Connect Locally</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <LocationSelector 
+              <LocationSelector
                 selectedLocation={selectedLocation}
                 onLocationChange={setSelectedLocation}
               />
-              
+
               {isLoggedIn ? (
                 <>
                   <Button size="sm" className="relative mr-2">
                     <ShoppingCart className="w-4 h-4" />
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      3
+                    </span>
                   </Button>
-                  
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="sm" className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md">
-                        <User className="w-4 h-4 mr-1" />
-                        <span className="hidden sm:inline">{user.name}</span>
-                        <ChevronDown className="w-3 h-3 ml-1" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem onClick={() => handleProfileAction('personal-details')}>
-                        Personal Details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleProfileAction('cart')}>
-                        Cart
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleProfileAction('wishlist')}>
-                        Wishlist
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleProfileAction('orders')}>
-                        Orders
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleProfileAction('invoices')}>
-                        Invoices
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleProfileAction('returns')}>
-                        Returns
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleProfileAction('reviews')}>
-                        Product Reviews
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleLogout}>
-                        Logout
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+
+                  {/* MUI User Dropdown */}
+                  <MuiButton
+                    variant="outlined"
+                    size="small"
+                    onClick={(e) => setAnchorEl(e.currentTarget)}
+                    startIcon={<AccountCircleIcon />}
+                    endIcon={<ArrowDropDownIcon />}
+                    sx={{
+                      textTransform: "none",
+                      borderRadius: "999px",
+                      fontWeight: 500,
+                      boxShadow: 1,
+                      height: 32,
+                      ml: 1,
+                      bgcolor: "background.paper"
+                    }}
+                  >
+                    <span className="hidden sm:inline">{user.name}</span>
+                  </MuiButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={() => setAnchorEl(null)}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    transformOrigin={{ vertical: "top", horizontal: "right" }}
+                    PaperProps={{
+                      sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 }
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => handleProfileAction("personal-details")}
+                    >
+                      <ListItemIcon>
+                        <AccountCircleIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText primary="Personal Details" />
+                    </MenuItem>
+                    <MenuItem onClick={() => handleProfileAction("cart")}>
+                      <ListItemText primary="Cart" />
+                    </MenuItem>
+                    <MenuItem onClick={() => handleProfileAction("wishlist")}>
+                      <ListItemText primary="Wishlist" />
+                    </MenuItem>
+                    <MenuItem onClick={() => handleProfileAction("orders")}>
+                      <ListItemText primary="Orders" />
+                    </MenuItem>
+                    <MenuItem onClick={() => handleProfileAction("invoices")}>
+                      <ListItemText primary="Invoices" />
+                    </MenuItem>
+                    <MenuItem onClick={() => handleProfileAction("returns")}>
+                      <ListItemText primary="Returns" />
+                    </MenuItem>
+                    <MenuItem onClick={() => handleProfileAction("reviews")}>
+                      <ListItemText primary="Product Reviews" />
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <ListItemText primary="Logout" />
+                    </MenuItem>
+                  </Menu>
                 </>
               ) : (
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   onClick={() => setShowAuthModal(true)}
                   className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-full shadow-md"
                 >
@@ -124,8 +180,8 @@ const Index = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-12 pr-4 h-12 bg-gradient-to-r from-background to-muted/50 border-2 border-primary/20 rounded-xl focus:border-primary/50 transition-all"
             />
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               className="absolute right-2 top-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-lg"
             >
               <Zap className="w-4 h-4" />
@@ -147,17 +203,17 @@ const Index = () => {
           {/* Quick Actions */}
           <section className="text-center">
             <div className="max-w-md mx-auto space-y-4">
-              <Button 
-                size="lg" 
-                onClick={() => navigate('/start-selling')}
+              <Button
+                size="lg"
+                onClick={() => navigate("/start-selling")}
                 className="w-full h-14 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold text-lg rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all animate-float"
               >
                 <Plus className="w-6 h-6 mr-3" />
                 Start Selling Now
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
+              <Button
+                variant="outline"
+                size="lg"
                 className="w-full h-14 border-2 border-primary/30 text-primary hover:bg-primary/10 font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
               >
                 <Search className="w-6 h-6 mr-3" />
@@ -183,7 +239,9 @@ const Index = () => {
           <section>
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-3">
-                <span className="gradient-text">Trending in {selectedLocation}</span>
+                <span className="gradient-text">
+                  Trending in {selectedLocation}
+                </span>
               </h2>
               <p className="text-muted-foreground text-lg flex items-center justify-center">
                 <MapPin className="w-5 h-5 mr-2" />
