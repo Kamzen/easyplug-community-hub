@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -7,42 +6,49 @@ import {
   MenuItem,
   FormControl,
   InputAdornment,
+  IconButton,
   Menu,
   MenuList,
   Paper,
   Typography,
   Divider
-} from '@mui/material';
-import { Search, ExpandMore } from '@mui/icons-material';
+} from "@mui/material";
+import { Search, ExpandMore } from "@mui/icons-material";
 
 const categories = [
   {
-    name: 'Electronics',
-    subcategories: ['Smartphones', 'Laptops', 'Tablets', 'Gaming', 'Audio']
+    name: "Electronics",
+    subcategories: ["Smartphones", "Laptops", "Tablets", "Gaming", "Audio"]
   },
   {
-    name: 'Vehicles',
-    subcategories: ['Cars', 'Motorcycles', 'Trucks', 'Parts', 'Accessories']
+    name: "Vehicles",
+    subcategories: ["Cars", "Motorcycles", "Trucks", "Parts", "Accessories"]
   },
   {
-    name: 'Property',
-    subcategories: ['Houses', 'Apartments', 'Land', 'Commercial', 'Rentals']
+    name: "Property",
+    subcategories: ["Houses", "Apartments", "Land", "Commercial", "Rentals"]
   },
   {
-    name: 'Services',
-    subcategories: ['Cleaning', 'Tutoring', 'Photography', 'Repair', 'Consulting']
+    name: "Services",
+    subcategories: [
+      "Cleaning",
+      "Tutoring",
+      "Photography",
+      "Repair",
+      "Consulting"
+    ]
   },
   {
-    name: 'Food',
-    subcategories: ['Fresh Produce', 'Bakery', 'Beverages', 'Snacks', 'Organic']
+    name: "Food",
+    subcategories: ["Fresh Produce", "Bakery", "Beverages", "Snacks", "Organic"]
   }
 ];
 
 export const SearchWithCategories = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-  const [searchValue, setSearchValue] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All Categories');
 
   const handleCategoryClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -54,88 +60,97 @@ export const SearchWithCategories = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, maxWidth: 600 }}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
       <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Search for items..."
+        placeholder="Search…"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         size="small"
+        variant="outlined"
+        sx={{ bgcolor: "background.paper", borderRadius: 2, minWidth: 180 }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
               <Search />
             </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                  px: 1,
-                  py: 0.5,
-                  borderLeft: '1px solid #ddd',
-                  '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' }
-                }}
-                onClick={handleCategoryClick}
-              >
-                <Typography variant="body2" sx={{ mr: 0.5 }}>
-                  {selectedCategory}
-                </Typography>
-                <ExpandMore fontSize="small" />
-              </Box>
-            </InputAdornment>
-          ),
+          )
         }}
       />
-
+      <FormControl size="small" variant="outlined" sx={{ minWidth: 140 }}>
+        <Select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          displayEmpty
+          startAdornment={
+            <InputAdornment position="start">
+              <IconButton size="small" onClick={handleCategoryClick} edge="end">
+                <ExpandMore />
+              </IconButton>
+            </InputAdornment>
+          }
+        >
+          <MenuItem value="All Categories">All Categories</MenuItem>
+          {categories.map((cat) => (
+            <MenuItem key={cat.name} value={cat.name}>
+              {cat.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
         PaperProps={{
-          sx: { width: 250, maxHeight: 400 }
+          sx: { width: 200, maxHeight: 400 }
         }}
       >
-        <MenuItem onClick={() => { setSelectedCategory('All Categories'); handleClose(); }}>
-          <Typography>All Categories</Typography>
-        </MenuItem>
-        <Divider />
-        {categories.map((category) => (
+        <MenuList>
           <MenuItem
-            key={category.name}
-            onMouseEnter={() => setHoveredCategory(category.name)}
-            onMouseLeave={() => setHoveredCategory(null)}
-            onClick={() => { setSelectedCategory(category.name); handleClose(); }}
-            sx={{ position: 'relative' }}
+            onClick={() => {
+              setSelectedCategory("All Categories");
+              handleClose();
+            }}
           >
-            <Typography>{category.name}</Typography>
-            {hoveredCategory === category.name && (
-              <Paper
-                sx={{
-                  position: 'absolute',
-                  left: '100%',
-                  top: 0,
-                  width: 200,
-                  zIndex: 1000,
-                  ml: 1
-                }}
-                elevation={4}
-              >
-                <MenuList>
-                  {category.subcategories.map((sub) => (
-                    <MenuItem key={sub} onClick={handleClose}>
-                      <Typography variant="body2">{sub}</Typography>
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </Paper>
-            )}
+            <Typography>All Categories</Typography>
           </MenuItem>
-        ))}
+          <Divider />
+          {categories.map((category) => (
+            <Box key={category.name}>
+              <MenuItem
+                onMouseEnter={() => setHoveredCategory(category.name)}
+                onMouseLeave={() => setHoveredCategory(null)}
+                onClick={() => {
+                  setSelectedCategory(category.name);
+                  handleClose();
+                }}
+              >
+                <Typography>{category.name}</Typography>
+              </MenuItem>
+              {hoveredCategory === category.name && (
+                <Paper
+                  sx={{
+                    position: "absolute",
+                    left: "100%",
+                    top: 0,
+                    width: 180,
+                    zIndex: 1000,
+                    ml: 1
+                  }}
+                  elevation={4}
+                >
+                  <MenuList>
+                    {category.subcategories.map((sub) => (
+                      <MenuItem key={sub} onClick={handleClose}>
+                        <Typography variant="body2">{sub}</Typography>
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Paper>
+              )}
+            </Box>
+          ))}
+        </MenuList>
       </Menu>
     </Box>
   );
