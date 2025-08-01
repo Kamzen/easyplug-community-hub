@@ -5,33 +5,19 @@ import {
   Card,
   CardContent,
   Typography,
-  TextField,
-  Button,
-  Paper,
-  Icon,
-  Divider,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  FormLabel,
+  Button
 } from "@mui/material";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { useCreateStore } from "../hooks/useCreateStore";
+import { useToast } from "../hooks/use-toast";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import LocationAutoComplete from "../components/form-inputs/LocationAutoComplete";
-import TextFieldWrapper from "../components/form-inputs/TextFieldWrapper";
-import SelectFieldWrapper from "../components/form-inputs/SelectFieldWrapper";
 
 const validationSchema = Yup.object({
   businessName: Yup.string().required("Business name is required"),
-  email: Yup.string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  phone: Yup.string().required("Phone number is required"),
   description: Yup.string().required("Business description is required"),
 });
 
@@ -44,27 +30,38 @@ const features = [
   "Mobile-friendly seller dashboard",
 ];
 
-const sellerTypes = [
-  { value: "sole", label: "Sole Provider" },
-  { value: "registered", label: "Registered Business" },
-];
+
 
 const StartSellingPage = () => {
   const navigate = useNavigate();
 
   type SellerApplicationValues = {
     businessName: string;
-    email: string;
-    phone: string;
     description: string;
   };
 
-  const handleSubmit = (values: SellerApplicationValues) => {
-    console.log("Seller application:", values);
-    alert(
-      "Application submitted! We will review and get back to you within 24 hours."
-    );
-    navigate("/");
+
+  const { toast } = useToast();
+  const createStore = useCreateStore();
+
+  const handleSubmit = async (values: SellerApplicationValues, { setSubmitting }: any) => {
+    try {
+      // For demo, using dummy lat/lng. Replace with real geocoding if needed.
+      const payload = {
+        name: values.businessName,
+        latitude: -26.2041,
+        longitude: 28.0473,
+        description: values.description,
+        image: null, // Add file upload logic if needed
+      };
+      await createStore.mutateAsync(payload);
+      toast({ title: "Store created!", description: "Your store is now live." });
+      navigate("/");
+    } catch (err: any) {
+      toast({ title: "Store creation failed", description: err?.response?.data?.message || err.message, variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -147,274 +144,35 @@ const StartSellingPage = () => {
 
                 <Formik
                   initialValues={{
-                    sellerType: "sole",
-                    name: "",
-                    companyName: "",
-                    registrationNumber: "",
-                    email: "",
-                    phone: "",
-                    location: "",
-                    profilePicture: null,
-                    companyLogo: null,
-                    otp: "",
-                    otpRequested: false,
+                    businessName: "",
+                    description: "",
                   }}
-                  validationSchema={Yup.object().shape({
-                    sellerType: Yup.string().required(
-                      "Seller type is required"
-                    ),
-                    name: Yup.string().required("Name is required"),
-                    companyName: Yup.string().when("sellerType", {
-                      is: "registered",
-                      then: (schema) =>
-                        schema.required("Company name is required"),
-                      otherwise: (schema) => schema.notRequired(),
-                    }),
-                    registrationNumber: Yup.string().when("sellerType", {
-                      is: "registered",
-                      then: (schema) =>
-                        schema.required("Registration number is required"),
-                      otherwise: (schema) => schema.notRequired(),
-                    }),
-                    email: Yup.string()
-                      .email("Invalid email format")
-                      .required("Email is required"),
-                    phone: Yup.string().required("Phone number is required"),
-                    location: Yup.string().required("Location is required"),
-                    profilePicture: Yup.mixed().required(
-                      "Profile picture is required"
-                    ),
-                    companyLogo: Yup.mixed().when("sellerType", {
-                      is: "registered",
-                      then: (schema) =>
-                        schema.required("Company logo is required"),
-                      otherwise: (schema) => schema.notRequired(),
-                    }),
-                    otp: Yup.string().required("OTP is required"),
-                    otpRequested: Yup.boolean().oneOf(
-                      [true],
-                      "You must request an OTP"
-                    ),
-                  })}
-                  onSubmit={(values) => {
-                    console.log("Seller application:", values);
-                    alert(
-                      "Application submitted! We will review and get back to you within 24 hours."
-                    );
-                    navigate("/");
-                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={handleSubmit}
                 >
-                  {({
-                    errors,
-                    touched,
-                    values,
-                    handleChange,
-                    setFieldValue,
-                    isSubmitting,
-                  }) => (
+                  {({ isSubmitting }) => (
                     <Form>
                       <Box sx={{ mb: 3 }}>
-                        <FormLabel
-                          component="legend"
-                          sx={{
-                            mb: 2,
-                            display: "block",
-                            fontWeight: 500,
-                            color: "text.primary",
-                            fontSize: "0.875rem",
-                          }}
-                        >
-                          What type of seller are you?
-                        </FormLabel>
-                        <RadioGroup
-                          row
-                          name="sellerType"
-                          value={values.sellerType}
-                          onChange={handleChange}
-                          sx={{
-                            display: "flex",
-                            gap: 2,
-                            "& .MuiFormControlLabel-root": {
-                              margin: 0,
-                              flex: 1,
-                              minWidth: 150,
-                              maxWidth: "50%",
-                            },
-                            "& .MuiRadio-root": {
-                              display: "none",
-                            },
-                            "& .MuiFormControlLabel-label": {
-                              width: "100%",
-                              height: "100%",
-                              margin: 0,
-                            },
-                          }}
-                        >
-                          {sellerTypes.map((type) => (
-                            <FormControlLabel
-                              key={type.value}
-                              value={type.value}
-                              control={<Radio />}
-                              label={
-                                <Paper
-                                  elevation={
-                                    values.sellerType === type.value ? 3 : 1
-                                  }
-                                  sx={{
-                                    p: 2,
-                                    width: "100%",
-                                    height: "100%",
-                                    border: `2px solid ${
-                                      values.sellerType === type.value
-                                        ? "#667eea"
-                                        : "#e0e0e0"
-                                    }`,
-                                    borderRadius: 2,
-                                    cursor: "pointer",
-                                    transition: "all 0.2s ease-in-out",
-                                    "&:hover": {
-                                      transform: "translateY(-2px)",
-                                      boxShadow: 3,
-                                      borderColor: values.sellerType === type.value ? "#667eea" : "#bdbdbd",
-                                    },
-                                    "&.Mui-focusVisible": {
-                                      outline: "2px solid #667eea",
-                                      outlineOffset: "2px",
-                                    },
-                                  }}
-                                >
-                                  <Typography
-                                    variant="body1"
-                                    sx={{
-                                      fontWeight: 500,
-                                      color: values.sellerType === type.value ? "#667eea" : "inherit",
-                                      textAlign: "center",
-                                    }}
-                                  >
-                                    {type.label}
-                                  </Typography>
-                                </Paper>
-                              }
-                              sx={{ m: 0, width: "100%" }}
-                            />
-                          ))}
-                        </RadioGroup>
-                      </Box>
-                      <TextFieldWrapper
-                        name="name"
-                        label="Full Name"
-                        sx={{ mb: 3 }}
-                      />
-                      {values.sellerType === "registered" && (
-                        <>
-                          <TextFieldWrapper
-                            name="companyName"
-                            label="Company Name"
-                            sx={{ mb: 3 }}
-                          />
-                          <TextFieldWrapper
-                            name="registrationNumber"
-                            label="Company Registration Number"
-                            sx={{ mb: 3 }}
-                          />
-                        </>
-                      )}
-                      <TextFieldWrapper
-                        name="email"
-                        label="Email"
-                        type="email"
-                        sx={{ mb: 3 }}
-                      />
-                      <TextFieldWrapper
-                        name="phone"
-                        label="Phone Number"
-                        sx={{ mb: 3 }}
-                      />
-                      <Box sx={{ mb: 3 }}>
-                        <LocationAutoComplete
-                          setAddressInfor={(address) =>
-                            setFieldValue(
-                              "location",
-                              address?.description || ""
-                            )
-                          }
+                        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                          Business Name
+                        </Typography>
+                        <input
+                          name="businessName"
+                          type="text"
+                          style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc" }}
+                          required
                         />
-                        {touched.location &&
-                          typeof errors.location === "string" && (
-                            <Typography color="error" variant="caption">
-                              {errors.location}
-                            </Typography>
-                          )}
                       </Box>
                       <Box sx={{ mb: 3 }}>
-                        <FormLabel>Profile Picture (Camera Only)</FormLabel>
-                        <TextFieldWrapper
-                          name="profilePicture"
-                          type="file"
-                          inputProps={{
-                            accept: "image/*",
-                            capture: "environment",
-                          }}
-                          onChange={(e) =>
-                            setFieldValue(
-                              "profilePicture",
-                              e.currentTarget.files
-                                ? e.currentTarget.files[0]
-                                : null
-                            )
-                          }
+                        <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                          Business Description
+                        </Typography>
+                        <textarea
+                          name="description"
+                          style={{ width: "100%", padding: 8, borderRadius: 4, border: "1px solid #ccc" }}
+                          rows={4}
+                          required
                         />
-                        {touched.profilePicture &&
-                          typeof errors.profilePicture === "string" && (
-                            <Typography color="error" variant="caption">
-                              {errors.profilePicture}
-                            </Typography>
-                          )}
-                      </Box>
-                      {values.sellerType === "registered" && (
-                        <Box sx={{ mb: 3 }}>
-                          <FormLabel>Company Logo</FormLabel>
-                          <TextFieldWrapper
-                            name="companyLogo"
-                            type="file"
-                            inputProps={{ accept: "image/*" }}
-                            onChange={(e) =>
-                              setFieldValue(
-                                "companyLogo",
-                                e.currentTarget.files
-                                  ? e.currentTarget.files[0]
-                                  : null
-                              )
-                            }
-                          />
-                          {touched.companyLogo &&
-                            typeof errors.companyLogo === "string" && (
-                              <Typography color="error" variant="caption">
-                                {errors.companyLogo}
-                              </Typography>
-                            )}
-                        </Box>
-                      )}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          mb: 3,
-                          gap: 2,
-                        }}
-                      >
-                        <TextFieldWrapper
-                          name="otp"
-                          label="OTP"
-                          sx={{ flex: 1 }}
-                        />
-                        <Button
-                          variant="outlined"
-                          onClick={() => setFieldValue("otpRequested", true)}
-                          disabled={values.otpRequested}
-                        >
-                          {values.otpRequested ? "OTP Sent" : "Request OTP"}
-                        </Button>
                       </Box>
                       <Button
                         type="submit"
@@ -434,9 +192,9 @@ const StartSellingPage = () => {
                               "linear-gradient(90deg, #764ba2 0%, #667eea 100%)",
                           },
                         }}
-                        disabled={!values.otpRequested || isSubmitting}
+                        disabled={isSubmitting}
                       >
-                        Submit Application
+                        Create Store
                       </Button>
                     </Form>
                   )}

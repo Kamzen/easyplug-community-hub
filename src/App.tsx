@@ -1,3 +1,5 @@
+import AddItemPage from "./pages/AddItemPage";
+              <Route path="/add-item" element={<AddItemPage />} />
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +19,8 @@ import ProfilePage from "./pages/ProfilePage";
 import SellerDashboardNew from "./pages/SellerDashboardNew";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
+import ConfirmEmailPage from "./pages/ConfirmEmailPage";
+import UploadCatalogPage from "./pages/UploadCatalogPage";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +38,8 @@ const App = () => (
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/start-selling" element={<StartSellingPage />} />
+              <Route path="/confirm-email" element={<ConfirmEmailPage />} />
+              <Route path="/upload-catalog" element={<UploadCatalogPage />} />
               <Route path="/category/:category" element={<CategoryPage />} />
               <Route path="/item/:id" element={<ItemDetailPage />} />
               <Route path="/profile" element={<ProfilePage />} />

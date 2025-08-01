@@ -11,8 +11,12 @@ import {
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
+
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { useLogin } from "../hooks/useLogin";
+import { useRegister } from "../hooks/useRegister";
+import { useToast } from "../hooks/use-toast";
 
 interface AuthModalProps {
   open: boolean;
@@ -22,6 +26,9 @@ interface AuthModalProps {
 export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
 
   const AuthSchema = Yup.object().shape({
     name: Yup.string().when("isLogin", {
@@ -84,21 +91,42 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
             confirmPassword: ""
           }}
           validationSchema={AuthSchema}
-          onSubmit={(values) => {
-            // Mock authentication
-            const userData = {
-              id: "1",
-              name: values.name || "John Doe",
-              email: values.email,
-              role: "user"
-            };
-            localStorage.setItem("user", JSON.stringify(userData));
-            onOpenChange(false);
-            window.location.reload();
+          onSubmit={async (values, { setSubmitting }) => {
+            if (isLogin) {
+              try {
+                const res = await loginMutation.mutateAsync({
+                  email: values.email,
+                  password: values.password,
+                });
+                localStorage.setItem("token", res.token);
+                localStorage.setItem("user", JSON.stringify(res.user));
+                toast({ title: "Login successful", description: `Welcome, ${res.user.name}!` });
+                onOpenChange(false);
+                window.location.reload();
+              } catch (err: any) {
+                toast({ title: "Login failed", description: err?.response?.data?.message || err.message, variant: "destructive" });
+              } finally {
+                setSubmitting(false);
+              }
+            } else {
+              try {
+                const res = await registerMutation.mutateAsync({
+                  email: values.email,
+                  password: values.password,
+                  name: values.name,
+                });
+                toast({ title: "Registration successful", description: res.message });
+                setIsLogin(true);
+              } catch (err: any) {
+                toast({ title: "Registration failed", description: err?.response?.data?.message || err.message, variant: "destructive" });
+              } finally {
+                setSubmitting(false);
+              }
+            }
           }}
           enableReinitialize
         >
-          {({ errors, touched, handleChange, values }) => (
+          {({ errors, touched, handleChange, values, isSubmitting }) => (
             <Form style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {!isLogin && (
                 <TextField
@@ -158,8 +186,11 @@ export const AuthModal = ({ open, onOpenChange }: AuthModalProps) => {
                 variant="contained"
                 fullWidth
                 sx={{ fontWeight: 700, borderRadius: 2, py: 1.2, fontSize: 16 }}
+                disabled={isSubmitting || loginMutation.isPending}
               >
-                {isLogin ? "Login" : "Register"}
+                {isLogin
+                  ? (loginMutation.isPending ? "Logging in..." : "Login")
+                  : (registerMutation.isPending ? "Registering..." : "Register")}
               </Button>
               <Box sx={{ textAlign: "center", mt: 1 }}>
                 <Button
