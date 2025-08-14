@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Grid,
   Paper,
@@ -13,17 +14,21 @@ import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import ShareIcon from "@mui/icons-material/Share";
+import Masonry from "@mui/lab/Masonry";
+import { MessageCircle, Clock } from "lucide-react";
 
 export const listings = [
   {
     id: 1,
-    title: "iPhone 14 Pro Max",
+    title:
+      "iPhone 14 Pro Max - Latest Model with Advanced Camera System and Extended Battery Life",
     price: "R15,999",
     location: "Polokwane Central",
     rating: 4.8,
     reviews: 124,
     image:
-      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400&h=500&fit=crop",
     timeAgo: "2 hours ago",
     verified: true,
     category: "Electronics"
@@ -36,20 +41,21 @@ export const listings = [
     rating: 4.9,
     reviews: 89,
     image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=250&fit=crop",
     timeAgo: "4 hours ago",
     verified: true,
     category: "Property"
   },
   {
     id: 3,
-    title: "Honda Civic 2020",
+    title:
+      "Honda Civic 2020 - Excellent Condition with Low Mileage and Full Service History",
     price: "R285,000",
     location: "Mankweng",
     rating: 4.7,
     reviews: 67,
     image:
-      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=400&h=600&fit=crop",
     timeAgo: "6 hours ago",
     verified: false,
     category: "Vehicles"
@@ -62,20 +68,21 @@ export const listings = [
     rating: 5.0,
     reviews: 156,
     image:
-      "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=200&fit=crop",
     timeAgo: "1 day ago",
     verified: true,
     category: "Services"
   },
   {
     id: 5,
-    title: "Gaming Setup - RTX 4080",
+    title:
+      "Gaming Setup - RTX 4080 - High Performance Gaming PC with Latest Graphics Card and RGB Lighting",
     price: "R45,999",
     location: "Polokwane Central",
     rating: 4.6,
     reviews: 43,
     image:
-      "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=400&h=450&fit=crop",
     timeAgo: "1 day ago",
     verified: true,
     category: "Electronics"
@@ -88,7 +95,7 @@ export const listings = [
     rating: 4.5,
     reviews: 78,
     image:
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=350&fit=crop",
     timeAgo: "2 days ago",
     verified: false,
     category: "Food"
@@ -96,13 +103,14 @@ export const listings = [
   // More dummy data for each category
   {
     id: 7,
-    title: "Samsung Galaxy S22 Ultra",
+    title:
+      "Samsung Galaxy S22 Ultra - Premium Smartphone with S Pen and Advanced Camera Features",
     price: "R19,999",
     location: "Seshego",
     rating: 4.9,
     reviews: 210,
     image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
     timeAgo: "3 hours ago",
     verified: true,
     category: "Electronics"
@@ -122,13 +130,14 @@ export const listings = [
   },
   {
     id: 9,
-    title: "Toyota Hilux 2021",
+    title:
+      "Toyota Hilux 2021 - Reliable Pickup Truck with Excellent Off-Road Capabilities",
     price: "R350,000",
     location: "Tzaneen",
     rating: 4.9,
     reviews: 32,
     image:
-      "https://images.unsplash.com/photo-1511918984145-48de785d4c4e?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=400&fit=crop",
     timeAgo: "7 hours ago",
     verified: true,
     category: "Vehicles"
@@ -228,42 +237,43 @@ export const listings = [
 
 export const FeaturedListings = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [hoveredId, setHoveredId] = React.useState<number | null>(null);
 
   return (
     <>
       {isMobile ? (
-        <Grid container spacing={2} sx={{ width: "100vw", mx: -2, p: 2 }}>
-          {listings.map((listing) => (
-            <Grid size={{ xs: 6 }} key={listing.id}>
+        <Box sx={{ width: "100%", px: 0 }}>
+          <Masonry columns={2} spacing={0.5}>
+            {listings.map((listing) => (
               <Paper
-                elevation={2}
+                key={listing.id}
+                elevation={0}
                 sx={{
                   mb: 0,
-                  borderRadius: 1,
+                  borderRadius: 0,
                   overflow: "hidden",
-                  boxShadow: 2,
-                  border: "1px solid",
-                  borderColor: "divider",
+                  boxShadow: "none",
+                  border: "1px solid #e0e0e0",
                   bgcolor: "background.paper",
                   display: "flex",
                   flexDirection: "column",
                   cursor: "pointer",
-                  transition: "box-shadow 0.2s",
-                  "&:active": { boxShadow: 4 },
-                  width: "100%",
-                  mx: 0,
-                  px: 0
+                  width: "100%"
                 }}
+                onMouseEnter={() => setHoveredId(listing.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onClick={() => navigate(`/item/${listing.id}`)}
               >
-                <Box sx={{ position: "relative", width: "100%", height: 180 }}>
+                <Box sx={{ position: "relative", width: "100%" }}>
                   <img
                     src={listing.image}
                     alt={listing.title}
                     style={{
                       width: "100%",
-                      height: "100%",
-                      objectFit: "cover"
+                      height: "auto",
+                      objectFit: "contain"
                     }}
                   />
                   <Chip
@@ -304,23 +314,65 @@ export const FeaturedListings = () => {
                     sx={{
                       position: "absolute",
                       bottom: 10,
+                      left: 10,
                       right: 10,
-                      bgcolor: "rgba(0,0,0,0.7)",
-                      color: "white",
-                      px: 1.2,
-                      py: 0.3,
-                      borderRadius: 2,
                       display: "flex",
                       alignItems: "center",
-                      fontSize: 11,
+                      justifyContent: "space-between",
                       zIndex: 2
                     }}
                   >
-                    <AccessTimeIcon sx={{ fontSize: 13, mr: 0.5 }} />
-                    {listing.timeAgo}
+                    {/* Chat icon - always visible on mobile */}
+                    <Box
+                      sx={{
+                        bgcolor: "rgba(0,0,0,0.8)",
+                        color: "white",
+                        width: 28,
+                        height: 28,
+                        borderRadius: "50%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          bgcolor: "rgba(0,0,0,0.9)",
+                          transform: "scale(1.1)"
+                        }
+                      }}
+                    >
+                      <MessageCircle style={{ fontSize: 14 }} />
+                    </Box>
+
+                    {/* Time posted */}
+                    <Box
+                      sx={{
+                        bgcolor: "rgba(0,0,0,0.7)",
+                        color: "white",
+                        px: 1.2,
+                        py: 0.3,
+                        borderRadius: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        fontSize: 11
+                      }}
+                    >
+                      <Clock style={{ fontSize: 13, marginRight: 4 }} />
+                      {listing.timeAgo}
+                    </Box>
                   </Box>
                 </Box>
-                <Box sx={{ px: 1, pt: 1, pb: 0 }}>
+                <Box
+                  sx={{
+                    px: 1,
+                    pt: 1,
+                    pb: 0,
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between"
+                  }}
+                >
                   <Typography
                     variant="h6"
                     color="primary"
@@ -335,10 +387,22 @@ export const FeaturedListings = () => {
                     sx={{
                       mb: 0.5,
                       lineHeight: 1.2,
+                      fontSize: 13,
                       overflow: "hidden",
                       textOverflow: "ellipsis",
-                      fontSize: 13,
-                      minHeight: 20
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical"
+                    }}
+                  >
+                    {listing.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      mb: 0.5,
+                      color: "text.secondary",
+                      fontSize: 12
                     }}
                   >
                     {listing.title}
@@ -373,11 +437,7 @@ export const FeaturedListings = () => {
                     <Typography
                       variant="body2"
                       sx={{
-                        fontSize: 10,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        maxWidth: 80
+                        fontSize: 10
                       }}
                     >
                       {listing.location}
@@ -385,38 +445,39 @@ export const FeaturedListings = () => {
                   </Box>
                 </Box>
               </Paper>
-            </Grid>
-          ))}
-        </Grid>
+            ))}
+          </Masonry>
+        </Box>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={1} sx={{ mx: -2, p: 2 }}>
           {listings.map((listing) => (
-            <Grid size={{ xs: 6, md: 4 }} key={listing.id}>
+            <Grid size={3} key={listing.id}>
               <Paper
-                elevation={4}
+                elevation={0}
                 sx={{
-                  borderRadius: 1,
+                  borderRadius: 0,
                   overflow: "hidden",
                   position: "relative",
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
-                  transition: "box-shadow 0.3s, transform 0.3s",
-                  boxShadow: 3,
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                  bgcolor: "background.paper",
                   "&:hover": {
-                    boxShadow: 8,
-                    transform: "translateY(-8px)"
-                  },
-                  border: "1px solid",
-                  borderColor: "divider",
-                  bgcolor: "background.paper"
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                  }
                 }}
+                onMouseEnter={() => setHoveredId(listing.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                onClick={() => navigate(`/item/${listing.id}`)}
               >
                 <Box
                   sx={{
                     position: "relative",
-                    height: 192,
-                    overflow: "hidden"
+                    overflow: "hidden",
+                    height: 250
                   }}
                 >
                   <img
@@ -466,19 +527,75 @@ export const FeaturedListings = () => {
                     sx={{
                       position: "absolute",
                       bottom: 8,
+                      left: 8,
                       right: 8,
-                      bgcolor: "rgba(0,0,0,0.7)",
-                      color: "white",
-                      px: 1.2,
-                      py: 0.3,
-                      borderRadius: 2,
                       display: "flex",
                       alignItems: "center",
-                      fontSize: 12
+                      justifyContent: "space-between"
                     }}
                   >
-                    <AccessTimeIcon sx={{ fontSize: 16, mr: 0.5 }} />
-                    {listing.timeAgo}
+                    {/* Chat icon - only on hover for desktop */}
+                    <Box
+                      sx={{
+                        bgcolor: "rgba(0,0,0,0.8)",
+                        color: "white",
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        display: { xs: "flex", md: "none" },
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        "&:hover": {
+                          bgcolor: "rgba(0,0,0,0.9)",
+                          transform: "scale(1.1)"
+                        }
+                      }}
+                    >
+                      <MessageCircle style={{ fontSize: 16 }} />
+                    </Box>
+
+                    {/* Chat icon - only on hover for desktop */}
+                    {hoveredId === listing.id && (
+                      <Box
+                        sx={{
+                          bgcolor: "rgba(0,0,0,0.8)",
+                          color: "white",
+                          width: 32,
+                          height: 32,
+                          borderRadius: "50%",
+                          display: { xs: "none", md: "flex" },
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          transition: "all 0.2s ease",
+                          "&:hover": {
+                            bgcolor: "rgba(0,0,0,0.9)",
+                            transform: "scale(1.1)"
+                          }
+                        }}
+                      >
+                        <MessageCircle style={{ fontSize: 16 }} />
+                      </Box>
+                    )}
+
+                    {/* Time posted */}
+                    <Box
+                      sx={{
+                        bgcolor: "rgba(0,0,0,0.7)",
+                        color: "white",
+                        px: 1.2,
+                        py: 0.3,
+                        borderRadius: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        fontSize: 12
+                      }}
+                    >
+                      <Clock style={{ fontSize: 16, marginRight: 4 }} />
+                      {listing.timeAgo}
+                    </Box>
                   </Box>
                 </Box>
                 <Box
@@ -486,26 +603,36 @@ export const FeaturedListings = () => {
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
-                    justifyContent: "flex-start",
+                    justifyContent: "space-between",
                     px: 2,
-                    pt: 1.5,
-                    pb: 0,
-                    gap: 1
+                    pt: 1,
+                    pb: 0
                   }}
                 >
                   <Typography
-                    variant="h5"
-                    color="primary"
+                    variant="h6"
+                    color="error"
                     fontWeight={700}
-                    sx={{ fontSize: 24 }}
+                    sx={{ fontSize: 18 }}
                   >
                     {listing.price}
                   </Typography>
+                  <Chip
+                    label={listing.category}
+                    size="small"
+                    sx={{
+                      bgcolor: "#f5f5f5",
+                      color: "text.secondary",
+                      fontWeight: 500,
+                      fontSize: 11,
+                      height: 20
+                    }}
+                  />
                 </Box>
                 <Box
                   sx={{
-                    p: 2,
-                    pt: 2,
+                    px: 2,
+                    pb: 2,
                     flexGrow: 1,
                     display: "flex",
                     flexDirection: "column",
@@ -514,15 +641,18 @@ export const FeaturedListings = () => {
                 >
                   <Box>
                     <Typography
-                      variant="h6"
-                      fontWeight={700}
+                      variant="body1"
+                      fontWeight={500}
                       sx={{
-                        mb: 0.5,
-                        lineHeight: 1.2,
-                        minHeight: 48,
+                        mb: 1,
+                        lineHeight: 1.3,
+                        fontSize: 14,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        fontSize: 20
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        color: "text.primary"
                       }}
                     >
                       {listing.title}
@@ -531,24 +661,20 @@ export const FeaturedListings = () => {
                       sx={{
                         display: "flex",
                         alignItems: "center",
-                        bgcolor: "#FEF3C7",
-                        px: 1,
-                        py: 0.3,
-                        borderRadius: 2,
-                        mr: 1
+                        mb: 1
                       }}
                     >
                       <StarIcon
                         sx={{
                           color: "#F59E42",
-                          fontSize: 18,
+                          fontSize: 14,
                           mr: 0.5
                         }}
                       />
                       <Typography
                         variant="body2"
                         fontWeight={500}
-                        sx={{ fontSize: 14 }}
+                        sx={{ fontSize: 12, color: "#F59E42" }}
                       >
                         {listing.rating}
                       </Typography>
@@ -556,8 +682,8 @@ export const FeaturedListings = () => {
                         variant="caption"
                         sx={{
                           ml: 0.5,
-                          color: "#B45309",
-                          fontSize: 12
+                          color: "text.secondary",
+                          fontSize: 11
                         }}
                       >
                         ({listing.reviews})
@@ -567,19 +693,15 @@ export const FeaturedListings = () => {
                       sx={{
                         display: "flex",
                         alignItems: "center",
-                        color: "text.secondary",
-                        mb: 1
+                        color: "text.secondary"
                       }}
                     >
-                      <LocationOnIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                      <LocationOnIcon sx={{ fontSize: 14, mr: 0.5 }} />
                       <Typography
                         variant="body2"
                         sx={{
-                          fontSize: 14,
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          maxWidth: 180
+                          fontSize: 12,
+                          color: "text.secondary"
                         }}
                       >
                         {listing.location}
