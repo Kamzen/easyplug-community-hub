@@ -14,7 +14,7 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  FormLabel,
+  FormLabel
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -32,7 +32,7 @@ const validationSchema = Yup.object({
     .email("Invalid email format")
     .required("Email is required"),
   phone: Yup.string().required("Phone number is required"),
-  description: Yup.string().required("Business description is required"),
+  description: Yup.string().required("Business description is required")
 });
 
 const features = [
@@ -41,12 +41,12 @@ const features = [
   "Secure payment processing",
   "Real-time chat with buyers",
   "Analytics and sales tracking",
-  "Mobile-friendly seller dashboard",
+  "Mobile-friendly seller dashboard"
 ];
 
 const sellerTypes = [
   { value: "sole", label: "Sole Provider" },
-  { value: "registered", label: "Registered Business" },
+  { value: "registered", label: "Registered Business" }
 ];
 
 const StartSellingPage = () => {
@@ -72,7 +72,7 @@ const StartSellingPage = () => {
       sx={{
         minHeight: "100vh",
         background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
-        py: 4,
+        py: 4
       }}
     >
       <Container maxWidth="lg">
@@ -88,7 +88,7 @@ const StartSellingPage = () => {
           sx={{
             display: "flex",
             flexDirection: { xs: "column", lg: "row" },
-            gap: 8,
+            gap: 8
           }}
         >
           <Box sx={{ flex: 1, color: "white", mb: 4 }}>
@@ -132,7 +132,7 @@ const StartSellingPage = () => {
                       borderRadius: "50%",
                       background:
                         "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
-                      mb: 2,
+                      mb: 2
                     }}
                   >
                     <StorefrontIcon sx={{ color: "white", fontSize: 30 }} />
@@ -157,7 +157,7 @@ const StartSellingPage = () => {
                     profilePicture: null,
                     companyLogo: null,
                     otp: "",
-                    otpRequested: false,
+                    otpRequested: false
                   }}
                   validationSchema={Yup.object().shape({
                     sellerType: Yup.string().required(
@@ -168,13 +168,13 @@ const StartSellingPage = () => {
                       is: "registered",
                       then: (schema) =>
                         schema.required("Company name is required"),
-                      otherwise: (schema) => schema.notRequired(),
+                      otherwise: (schema) => schema.notRequired()
                     }),
                     registrationNumber: Yup.string().when("sellerType", {
                       is: "registered",
                       then: (schema) =>
                         schema.required("Registration number is required"),
-                      otherwise: (schema) => schema.notRequired(),
+                      otherwise: (schema) => schema.notRequired()
                     }),
                     email: Yup.string()
                       .email("Invalid email format")
@@ -188,13 +188,13 @@ const StartSellingPage = () => {
                       is: "registered",
                       then: (schema) =>
                         schema.required("Company logo is required"),
-                      otherwise: (schema) => schema.notRequired(),
+                      otherwise: (schema) => schema.notRequired()
                     }),
                     otp: Yup.string().required("OTP is required"),
                     otpRequested: Yup.boolean().oneOf(
                       [true],
                       "You must request an OTP"
-                    ),
+                    )
                   })}
                   onSubmit={(values) => {
                     console.log("Seller application:", values);
@@ -210,7 +210,7 @@ const StartSellingPage = () => {
                     values,
                     handleChange,
                     setFieldValue,
-                    isSubmitting,
+                    isSubmitting
                   }) => (
                     <Form>
                       <Box sx={{ mb: 3 }}>
@@ -221,7 +221,7 @@ const StartSellingPage = () => {
                             display: "block",
                             fontWeight: 500,
                             color: "text.primary",
-                            fontSize: "0.875rem",
+                            fontSize: "0.875rem"
                           }}
                         >
                           What type of seller are you?
@@ -238,16 +238,16 @@ const StartSellingPage = () => {
                               margin: 0,
                               flex: 1,
                               minWidth: 150,
-                              maxWidth: "50%",
+                              maxWidth: "50%"
                             },
                             "& .MuiRadio-root": {
-                              display: "none",
+                              display: "none"
                             },
                             "& .MuiFormControlLabel-label": {
                               width: "100%",
                               height: "100%",
-                              margin: 0,
-                            },
+                              margin: 0
+                            }
                           }}
                         >
                           {sellerTypes.map((type) => (
@@ -275,20 +275,26 @@ const StartSellingPage = () => {
                                     "&:hover": {
                                       transform: "translateY(-2px)",
                                       boxShadow: 3,
-                                      borderColor: values.sellerType === type.value ? "#667eea" : "#bdbdbd",
+                                      borderColor:
+                                        values.sellerType === type.value
+                                          ? "#667eea"
+                                          : "#bdbdbd"
                                     },
                                     "&.Mui-focusVisible": {
                                       outline: "2px solid #667eea",
-                                      outlineOffset: "2px",
-                                    },
+                                      outlineOffset: "2px"
+                                    }
                                   }}
                                 >
                                   <Typography
                                     variant="body1"
                                     sx={{
                                       fontWeight: 500,
-                                      color: values.sellerType === type.value ? "#667eea" : "inherit",
-                                      textAlign: "center",
+                                      color:
+                                        values.sellerType === type.value
+                                          ? "#667eea"
+                                          : "inherit",
+                                      textAlign: "center"
                                     }}
                                   >
                                     {type.label}
@@ -353,7 +359,7 @@ const StartSellingPage = () => {
                           type="file"
                           inputProps={{
                             accept: "image/*",
-                            capture: "environment",
+                            capture: "environment"
                           }}
                           onChange={(e) =>
                             setFieldValue(
@@ -400,7 +406,7 @@ const StartSellingPage = () => {
                           display: "flex",
                           alignItems: "center",
                           mb: 3,
-                          gap: 2,
+                          gap: 2
                         }}
                       >
                         <TextFieldWrapper
@@ -431,8 +437,8 @@ const StartSellingPage = () => {
                           textTransform: "none",
                           "&:hover": {
                             background:
-                              "linear-gradient(90deg, #764ba2 0%, #667eea 100%)",
-                          },
+                              "linear-gradient(90deg, #764ba2 0%, #667eea 100%)"
+                          }
                         }}
                         disabled={!values.otpRequested || isSubmitting}
                       >
