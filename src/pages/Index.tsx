@@ -10,7 +10,7 @@ import { NavBar } from "@/components/NavBar";
 const Index = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
-  
+
   // Get user state from local storage
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isLoggedIn = !!user;
@@ -28,22 +28,14 @@ const Index = () => {
         onAuthClick={() => setShowAuthModal(true)}
         onLogout={handleLogout}
       />
-      
+
       <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
-      
+
       <main className="pt-20">
         {/* Hero Section */}
         <section className="py-12 bg-gradient-to-b from-blue-50 to-white">
           <div className="container mx-auto px-4">
             <HeroSection />
-          </div>
-        </section>
-
-        {/* Featured Listings */}
-        <section className="py-12">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center">Featured Listings</h2>
-            <FeaturedListings />
           </div>
         </section>
 
@@ -59,7 +51,7 @@ const Index = () => {
                 <Plus className="w-6 h-6 mr-3" />
                 Start Selling Now
               </Button>
-              
+
               <Button
                 variant="outline"
                 size="lg"
@@ -69,6 +61,16 @@ const Index = () => {
                 Browse Marketplace
               </Button>
             </div>
+          </div>
+        </section>
+
+        {/* Featured Listings */}
+        <section className="py-12">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-8 text-center">
+              Popular picks around Polokwane
+            </h2>
+            <FeaturedListings />
           </div>
         </section>
       </main>
