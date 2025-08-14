@@ -412,11 +412,11 @@ const ItemDetailPage = () => {
         onSearchChange={setSearchQuery}
         isLoggedIn={isLoggedIn}
         user={user}
-        onProfileAction={handleProfileAction}
+        onAuthClick={() => setShowAuthModal(true)}
         onLogout={handleLogout}
       />
 
-      <Container maxWidth="lg" sx={{ py: 4, pt: 16, mt: 2 }}>
+      <Container maxWidth="lg" sx={{ py: 4, pt: 16, mt: 4 }}>
         <Button
           startIcon={<ArrowLeft />}
           onClick={() => navigate(-1)}
@@ -474,12 +474,15 @@ const ItemDetailPage = () => {
                     }}
                     onClick={() => setSelectedImage(index)}
                   >
-                    <CardMedia
+                    <Box
                       component="img"
-                      height={{ xs: "80px", md: "80px" }}
-                      image={image}
+                      src={image}
                       alt={`${item.title} ${index + 1}`}
-                      sx={{ objectFit: "cover" }}
+                      sx={{
+                        objectFit: "cover",
+                        height: { xs: "80px", md: "80px" },
+                        width: "100%"
+                      }}
                     />
                   </Card>
                 ))}
@@ -496,12 +499,15 @@ const ItemDetailPage = () => {
                   order: { xs: 1, md: 2 },
                 }}
               >
-                <CardMedia
+                <Box
                   component="img"
-                  height={{ xs: "300px", md: "500px" }}
-                  image={item.images[selectedImage]}
+                  src={item.images[selectedImage]}
                   alt={item.title}
-                  sx={{ objectFit: "cover" }}
+                  sx={{
+                    objectFit: "cover",
+                    height: { xs: "300px", md: "500px" },
+                    width: "100%"
+                  }}
                 />
               </Card>
             </Box>
