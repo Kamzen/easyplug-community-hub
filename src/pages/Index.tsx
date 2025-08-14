@@ -8,7 +8,7 @@ import {
   Plus,
   Zap,
   ChevronDown,
-  ShoppingCart
+  ShoppingCart,
 } from "lucide-react";
 import {
   Button as MuiButton,
@@ -16,7 +16,7 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -51,13 +51,13 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Floating Header */}
-      <header className="fixed top-4 left-4 right-4 z-50 bg-background/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-lg">
-        <div className="px-4 py-3">
+    <div className="min-h-screen bg-white pt-16">
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border/50 shadow-sm">
+        <div className="px-4 py-2">
           {/* Top Header Row */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3 py-1">
               <div className="relative">
                 {/* Logo image */}
                 <img
@@ -67,7 +67,7 @@ const Index = () => {
                     width: 40,
                     height: 40,
                     borderRadius: 12,
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
                   }}
                 />
               </div>
@@ -106,7 +106,7 @@ const Index = () => {
                       boxShadow: 1,
                       height: 32,
                       ml: 1,
-                      bgcolor: "background.paper"
+                      bgcolor: "background.paper",
                     }}
                   >
                     <span className="hidden sm:inline">{user.name}</span>
@@ -118,7 +118,7 @@ const Index = () => {
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                     PaperProps={{
-                      sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 }
+                      sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 },
                     }}
                   >
                     <MenuItem
