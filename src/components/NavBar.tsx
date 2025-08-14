@@ -22,24 +22,24 @@ import { LocationSelector } from "./LocationSelector";
 import { AuthModal } from "./AuthModal";
 
 interface NavBarProps {
-  selectedLocation: string;
-  onLocationChange: (loc: string) => void;
-  searchQuery: string;
-  onSearchChange: (val: string) => void;
+  selectedLocation?: string;
+  onLocationChange?: (loc: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (val: string) => void;
   isLoggedIn: boolean;
-  user: Record<string, unknown>;
-  onProfileAction: (action: string) => void;
+  user?: Record<string, unknown>;
+  onAuthClick: () => void;
   onLogout: () => void;
 }
 
 export const NavBar = ({
-  selectedLocation,
-  onLocationChange,
-  searchQuery,
-  onSearchChange,
+  selectedLocation = 'Polokwane',
+  onLocationChange = () => {},
+  searchQuery = '',
+  onSearchChange = () => {},
   isLoggedIn,
-  user,
-  onProfileAction,
+  user = {},
+  onAuthClick,
   onLogout,
 }: NavBarProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -79,24 +79,16 @@ export const NavBar = ({
                 </Button>
 
                 {/* MUI User Dropdown */}
-                <MuiButton
-                  variant="outlined"
-                  size="small"
+                <Button
+                  variant="ghost"
+                  className="flex items-center space-x-2 px-2"
                   onClick={(e) => setAnchorEl(e.currentTarget)}
-                  startIcon={<AccountCircleIcon />}
-                  endIcon={<ArrowDropDownIcon />}
-                  sx={{
-                    textTransform: "none",
-                    borderRadius: "999px",
-                    fontWeight: 500,
-                    boxShadow: 1,
-                    height: 32,
-                    ml: 1,
-                    bgcolor: "background.paper",
-                  }}
                 >
-                  <span className="hidden sm:inline">{String(user.name)}</span>
-                </MuiButton>
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="hidden md:inline">{(user as any)?.name || 'User'}</span>
+                </Button>
                 <Menu
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
@@ -107,28 +99,25 @@ export const NavBar = ({
                     sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 },
                   }}
                 >
-                  <MenuItem onClick={() => onProfileAction("personal-details")}>
+                  <MenuItem onClick={onAuthClick}>
                     <ListItemIcon>
                       <AccountCircleIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText primary="Personal Details" />
                   </MenuItem>
-                  <MenuItem onClick={() => onProfileAction("cart")}>
-                    <ListItemText primary="Cart" />
-                  </MenuItem>
-                  <MenuItem onClick={() => onProfileAction("wishlist")}>
+                  <MenuItem onClick={onAuthClick}>
                     <ListItemText primary="Wishlist" />
                   </MenuItem>
-                  <MenuItem onClick={() => onProfileAction("orders")}>
+                  <MenuItem onClick={onAuthClick}>
                     <ListItemText primary="Orders" />
                   </MenuItem>
-                  <MenuItem onClick={() => onProfileAction("invoices")}>
+                  <MenuItem onClick={onAuthClick}>
                     <ListItemText primary="Invoices" />
                   </MenuItem>
-                  <MenuItem onClick={() => onProfileAction("returns")}>
+                  <MenuItem onClick={onAuthClick}>
                     <ListItemText primary="Returns" />
                   </MenuItem>
-                  <MenuItem onClick={() => onProfileAction("reviews")}>
+                  <MenuItem onClick={onAuthClick}>
                     <ListItemText primary="Product Reviews" />
                   </MenuItem>
                   <MenuItem onClick={onLogout}>
