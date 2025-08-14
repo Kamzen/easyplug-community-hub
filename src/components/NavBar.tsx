@@ -7,14 +7,14 @@ import {
   User,
   Sparkles,
   Zap,
-  ShoppingCart
+  ShoppingCart,
 } from "lucide-react";
 import {
   Button as MuiButton,
   Menu,
   MenuItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -40,7 +40,7 @@ export const NavBar = ({
   isLoggedIn,
   user,
   onProfileAction,
-  onLogout
+  onLogout,
 }: NavBarProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -92,7 +92,7 @@ export const NavBar = ({
                     boxShadow: 1,
                     height: 32,
                     ml: 1,
-                    bgcolor: "background.paper"
+                    bgcolor: "background.paper",
                   }}
                 >
                   <span className="hidden sm:inline">{String(user.name)}</span>
@@ -104,7 +104,7 @@ export const NavBar = ({
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
                   PaperProps={{
-                    sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 }
+                    sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 },
                   }}
                 >
                   <MenuItem onClick={() => onProfileAction("personal-details")}>
