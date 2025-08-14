@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import { ThemeProvider as NextThemeProvider } from "next-themes";
 import CssBaseline from "@mui/material/CssBaseline";
+import { ScrollToTop } from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -29,6 +30,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<LoginPage />} />
