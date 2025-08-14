@@ -21,7 +21,7 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Stack
+  Stack,
 } from "@mui/material";
 import {
   ArrowLeft,
@@ -31,7 +31,7 @@ import {
   Favorite,
   FavoriteBorder,
   Verified,
-  Message
+  Message,
 } from "@mui/icons-material";
 import { MapPin, Clock, MessageCircle } from "lucide-react";
 import { NavBar } from "../components/NavBar";
@@ -130,8 +130,8 @@ const ItemDetailPage = () => {
         totalSales: Math.floor(Math.random() * 200) + 50,
         memberSince: "2022",
         responseTime: "Usually responds within 2 hours",
-        verified: listing.verified
-      }
+        verified: listing.verified,
+      },
     };
 
     switch (listing.category) {
@@ -148,7 +148,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=600&h=400&fit=crop"
+            "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=600&h=400&fit=crop",
           ],
           colors: ["Black", "White", "Blue", "Red"],
           description:
@@ -159,7 +159,7 @@ const ItemDetailPage = () => {
             "Extended Warranty",
             "Fast Performance",
             "User-Friendly Interface",
-            "Energy Efficient"
+            "Energy Efficient",
           ],
           condition: "Brand New",
           reviewList: [
@@ -172,7 +172,7 @@ const ItemDetailPage = () => {
               date: "2 days ago",
               comment:
                 "Amazing product! The quality is exceptional and it works perfectly.",
-              verified: true
+              verified: true,
             },
             {
               id: 2,
@@ -182,9 +182,9 @@ const ItemDetailPage = () => {
               rating: 4,
               date: "1 week ago",
               comment: "Great product, very satisfied with the purchase.",
-              verified: true
-            }
-          ]
+              verified: true,
+            },
+          ],
         };
 
       case "Property":
@@ -196,7 +196,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1464983953574-0892a716854b?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600&h=400&fit=crop"
+            "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600&h=400&fit=crop",
           ],
           colors: undefined,
           description:
@@ -207,7 +207,7 @@ const ItemDetailPage = () => {
             "Secure Environment",
             "Parking Available",
             "24/7 Security",
-            "Maintenance Included"
+            "Maintenance Included",
           ],
           condition: "Excellent",
           reviewList: [
@@ -220,9 +220,9 @@ const ItemDetailPage = () => {
               date: "3 days ago",
               comment:
                 "Perfect location and the property is exactly as described!",
-              verified: true
-            }
-          ]
+              verified: true,
+            },
+          ],
         };
 
       case "Vehicles":
@@ -238,7 +238,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop"
+            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop",
           ],
           colors: ["White", "Black", "Silver", "Blue"],
           description:
@@ -249,7 +249,7 @@ const ItemDetailPage = () => {
             "Low Mileage",
             "Fuel Efficient",
             "Safety Features",
-            "Warranty Available"
+            "Warranty Available",
           ],
           condition: "Used - Excellent",
           reviewList: [
@@ -262,9 +262,9 @@ const ItemDetailPage = () => {
               date: "1 week ago",
               comment:
                 "Great vehicle, runs perfectly and very well maintained.",
-              verified: true
-            }
-          ]
+              verified: true,
+            },
+          ],
         };
 
       case "Services":
@@ -276,7 +276,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
+            "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
           ],
           colors: undefined,
           description:
@@ -287,7 +287,7 @@ const ItemDetailPage = () => {
             "Quality Guaranteed",
             "Flexible Scheduling",
             "Competitive Pricing",
-            "Customer Satisfaction"
+            "Customer Satisfaction",
           ],
           condition: "Professional",
           reviewList: [
@@ -300,9 +300,9 @@ const ItemDetailPage = () => {
               date: "2 days ago",
               comment:
                 "Excellent service! Very professional and exceeded expectations.",
-              verified: true
-            }
-          ]
+              verified: true,
+            },
+          ],
         };
 
       case "Food":
@@ -314,7 +314,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=400&fit=crop"
+            "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=400&fit=crop",
           ],
           colors: undefined,
           description:
@@ -325,7 +325,7 @@ const ItemDetailPage = () => {
             "No Pesticides",
             "Peak Freshness",
             "Nutritional Value",
-            "Sustainable Farming"
+            "Sustainable Farming",
           ],
           condition: "Fresh",
           reviewList: [
@@ -337,9 +337,9 @@ const ItemDetailPage = () => {
               rating: 5,
               date: "1 day ago",
               comment: "Fresh and delicious! Will definitely order again.",
-              verified: true
-            }
-          ]
+              verified: true,
+            },
+          ],
         };
 
       default:
@@ -352,7 +352,7 @@ const ItemDetailPage = () => {
           description: "Quality item available for purchase.",
           features: ["Quality Guaranteed", "Good Condition"],
           condition: "Good",
-          reviewList: []
+          reviewList: [],
         };
     }
   };
@@ -370,7 +370,7 @@ const ItemDetailPage = () => {
       price: item.price,
       image: item.image,
       rating: item.rating,
-      reviews: item.reviews
+      reviews: item.reviews,
     }));
   };
 
@@ -395,7 +395,7 @@ const ItemDetailPage = () => {
           bgcolor: "#fafafa",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <Typography variant="h5">Item not found</Typography>
@@ -416,7 +416,7 @@ const ItemDetailPage = () => {
         onLogout={handleLogout}
       />
 
-      <Container maxWidth="lg" sx={{ py: 4, pt: 16 }}>
+      <Container maxWidth="lg" sx={{ py: 4, pt: 16, mt: 2 }}>
         <Button
           startIcon={<ArrowLeft />}
           onClick={() => navigate(-1)}
@@ -426,8 +426,8 @@ const ItemDetailPage = () => {
             textTransform: "none",
             fontSize: "16px",
             "&:hover": {
-              backgroundColor: "#f0f0f0"
-            }
+              backgroundColor: "#f0f0f0",
+            },
           }}
         >
           Back to Browse
@@ -440,7 +440,7 @@ const ItemDetailPage = () => {
               sx={{
                 display: "flex",
                 flexDirection: { xs: "column", md: "row" },
-                gap: 2
+                gap: 2,
               }}
             >
               {/* Thumbnails - left on desktop, below on mobile */}
@@ -450,7 +450,7 @@ const ItemDetailPage = () => {
                   flexDirection: { xs: "row", md: "column" },
                   gap: 1,
                   width: { xs: "100%", md: "80px" },
-                  order: { xs: 2, md: 1 }
+                  order: { xs: 2, md: 1 },
                 }}
               >
                 {item.images.map((image, index) => (
@@ -469,8 +469,8 @@ const ItemDetailPage = () => {
                       width: { xs: "80px", md: "100%" },
                       flexShrink: 0,
                       "&:hover": {
-                        transform: "scale(1.02)"
-                      }
+                        transform: "scale(1.02)",
+                      },
                     }}
                     onClick={() => setSelectedImage(index)}
                   >
@@ -493,7 +493,7 @@ const ItemDetailPage = () => {
                   overflow: "hidden",
                   boxShadow: "none",
                   border: "none",
-                  order: { xs: 1, md: 2 }
+                  order: { xs: 1, md: 2 },
                 }}
               >
                 <CardMedia
@@ -521,7 +521,7 @@ const ItemDetailPage = () => {
                     sx={{
                       bgcolor: "#ff4444",
                       color: "white",
-                      fontWeight: "bold"
+                      fontWeight: "bold",
                     }}
                   />
                 )}
@@ -530,7 +530,7 @@ const ItemDetailPage = () => {
                   size="small"
                   sx={{
                     bgcolor: "#e3f2fd",
-                    color: "#1976d2"
+                    color: "#1976d2",
                   }}
                 />
                 {item.verified && (
@@ -540,7 +540,7 @@ const ItemDetailPage = () => {
                     icon={<Verified />}
                     sx={{
                       bgcolor: "#4caf50",
-                      color: "white"
+                      color: "white",
                     }}
                   />
                 )}
@@ -581,7 +581,7 @@ const ItemDetailPage = () => {
                       sx={{
                         textDecoration: "line-through",
                         color: "text.secondary",
-                        ml: 2
+                        ml: 2,
                       }}
                     >
                       {item.originalPrice}
@@ -614,8 +614,8 @@ const ItemDetailPage = () => {
                           minWidth: "80px",
                           ...(selectedColor === color && {
                             bgcolor: "#1976d2",
-                            "&:hover": { bgcolor: "#1565c0" }
-                          })
+                            "&:hover": { bgcolor: "#1565c0" },
+                          }),
                         }}
                       >
                         {color}
@@ -640,8 +640,8 @@ const ItemDetailPage = () => {
                     fontWeight: "bold",
                     fontSize: "16px",
                     "&:hover": {
-                      bgcolor: "#1565c0"
-                    }
+                      bgcolor: "#1565c0",
+                    },
                   }}
                 >
                   Contact Seller
@@ -660,8 +660,8 @@ const ItemDetailPage = () => {
                       textTransform: "none",
                       "&:hover": {
                         borderColor: "#1976d2",
-                        backgroundColor: "#f5f5f5"
-                      }
+                        backgroundColor: "#f5f5f5",
+                      },
                     }}
                   >
                     {isWishlisted ? "Wishlisted" : "Wishlist"}
@@ -674,7 +674,7 @@ const ItemDetailPage = () => {
                       color: "#666",
                       borderRadius: 0,
                       textTransform: "none",
-                      minWidth: "120px"
+                      minWidth: "120px",
                     }}
                   >
                     Share
@@ -690,7 +690,7 @@ const ItemDetailPage = () => {
                 borderRadius: 0,
                 mt: 3,
                 boxShadow: "none",
-                border: "none"
+                border: "none",
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -736,8 +736,8 @@ const ItemDetailPage = () => {
                   textTransform: "none",
                   "&:hover": {
                     borderColor: "#1565c0",
-                    backgroundColor: "#f5f5f5"
-                  }
+                    backgroundColor: "#f5f5f5",
+                  },
                 }}
               >
                 Message Seller
@@ -779,8 +779,8 @@ const ItemDetailPage = () => {
                         border: "none",
                         bgcolor: "background.paper",
                         "&:hover": {
-                          transform: "translateY(-2px)"
-                        }
+                          transform: "translateY(-2px)",
+                        },
                       }}
                       onClick={() => navigate(`/item/${similarItem.id}`)}
                     >
@@ -791,7 +791,7 @@ const ItemDetailPage = () => {
                           style={{
                             width: "100%",
                             height: "auto",
-                            objectFit: "contain"
+                            objectFit: "contain",
                           }}
                         />
                         <Chip
@@ -806,7 +806,7 @@ const ItemDetailPage = () => {
                             fontWeight: 500,
                             opacity: 0.95,
                             fontSize: 11,
-                            zIndex: 2
+                            zIndex: 2,
                           }}
                         />
                         <Box
@@ -816,7 +816,7 @@ const ItemDetailPage = () => {
                             right: 10,
                             display: "flex",
                             alignItems: "center",
-                            gap: 1
+                            gap: 1,
                           }}
                         >
                           <Box
@@ -833,8 +833,8 @@ const ItemDetailPage = () => {
                               transition: "all 0.2s ease",
                               "&:hover": {
                                 bgcolor: "rgba(0,0,0,0.9)",
-                                transform: "scale(1.1)"
-                              }
+                                transform: "scale(1.1)",
+                              },
                             }}
                           >
                             <MessageCircle style={{ fontSize: 14 }} />
@@ -848,7 +848,7 @@ const ItemDetailPage = () => {
                               borderRadius: 2,
                               display: "flex",
                               alignItems: "center",
-                              fontSize: 11
+                              fontSize: 11,
                             }}
                           >
                             <Clock style={{ fontSize: 13, marginRight: 4 }} />
@@ -864,7 +864,7 @@ const ItemDetailPage = () => {
                           flexGrow: 1,
                           display: "flex",
                           flexDirection: "column",
-                          justifyContent: "space-between"
+                          justifyContent: "space-between",
                         }}
                       >
                         <Typography
@@ -886,7 +886,7 @@ const ItemDetailPage = () => {
                             textOverflow: "ellipsis",
                             display: "-webkit-box",
                             WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical"
+                            WebkitBoxOrient: "vertical",
                           }}
                         >
                           {similarItem.title}
@@ -896,7 +896,7 @@ const ItemDetailPage = () => {
                           sx={{
                             mb: 0.5,
                             color: "text.secondary",
-                            fontSize: 12
+                            fontSize: 12,
                           }}
                         >
                           {similarItem.title}
@@ -905,14 +905,14 @@ const ItemDetailPage = () => {
                           sx={{
                             display: "flex",
                             alignItems: "center",
-                            mb: 0.5
+                            mb: 0.5,
                           }}
                         >
                           <Star
                             style={{
                               color: "#F59E42",
                               fontSize: 12,
-                              marginRight: 4
+                              marginRight: 4,
                             }}
                           />
                           <Typography
@@ -934,14 +934,14 @@ const ItemDetailPage = () => {
                             display: "flex",
                             alignItems: "center",
                             color: "text.secondary",
-                            mb: 1
+                            mb: 1,
                           }}
                         >
                           <MapPin style={{ fontSize: 11, marginRight: 4 }} />
                           <Typography
                             variant="body2"
                             sx={{
-                              fontSize: 10
+                              fontSize: 10,
                             }}
                           >
                             Polokwane Central
