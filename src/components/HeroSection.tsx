@@ -87,22 +87,44 @@ export const HeroSection = () => {
           </div>
 
           {/* Trust Badges with enhanced design */}
-          <div className="flex flex-wrap justify-center gap-3">
-            <Badge className="bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 text-emerald-700 border-emerald-200 hover:from-emerald-500/20 hover:to-emerald-600/20 px-4 py-2 rounded-full">
-              <Star className="w-4 h-4 mr-2 fill-current" />
-              Verified Locals
-            </Badge>
-            <Badge className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 text-blue-700 border-blue-200 hover:from-blue-500/20 hover:to-blue-600/20 px-4 py-2 rounded-full">
-              <MapPin className="w-4 h-4 mr-2" />
-              Safe Meetups
-            </Badge>
-            <Badge className="bg-gradient-to-r from-purple-500/10 to-purple-600/10 text-purple-700 border-purple-200 hover:from-purple-500/20 hover:to-purple-600/20 px-4 py-2 rounded-full">
-              <Heart className="w-4 h-4 mr-2" />
-              Community First
-            </Badge>
+          <div className="flex flex-wrap justify-center gap-4 mt-8">
+            <div className="bg-white shadow-lg border-2 border-emerald-200 hover:border-emerald-300 px-6 py-3 rounded-full transition-all duration-300 hover:shadow-xl hover:scale-105">
+              <div className="flex items-center space-x-2">
+                <div className="bg-emerald-500 p-2 rounded-full">
+                  <Star className="w-4 h-4 text-white fill-current" />
+                </div>
+                <span className="text-emerald-800 font-semibold text-sm">
+                  Verified Locals
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white shadow-lg border-2 border-blue-200 hover:border-blue-300 px-6 py-3 rounded-full transition-all duration-300 hover:shadow-xl hover:scale-105">
+              <div className="flex items-center space-x-2">
+                <div className="bg-blue-500 p-2 rounded-full">
+                  <MapPin className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-blue-800 font-semibold text-sm">
+                  Safe Meetups
+                </span>
+              </div>
+            </div>
+
+            <div className="bg-white shadow-lg border-2 border-purple-200 hover:border-purple-300 px-6 py-3 rounded-full transition-all duration-300 hover:shadow-xl hover:scale-105">
+              <div className="flex items-center space-x-2">
+                <div className="bg-purple-500 p-2 rounded-full">
+                  <Heart className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-purple-800 font-semibold text-sm">
+                  Community First
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 };
+
+export default HeroSection;
