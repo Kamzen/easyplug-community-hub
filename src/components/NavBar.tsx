@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Search,
-  MapPin,
-  User,
-  Sparkles,
-  Zap,
-  ShoppingCart,
-} from "lucide-react";
+import { Search, MapPin, User, Zap, ShoppingCart } from "lucide-react";
 import {
   Button as MuiButton,
   Menu,
@@ -33,9 +26,9 @@ interface NavBarProps {
 }
 
 export const NavBar = ({
-  selectedLocation = 'Polokwane',
+  selectedLocation = "Polokwane",
   onLocationChange = () => {},
-  searchQuery = '',
+  searchQuery = "",
   onSearchChange = () => {},
   isLoggedIn,
   user = {},
@@ -52,10 +45,13 @@ export const NavBar = ({
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg animate-pulse-glow">
-                <Sparkles className="w-5 h-5 text-primary-foreground" />
+              <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-white">
+                <img
+                  src="/src/images/Sample Logo 1 (2).png"
+                  alt="EasyPlug Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-ping"></div>
             </div>
             <div>
               <h1 className="text-xl font-bold gradient-text">EasyPlug</h1>
@@ -87,7 +83,9 @@ export const NavBar = ({
                   <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                     <User className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="hidden md:inline">{(user as any)?.name || 'User'}</span>
+                  <span className="hidden md:inline">
+                    {(user as any)?.name || "User"}
+                  </span>
                 </Button>
                 <Menu
                   anchorEl={anchorEl}
