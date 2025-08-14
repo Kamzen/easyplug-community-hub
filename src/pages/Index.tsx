@@ -6,30 +6,10 @@ import {
   MapPin,
   User,
   Plus,
-  Sparkles,
   Zap,
   ChevronDown,
-  ShoppingCart,
-  Bell
+  ShoppingCart
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
-import { HeroSection } from "@/components/HeroSection";
-import { CategoryGrid } from "@/components/CategoryGrid";
-import { FeaturedListings } from "@/components/FeaturedListings";
-import { LocationSelector } from "@/components/LocationSelector";
-import { AuthModal } from "@/components/AuthModal";
-import { useNavigate } from "react-router-dom";
 import {
   Button as MuiButton,
   IconButton,
@@ -40,6 +20,15 @@ import {
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { LocationSelector } from "@/components/LocationSelector";
+import { AuthModal } from "@/components/AuthModal";
+import { useNavigate } from "react-router-dom";
+import { HeroSection } from "@/components/HeroSection";
+import { CategoryGrid } from "@/components/CategoryGrid";
+import { FeaturedListings } from "@/components/FeaturedListings";
+
+// Import your logo image
+import simpleLogo from "@/images/Sample Logo 1 (3).png";
 
 const Index = () => {
   const [selectedLocation, setSelectedLocation] = useState("Polokwane");
@@ -70,10 +59,17 @@ const Index = () => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg animate-pulse-glow">
-                  <Sparkles className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full animate-ping"></div>
+                {/* Logo image */}
+                <img
+                  src={simpleLogo}
+                  alt="EasyPlug Logo"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 12,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+                  }}
+                />
               </div>
               <div>
                 <h1 className="text-xl font-bold gradient-text">EasyPlug</h1>
@@ -214,7 +210,7 @@ const Index = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full h-14 border-2 border-primary/30 text-primary hover:bg-primary/10 font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+                className="w-full h-14 border-2 border-primary/40 text-primary hover:bg-primary hover:text-white font-semibold text-lg rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 hover:border-primary"
               >
                 <Search className="w-6 h-6 mr-3" />
                 Explore Marketplace
