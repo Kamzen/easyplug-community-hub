@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, User, Zap, ShoppingCart } from "lucide-react";
+import logo from "@/images/Sample Logo 1 (3).png";
 import {
   Button as MuiButton,
   Menu,
@@ -47,7 +48,7 @@ export const NavBar = ({
             <div className="relative">
               <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-white">
                 <img
-                  src="/src/images/Sample Logo 1 (3).png"
+                  src={logo}
                   alt="EasyPlug Logo"
                   className="w-full h-full object-cover"
                 />
