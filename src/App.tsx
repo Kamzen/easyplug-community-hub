@@ -17,7 +17,10 @@ import ItemDetailPage from "./pages/ItemDetailPage";
 import ProfilePage from "./pages/ProfilePage";
 import SellerDashboardNew from "./pages/SellerDashboardNew";
 import AdminDashboard from "./pages/AdminDashboard";
+import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
+import AdvertiseShowcase from "./pages/AdvertiseShowcase";
+import BrowsePage from "./pages/BrowsePage";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +47,10 @@ const App = () => (
                 element={<SellerDashboardNew />}
               />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/messages/:conversationId" element={<Messages />} />
+              <Route path="/advertise" element={<AdvertiseShowcase />} />
+              <Route path="/browse" element={<BrowsePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
