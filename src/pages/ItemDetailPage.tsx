@@ -21,7 +21,7 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Stack,
+  Stack
 } from "@mui/material";
 import {
   ArrowLeft,
@@ -31,11 +31,15 @@ import {
   Favorite,
   FavoriteBorder,
   Verified,
-  Message,
+  Message
 } from "@mui/icons-material";
 import { MapPin, Clock, MessageCircle } from "lucide-react";
 import { NavBar } from "../components/NavBar";
-import { listings } from "../components/FeaturedListings";
+import FeaturedListings, {
+  listings,
+  type ListingItem
+} from "../components/FeaturedListings";
+import type { SponsoredItem } from "@/components/SponsoredListingCard";
 
 // Type definitions
 interface Review {
@@ -49,6 +53,7 @@ interface Review {
 }
 
 interface Seller {
+  id: string;
   name: string;
   avatar: string;
   rating: number;
@@ -114,6 +119,7 @@ const ItemDetailPage = () => {
       verified: listing.verified,
       category: listing.category,
       seller: {
+        id: `seller_${listing.id}`,
         name:
           listing.category === "Services"
             ? "Professional Service Provider"
@@ -130,8 +136,8 @@ const ItemDetailPage = () => {
         totalSales: Math.floor(Math.random() * 200) + 50,
         memberSince: "2022",
         responseTime: "Usually responds within 2 hours",
-        verified: listing.verified,
-      },
+        verified: listing.verified
+      }
     };
 
     switch (listing.category) {
@@ -148,7 +154,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=600&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=600&h=400&fit=crop"
           ],
           colors: ["Black", "White", "Blue", "Red"],
           description:
@@ -159,7 +165,7 @@ const ItemDetailPage = () => {
             "Extended Warranty",
             "Fast Performance",
             "User-Friendly Interface",
-            "Energy Efficient",
+            "Energy Efficient"
           ],
           condition: "Brand New",
           reviewList: [
@@ -172,7 +178,7 @@ const ItemDetailPage = () => {
               date: "2 days ago",
               comment:
                 "Amazing product! The quality is exceptional and it works perfectly.",
-              verified: true,
+              verified: true
             },
             {
               id: 2,
@@ -182,9 +188,9 @@ const ItemDetailPage = () => {
               rating: 4,
               date: "1 week ago",
               comment: "Great product, very satisfied with the purchase.",
-              verified: true,
-            },
-          ],
+              verified: true
+            }
+          ]
         };
 
       case "Property":
@@ -196,7 +202,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1464983953574-0892a716854b?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600&h=400&fit=crop"
           ],
           colors: undefined,
           description:
@@ -207,7 +213,7 @@ const ItemDetailPage = () => {
             "Secure Environment",
             "Parking Available",
             "24/7 Security",
-            "Maintenance Included",
+            "Maintenance Included"
           ],
           condition: "Excellent",
           reviewList: [
@@ -220,9 +226,9 @@ const ItemDetailPage = () => {
               date: "3 days ago",
               comment:
                 "Perfect location and the property is exactly as described!",
-              verified: true,
-            },
-          ],
+              verified: true
+            }
+          ]
         };
 
       case "Vehicles":
@@ -238,7 +244,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop"
           ],
           colors: ["White", "Black", "Silver", "Blue"],
           description:
@@ -249,7 +255,7 @@ const ItemDetailPage = () => {
             "Low Mileage",
             "Fuel Efficient",
             "Safety Features",
-            "Warranty Available",
+            "Warranty Available"
           ],
           condition: "Used - Excellent",
           reviewList: [
@@ -262,9 +268,9 @@ const ItemDetailPage = () => {
               date: "1 week ago",
               comment:
                 "Great vehicle, runs perfectly and very well maintained.",
-              verified: true,
-            },
-          ],
+              verified: true
+            }
+          ]
         };
 
       case "Services":
@@ -276,7 +282,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
           ],
           colors: undefined,
           description:
@@ -287,7 +293,7 @@ const ItemDetailPage = () => {
             "Quality Guaranteed",
             "Flexible Scheduling",
             "Competitive Pricing",
-            "Customer Satisfaction",
+            "Customer Satisfaction"
           ],
           condition: "Professional",
           reviewList: [
@@ -300,9 +306,9 @@ const ItemDetailPage = () => {
               date: "2 days ago",
               comment:
                 "Excellent service! Very professional and exceeded expectations.",
-              verified: true,
-            },
-          ],
+              verified: true
+            }
+          ]
         };
 
       case "Food":
@@ -314,7 +320,7 @@ const ItemDetailPage = () => {
             listing.image,
             "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop",
             "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=400&fit=crop",
+            "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=400&fit=crop"
           ],
           colors: undefined,
           description:
@@ -325,7 +331,7 @@ const ItemDetailPage = () => {
             "No Pesticides",
             "Peak Freshness",
             "Nutritional Value",
-            "Sustainable Farming",
+            "Sustainable Farming"
           ],
           condition: "Fresh",
           reviewList: [
@@ -337,9 +343,9 @@ const ItemDetailPage = () => {
               rating: 5,
               date: "1 day ago",
               comment: "Fresh and delicious! Will definitely order again.",
-              verified: true,
-            },
-          ],
+              verified: true
+            }
+          ]
         };
 
       default:
@@ -352,29 +358,62 @@ const ItemDetailPage = () => {
           description: "Quality item available for purchase.",
           features: ["Quality Guaranteed", "Good Condition"],
           condition: "Good",
-          reviewList: [],
+          reviewList: []
         };
     }
   };
 
   const item = listing ? generateItemData(listing) : null;
 
-  // Similar items data based on category
-  const getSimilarItems = (category: string) => {
-    const categoryItems = listings.filter(
-      (item) => item.category === category && item.id !== Number(id)
-    );
-    return categoryItems.slice(0, 4).map((item) => ({
-      id: item.id,
-      title: item.title,
-      price: item.price,
-      image: item.image,
-      rating: item.rating,
-      reviews: item.reviews,
-    }));
-  };
+  // Similar items data (reuse normal listing UI)
+  const similarListingItems: ListingItem[] = item
+    ? listings
+        .filter((i) => i.category === item.category && i.id !== Number(id))
+        .slice(0, 8)
+    : [];
 
-  const similarItems = item ? getSimilarItems(item.category) : [];
+  // Ads for similar items: inline and a sponsored row
+  const similarInlineAds: SponsoredItem[] = [
+    {
+      id: "sim-inline-1",
+      title: "Trusted Local Pro",
+      image:
+        "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200&auto=format&fit=crop"
+    },
+    {
+      id: "sim-inline-2",
+      title: "Top-rated Service",
+      image:
+        "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&auto=format&fit=crop"
+    }
+  ];
+
+  const similarSponsoredItems: SponsoredItem[] = [
+    {
+      id: "sim-spons-1",
+      title: "Weekend Special",
+      image:
+        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&auto=format&fit=crop"
+    },
+    {
+      id: "sim-spons-2",
+      title: "Limited Offer",
+      image:
+        "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&auto=format&fit=crop"
+    },
+    {
+      id: "sim-spons-3",
+      title: "Save Big Today",
+      image:
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&auto=format&fit=crop"
+    },
+    {
+      id: "sim-spons-4",
+      title: "Editor’s Choice",
+      image:
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&auto=format&fit=crop"
+    }
+  ];
 
   const [selectedImage, setSelectedImage] = React.useState(0);
   const [selectedColor, setSelectedColor] = React.useState(
@@ -395,7 +434,7 @@ const ItemDetailPage = () => {
           bgcolor: "#fafafa",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "center"
         }}
       >
         <Typography variant="h5">Item not found</Typography>
@@ -426,8 +465,8 @@ const ItemDetailPage = () => {
             textTransform: "none",
             fontSize: "16px",
             "&:hover": {
-              backgroundColor: "#f0f0f0",
-            },
+              backgroundColor: "#f0f0f0"
+            }
           }}
         >
           Back to Browse
@@ -440,7 +479,7 @@ const ItemDetailPage = () => {
               sx={{
                 display: "flex",
                 flexDirection: { xs: "column", md: "row" },
-                gap: 2,
+                gap: 2
               }}
             >
               {/* Thumbnails - left on desktop, below on mobile */}
@@ -450,7 +489,7 @@ const ItemDetailPage = () => {
                   flexDirection: { xs: "row", md: "column" },
                   gap: 1,
                   width: { xs: "100%", md: "80px" },
-                  order: { xs: 2, md: 1 },
+                  order: { xs: 2, md: 1 }
                 }}
               >
                 {item.images.map((image, index) => (
@@ -469,8 +508,8 @@ const ItemDetailPage = () => {
                       width: { xs: "80px", md: "100%" },
                       flexShrink: 0,
                       "&:hover": {
-                        transform: "scale(1.02)",
-                      },
+                        transform: "scale(1.02)"
+                      }
                     }}
                     onClick={() => setSelectedImage(index)}
                   >
@@ -496,7 +535,7 @@ const ItemDetailPage = () => {
                   overflow: "hidden",
                   boxShadow: "none",
                   border: "none",
-                  order: { xs: 1, md: 2 },
+                  order: { xs: 1, md: 2 }
                 }}
               >
                 <Box
@@ -527,7 +566,7 @@ const ItemDetailPage = () => {
                     sx={{
                       bgcolor: "#ff4444",
                       color: "white",
-                      fontWeight: "bold",
+                      fontWeight: "bold"
                     }}
                   />
                 )}
@@ -536,7 +575,7 @@ const ItemDetailPage = () => {
                   size="small"
                   sx={{
                     bgcolor: "#e3f2fd",
-                    color: "#1976d2",
+                    color: "#1976d2"
                   }}
                 />
                 {item.verified && (
@@ -546,7 +585,7 @@ const ItemDetailPage = () => {
                     icon={<Verified />}
                     sx={{
                       bgcolor: "#4caf50",
-                      color: "white",
+                      color: "white"
                     }}
                   />
                 )}
@@ -587,7 +626,7 @@ const ItemDetailPage = () => {
                       sx={{
                         textDecoration: "line-through",
                         color: "text.secondary",
-                        ml: 2,
+                        ml: 2
                       }}
                     >
                       {item.originalPrice}
@@ -620,8 +659,8 @@ const ItemDetailPage = () => {
                           minWidth: "80px",
                           ...(selectedColor === color && {
                             bgcolor: "#1976d2",
-                            "&:hover": { bgcolor: "#1565c0" },
-                          }),
+                            "&:hover": { bgcolor: "#1565c0" }
+                          })
                         }}
                       >
                         {color}
@@ -646,8 +685,8 @@ const ItemDetailPage = () => {
                     fontWeight: "bold",
                     fontSize: "16px",
                     "&:hover": {
-                      bgcolor: "#1565c0",
-                    },
+                      bgcolor: "#1565c0"
+                    }
                   }}
                 >
                   Contact Seller
@@ -666,8 +705,8 @@ const ItemDetailPage = () => {
                       textTransform: "none",
                       "&:hover": {
                         borderColor: "#1976d2",
-                        backgroundColor: "#f5f5f5",
-                      },
+                        backgroundColor: "#f5f5f5"
+                      }
                     }}
                   >
                     {isWishlisted ? "Wishlisted" : "Wishlist"}
@@ -680,7 +719,7 @@ const ItemDetailPage = () => {
                       color: "#666",
                       borderRadius: 0,
                       textTransform: "none",
-                      minWidth: "120px",
+                      minWidth: "120px"
                     }}
                   >
                     Share
@@ -696,7 +735,7 @@ const ItemDetailPage = () => {
                 borderRadius: 0,
                 mt: 3,
                 boxShadow: "none",
-                border: "none",
+                border: "none"
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -735,6 +774,11 @@ const ItemDetailPage = () => {
                 variant="outlined"
                 startIcon={<Message />}
                 fullWidth
+                onClick={() =>
+                  navigate("/messages", {
+                    state: { sellerId: item.seller.id, itemId: item.id }
+                  })
+                }
                 sx={{
                   borderColor: "#1976d2",
                   color: "#1976d2",
@@ -742,8 +786,8 @@ const ItemDetailPage = () => {
                   textTransform: "none",
                   "&:hover": {
                     borderColor: "#1565c0",
-                    backgroundColor: "#f5f5f5",
-                  },
+                    backgroundColor: "#f5f5f5"
+                  }
                 }}
               >
                 Message Seller
@@ -772,192 +816,12 @@ const ItemDetailPage = () => {
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Similar {item.category} You Might Like
               </Typography>
-              <Grid container spacing={3}>
-                {similarItems.map((similarItem) => (
-                  <Grid size={{ xs: 12, sm: 6, md: 3 }} key={similarItem.id}>
-                    <Paper
-                      sx={{
-                        borderRadius: 0,
-                        overflow: "hidden",
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                        boxShadow: "none",
-                        border: "none",
-                        bgcolor: "background.paper",
-                        "&:hover": {
-                          transform: "translateY(-2px)",
-                        },
-                      }}
-                      onClick={() => navigate(`/item/${similarItem.id}`)}
-                    >
-                      <Box sx={{ position: "relative", width: "100%" }}>
-                        <img
-                          src={similarItem.image}
-                          alt={similarItem.title}
-                          style={{
-                            width: "100%",
-                            height: "auto",
-                            objectFit: "contain",
-                          }}
-                        />
-                        <Chip
-                          label={item.category}
-                          size="small"
-                          sx={{
-                            position: "absolute",
-                            top: 10,
-                            left: 10,
-                            bgcolor: "background.paper",
-                            color: "primary.main",
-                            fontWeight: 500,
-                            opacity: 0.95,
-                            fontSize: 11,
-                            zIndex: 2,
-                          }}
-                        />
-                        <Box
-                          sx={{
-                            position: "absolute",
-                            bottom: 10,
-                            right: 10,
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              bgcolor: "rgba(0,0,0,0.8)",
-                              color: "white",
-                              width: 28,
-                              height: 28,
-                              borderRadius: "50%",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              "&:hover": {
-                                bgcolor: "rgba(0,0,0,0.9)",
-                                transform: "scale(1.1)",
-                              },
-                            }}
-                          >
-                            <MessageCircle style={{ fontSize: 14 }} />
-                          </Box>
-                          <Box
-                            sx={{
-                              bgcolor: "rgba(0,0,0,0.7)",
-                              color: "white",
-                              px: 1.2,
-                              py: 0.3,
-                              borderRadius: 2,
-                              display: "flex",
-                              alignItems: "center",
-                              fontSize: 11,
-                            }}
-                          >
-                            <Clock style={{ fontSize: 13, marginRight: 4 }} />
-                            2h ago
-                          </Box>
-                        </Box>
-                      </Box>
-                      <Box
-                        sx={{
-                          px: 1,
-                          pt: 1,
-                          pb: 0,
-                          flexGrow: 1,
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          color="primary"
-                          fontWeight={700}
-                          sx={{ fontSize: 16 }}
-                        >
-                          {similarItem.price}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          fontWeight={700}
-                          sx={{
-                            mb: 0.5,
-                            lineHeight: 1.2,
-                            fontSize: 13,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                          }}
-                        >
-                          {similarItem.title}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            mb: 0.5,
-                            color: "text.secondary",
-                            fontSize: 12,
-                          }}
-                        >
-                          {similarItem.title}
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            mb: 0.5,
-                          }}
-                        >
-                          <Star
-                            style={{
-                              color: "#F59E42",
-                              fontSize: 12,
-                              marginRight: 4,
-                            }}
-                          />
-                          <Typography
-                            variant="body2"
-                            fontWeight={500}
-                            sx={{ fontSize: 11 }}
-                          >
-                            {similarItem.rating}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{ ml: 0.5, color: "#B45309", fontSize: 9 }}
-                          >
-                            ({similarItem.reviews})
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            color: "text.secondary",
-                            mb: 1,
-                          }}
-                        >
-                          <MapPin style={{ fontSize: 11, marginRight: 4 }} />
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              fontSize: 10,
-                            }}
-                          >
-                            Polokwane Central
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Paper>
-                  </Grid>
-                ))}
-              </Grid>
+              <FeaturedListings
+                items={similarListingItems}
+                ads={similarInlineAds}
+                adEvery={4}
+                sponsoredRow={{ after: 8, items: similarSponsoredItems }}
+              />
             </Box>
           )}
 
