@@ -3,9 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { HeroSection } from "@/components/HeroSection";
-import { FeaturedListings } from "@/components/FeaturedListings";
+import { FeaturedListings, listings } from "@/components/FeaturedListings";
+import { ListingTile } from "@/components/FeaturedListings";
 import { AuthModal } from "@/components/AuthModal";
 import { NavBar } from "@/components/NavBar";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "@/components/ui/carousel";
 
 const Index = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -70,7 +78,81 @@ const Index = () => {
             <h2 className="text-3xl font-bold mb-8 text-center">
               Popular picks around Polokwane
             </h2>
-            <FeaturedListings />
+            {/* Home ads row carousel */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-lg font-semibold">Sponsored suggestions</h3>
+              </div>
+              <div className="relative">
+                <Carousel
+                  className="w-full"
+                  opts={{ align: "start", loop: false }}
+                >
+                  <CarouselContent>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                      <CarouselItem
+                        key={`home-ads-${n}`}
+                        className="basis-3/4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                      >
+                        <ListingTile
+                          // Casting to unknown then to the exported ListingItem type from FeaturedListings
+                          listing={
+                            {
+                              id: Number(`300000${n}`),
+                              title: `Special offer ${n}`,
+                              price: "Sponsored",
+                              location: "Featured",
+                              rating: 5,
+                              reviews: 0,
+                              image: `https://picsum.photos/seed/${n}/600/360`,
+                              timeAgo: "Just now",
+                              verified: false,
+                              category: "Sponsored"
+                            } as unknown as Parameters<
+                              typeof ListingTile
+                            >[0]["listing"]
+                          }
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="-left-4" />
+                  <CarouselNext className="-right-4" />
+                </Carousel>
+              </div>
+            </div>
+            <FeaturedListings
+              items={listings}
+              sponsoredRow={{
+                after: 8,
+                items: [
+                  {
+                    id: "home-mid-1",
+                    title: "Local Pro Cleaning",
+                    image:
+                      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200&auto=format&fit=crop"
+                  },
+                  {
+                    id: "home-mid-2",
+                    title: "Mobile Mechanics",
+                    image:
+                      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&auto=format&fit=crop"
+                  },
+                  {
+                    id: "home-mid-3",
+                    title: "Chef at Home",
+                    image:
+                      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&auto=format&fit=crop"
+                  },
+                  {
+                    id: "home-mid-4",
+                    title: "Handyman Special",
+                    image:
+                      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&auto=format&fit=crop"
+                  }
+                ]
+              }}
+            />
           </div>
         </section>
       </main>
