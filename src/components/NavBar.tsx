@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, User, Zap, ShoppingCart } from "lucide-react";
-import logo from "@/images/Sample Logo 1 (3).png";
+import logo from "@/images/Sample Logo 1 (4).png";
 import {
   Button as MuiButton,
   Menu,
   MenuItem,
   ListItemIcon,
-  ListItemText,
+  ListItemText
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -34,7 +34,7 @@ export const NavBar = ({
   isLoggedIn,
   user = {},
   onAuthClick,
-  onLogout,
+  onLogout
 }: NavBarProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -95,7 +95,7 @@ export const NavBar = ({
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
                   PaperProps={{
-                    sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 },
+                    sx: { width: 220, borderRadius: 3, boxShadow: 6, p: 1 }
                   }}
                 >
                   <MenuItem onClick={onAuthClick}>
