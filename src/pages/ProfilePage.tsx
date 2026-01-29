@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  Tabs,
-  Tab,
   Box,
   Typography,
   Card,
@@ -12,612 +11,811 @@ import {
   useMediaQuery,
   Chip,
   Avatar,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper
+  Divider,
+  IconButton,
+  Grid,
+  Paper,
+  Container
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import StarIcon from "@mui/icons-material/Star";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-import ReplayIcon from "@mui/icons-material/Replay";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import PersonIcon from "@mui/icons-material/Person";
 import {
   User,
-  ShoppingCart,
+  MapPin,
+  Phone,
+  Mail,
+  Calendar,
+  TrendingUp,
+  Eye,
+  MessageCircle,
   Heart,
-  Package,
-  FileText,
-  RotateCcw,
-  Star
+  DollarSign,
+  Edit,
+  Camera,
+  Settings,
+  Shield,
+  Bell
 } from "lucide-react";
 import { NavBar } from "../components/NavBar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { FeaturedListings } from "../components/FeaturedListings";
+import { useQuery } from "@tanstack/react-query";
+import { authService, type AuthUser } from "@/services/authService";
 
 const ProfilePage = () => {
-  const [activeTab, setActiveTab] = useState("personal-details");
-
-  // Mock data
-  const orderData = [
-    {
-      id: "ORD001",
-      date: "2024-01-15",
-      total: "R 1,250",
-      status: "Delivered",
-      items: 3
-    },
-    {
-      id: "ORD002",
-      date: "2024-01-10",
-      total: "R 890",
-      status: "Shipped",
-      items: 2
-    },
-    {
-      id: "ORD003",
-      date: "2024-01-05",
-      total: "R 2,100",
-      status: "Processing",
-      items: 5
-    }
-  ];
-
-  const cartData = [
-    {
-      id: 1,
-      name: "iPhone 14 Pro",
-      price: "R 18,999",
-      quantity: 1,
-      image: "/placeholder.svg"
-    },
-    {
-      id: 2,
-      name: "Samsung Galaxy Watch",
-      price: "R 3,499",
-      quantity: 2,
-      image: "/placeholder.svg"
-    },
-    {
-      id: 3,
-      name: "AirPods Pro",
-      price: "R 4,299",
-      quantity: 1,
-      image: "/placeholder.svg"
-    }
-  ];
-
-  const wishlistData = [
-    {
-      id: 1,
-      name: "MacBook Pro M3",
-      price: "R 32,999",
-      image: "/placeholder.svg"
-    },
-    {
-      id: 2,
-      name: "Sony WH-1000XM5",
-      price: "R 6,999",
-      image: "/placeholder.svg"
-    },
-    { id: 3, name: "iPad Air", price: "R 12,999", image: "/placeholder.svg" }
-  ];
-
-  const invoiceData = [
-    {
-      id: "INV001",
-      orderId: "ORD001",
-      date: "2024-01-15",
-      amount: "R 1,250",
-      status: "Paid"
-    },
-    {
-      id: "INV002",
-      orderId: "ORD002",
-      date: "2024-01-10",
-      amount: "R 890",
-      status: "Paid"
-    },
-    {
-      id: "INV003",
-      orderId: "ORD003",
-      date: "2024-01-05",
-      amount: "R 2,100",
-      status: "Pending"
-    }
-  ];
-
-  const returnData = [
-    {
-      id: "RET001",
-      orderId: "ORD001",
-      product: "iPhone Case",
-      reason: "Defective",
-      status: "Approved",
-      date: "2024-01-20"
-    },
-    {
-      id: "RET002",
-      orderId: "ORD002",
-      product: "Bluetooth Speaker",
-      reason: "Wrong Size",
-      status: "Processing",
-      date: "2024-01-18"
-    }
-  ];
-
-  const reviewData = [
-    {
-      id: 1,
-      product: "iPhone 14 Pro",
-      rating: 5,
-      review: "Excellent product, very satisfied!",
-      date: "2024-01-16"
-    },
-    {
-      id: 2,
-      product: "Samsung Watch",
-      rating: 4,
-      review: "Good quality, fast delivery.",
-      date: "2024-01-12"
-    },
-    {
-      id: 3,
-      product: "AirPods Pro",
-      rating: 5,
-      review: "Amazing sound quality!",
-      date: "2024-01-08"
-    }
-  ];
-
-  // State for NavBar
-  const [selectedLocation, setSelectedLocation] = useState("Polokwane");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const isLoggedIn = !!user;
-
-  const handleProfileAction = (action: string) => {
-    // Optionally, you can use navigate here if needed
-  };
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.reload();
-  };
-
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const tabLabels = [
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [isEditing, setIsEditing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Fetch user from /auth/me via React Query (shared cache with NavBar)
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const { data } = useQuery<{ user: AuthUser }>({
+    queryKey: ["me"],
+    queryFn: async () => ({ user: await authService.getUserInfo() }),
+    enabled: Boolean(token),
+    retry: false
+  });
+  const me = data?.user;
+  const [userLocation, setUserLocation] = useState<{
+    streetNumber?: string;
+    streetName?: string;
+    suburb?: string;
+    city?: string;
+    province?: string;
+    country?: string;
+    postalCode?: string;
+    accuracy?: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const storedLocation = localStorage.getItem("userLocation");
+    if (storedLocation) {
+      try {
+        const locationData = JSON.parse(storedLocation);
+        setUserLocation(locationData);
+      } catch (error) {
+        console.error("Error parsing stored location:", error);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  // State for user avatar
+  const [avatarUrl, setAvatarUrl] = useState(
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+  );
+
+  // Handle file upload for avatar
+  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        alert("Please select a valid image file.");
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size must be less than 5MB.");
+        return;
+      }
+
+      // Create a URL for the selected image
+      const imageUrl = URL.createObjectURL(file);
+      setAvatarUrl(imageUrl);
+
+      // Here you would typically upload the file to your server
+      // Example: uploadToServer(file);
+      console.log("Selected file:", file);
+      console.log("File uploaded locally, ready to send to server");
+    }
+  };
+
+  // Handle camera icon click
+  const handleCameraClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // User data from API with safe fallbacks
+  const fullName = me
+    ? [
+        me as unknown as {
+          firstName?: string;
+          lastName?: string;
+          name?: string;
+        }
+      ].map((u) => {
+        const fn = u.firstName || u.name?.split(" ")[0] || "";
+        const ln = u.lastName || u.name?.split(" ")[1] || "";
+        const n = `${fn} ${ln}`.trim();
+        return n || (me.email?.split("@")[0] ?? "User");
+      })[0]
+    : "John Doe";
+  const serverPic =
+    (me as unknown as { profilePicture?: string })?.profilePicture || "";
+  const resolvedAvatar = serverPic.startsWith("http") ? serverPic : avatarUrl;
+  const userData = {
+    id: (me as unknown as { userId?: string | number })?.userId || 1,
+    name: fullName,
+    email: me?.email || "john.doe@example.com",
+    phone: (me as unknown as { phone?: string })?.phone || "+27 82 123 4567",
+    avatar: resolvedAvatar,
+    joinDate: "January 2024",
+    verified: true,
+    rating: 4.8,
+    totalListings: 12,
+    totalViews: 2847,
+    totalMessages: 156,
+    totalLikes: 89
+  };
+
+  // Mock address data - integrate with location data
+  const addressData = {
+    streetNumber: userLocation?.streetNumber || "123",
+    streetName: userLocation?.streetName || "Main Street",
+    suburb: userLocation?.suburb || "Bendor",
+    city: userLocation?.city || "Polokwane",
+    province: userLocation?.province || "Limpopo",
+    country: userLocation?.country || "South Africa",
+    postalCode: userLocation?.postalCode || "0700"
+  };
+
+  // Mock transaction data
+  const transactionData = [
     {
-      label: "Personal Details",
-      icon: <PersonIcon />,
-      value: "personal-details"
+      id: "TXN001",
+      type: "Sale",
+      amount: "R 1,250",
+      date: "2024-01-15",
+      status: "Completed",
+      description: "iPhone 13 Pro"
     },
-    { label: "Cart", icon: <ShoppingCartIcon />, value: "cart" },
-    { label: "Wishlist", icon: <FavoriteIcon />, value: "wishlist" },
-    { label: "Orders", icon: <LocalShippingIcon />, value: "orders" },
-    { label: "Invoices", icon: <ReceiptIcon />, value: "invoices" },
-    { label: "Returns", icon: <ReplayIcon />, value: "returns" },
-    { label: "Reviews", icon: <RateReviewIcon />, value: "reviews" }
+    {
+      id: "TXN002",
+      type: "Purchase",
+      amount: "R 890",
+      date: "2024-01-12",
+      status: "Completed",
+      description: "Samsung Galaxy Watch"
+    },
+    {
+      id: "TXN003",
+      type: "Sale",
+      amount: "R 2,100",
+      date: "2024-01-08",
+      status: "Pending",
+      description: "MacBook Pro"
+    }
+  ];
+
+  // Mock listing interactions
+  const listingInteractions = [
+    {
+      id: 1,
+      title: "iPhone 14 Pro Max",
+      views: 245,
+      messages: 12,
+      likes: 8,
+      status: "Active",
+      image:
+        "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=100&h=100&fit=crop"
+    },
+    {
+      id: 2,
+      title: "Gaming Setup Complete",
+      views: 189,
+      messages: 7,
+      likes: 15,
+      status: "Active",
+      image:
+        "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=100&h=100&fit=crop"
+    },
+    {
+      id: 3,
+      title: "Vintage Guitar Collection",
+      views: 156,
+      messages: 4,
+      likes: 22,
+      status: "Sold",
+      image:
+        "https://images.unsplash.com/photo-1564186763535-ebb21ef5277f?w=100&h=100&fit=crop"
+    }
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default", py: 8 }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "grey.50"
+      }}
+    >
       <NavBar
-        selectedLocation={selectedLocation}
-        onLocationChange={setSelectedLocation}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        isLoggedIn={isLoggedIn}
-        user={user}
-        onProfileAction={handleProfileAction}
         onLogout={handleLogout}
+        searchQuery=""
+        onSearchChange={() => {}}
+        selectedLocation={addressData.suburb}
       />
-      <Box sx={{ maxWidth: 1200, mx: "auto", px: { xs: 2, sm: 4 }, pt: 12 }}>
-        <Box sx={{ mt: 6, mb: 6 }}>
-          <MuiButton
-            startIcon={<ArrowBackIcon />}
-            onClick={() => (window.location.href = "/")}
-            sx={{
-              color: "#fff",
-              fontWeight: 700,
-              background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
-              px: 2,
-              boxShadow: 2,
-              "&:hover": {
-                background: "linear-gradient(90deg, #764ba2 0%, #667eea 100%)"
-              }
-            }}
-          >
-            Back to Home
-          </MuiButton>
-          <Typography variant="h4" fontWeight="bold" sx={{ mb: 4, mt: 2 }}>
-            My Profile
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            gap: 4
-          }}
-        >
-          {/* MUI Tabs Sidebar */}
-          <Tabs
-            orientation={isMobile ? "horizontal" : "vertical"}
-            value={activeTab}
-            onChange={(_, v) => setActiveTab(v)}
-            variant={isMobile ? "scrollable" : "standard"}
-            scrollButtons={isMobile ? "auto" : false}
-            sx={{
-              minWidth: isMobile ? "100%" : 180,
-              borderRadius: 2,
-              bgcolor: "background.paper",
-              mb: { xs: 2, sm: 0 },
-              boxShadow: { sm: 1 }
-            }}
-          >
-            {tabLabels.map((tab) => (
-              <Tab
-                key={tab.value}
-                icon={tab.icon}
-                iconPosition="start"
-                label={tab.label}
-                value={tab.value}
-                sx={{
-                  alignItems: "flex-start",
-                  minHeight: 48,
-                  fontSize: { xs: 12, sm: 16 },
-                  textTransform: "none",
-                  fontWeight: 500
-                }}
-              />
-            ))}
-          </Tabs>
-          {/* Tab Content */}
-          <Box sx={{ flex: 1, width: "100%" }}>
-            {activeTab === "personal-details" && (
-              <Card sx={{ mb: 4 }}>
-                <CardHeader
-                  title={<Typography variant="h6">Personal Details</Typography>}
-                />
-                <CardContent>
+
+      <Box sx={{ pt: 24, pb: 4 }}>
+        <Container maxWidth="xl" sx={{ px: 2 }}>
+          {/* Header */}
+          <Box sx={{ mb: 3, display: "flex", alignItems: "center", gap: 2 }}>
+            <IconButton
+              onClick={() => navigate("/")}
+              sx={{ color: "primary.main" }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant={isMobile ? "h5" : "h4"} fontWeight="bold">
+              My Profile
+            </Typography>
+          </Box>
+
+          <Grid container spacing={3}>
+            {/* User Profile Card */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Card sx={{ mb: 3 }}>
+                <CardContent sx={{ textAlign: "center", p: 3 }}>
                   <Box
                     sx={{
-                      display: "grid",
-                      gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                      gap: 2
+                      position: "relative",
+                      display: "inline-block",
+                      mb: 2
                     }}
                   >
-                    <TextField
-                      label="First Name"
-                      defaultValue="John"
-                      fullWidth
-                      size="small"
+                    <Avatar
+                      src={userData.avatar}
+                      sx={{ width: 120, height: 120, mx: "auto" }}
                     />
-                    <TextField
-                      label="Last Name"
-                      defaultValue="Doe"
-                      fullWidth
+                    <IconButton
+                      onClick={handleCameraClick}
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        bgcolor: "primary.main",
+                        color: "white",
+                        "&:hover": { bgcolor: "primary.dark" }
+                      }}
                       size="small"
+                    >
+                      <Camera size={16} />
+                    </IconButton>
+                    {/* Hidden file input */}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={handleAvatarUpload}
                     />
                   </Box>
-                  <TextField
-                    label="Email"
-                    defaultValue="john.doe@example.com"
-                    fullWidth
-                    size="small"
-                    sx={{ mt: 2 }}
-                  />
-                  <TextField
-                    label="Phone"
-                    defaultValue="+27 123 456 789"
-                    fullWidth
-                    size="small"
-                    sx={{ mt: 2 }}
-                  />
-                  <TextField
-                    label="Address"
-                    defaultValue="123 Market Street, Polokwane, 0700"
-                    fullWidth
-                    size="small"
-                    sx={{ mt: 2 }}
-                    multiline
-                    rows={2}
-                  />
-                  <MuiButton
-                    variant="contained"
+
+                  <Box
                     sx={{
-                      mt: 2,
-                      background:
-                        "linear-gradient(90deg, #667eea 0%, #764ba2 100%)",
-                      color: "#fff",
-                      fontWeight: 700,
-                      boxShadow: 2,
-                      "&:hover": {
-                        background:
-                          "linear-gradient(90deg, #764ba2 0%, #667eea 100%)"
-                      }
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 1,
+                      mb: 1
                     }}
                   >
-                    Save Changes
+                    <Typography variant="h6" fontWeight="bold">
+                      {userData.name}
+                    </Typography>
+                    {userData.verified && <Shield size={20} color="#4CAF50" />}
+                  </Box>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 2 }}
+                  >
+                    Member since {userData.joinDate}
+                  </Typography>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 2,
+                      mb: 3
+                    }}
+                  >
+                    <Box sx={{ textAlign: "center" }}>
+                      <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        color="primary"
+                      >
+                        {userData.rating}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Rating
+                      </Typography>
+                    </Box>
+                    <Divider orientation="vertical" flexItem />
+                    <Box sx={{ textAlign: "center" }}>
+                      <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        color="primary"
+                      >
+                        {userData.totalListings}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Listings
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <MuiButton
+                    variant="outlined"
+                    startIcon={<Edit size={16} />}
+                    onClick={() => setIsEditing(!isEditing)}
+                    fullWidth
+                    sx={{ mb: 1 }}
+                  >
+                    Edit Profile
+                  </MuiButton>
+
+                  <MuiButton
+                    variant="text"
+                    startIcon={<Settings size={16} />}
+                    fullWidth
+                  >
+                    Account Settings
+                  </MuiButton>
+
+                  <MuiButton
+                    variant="outlined"
+                    color="error"
+                    startIcon={<Bell size={16} />}
+                    onClick={handleLogout}
+                    fullWidth
+                    sx={{ mt: 1 }}
+                  >
+                    Sign out
                   </MuiButton>
                 </CardContent>
               </Card>
-            )}
-            {activeTab === "cart" && (
-              <Card sx={{ mb: 4 }}>
-                <CardHeader
-                  title={<Typography variant="h6">Shopping Cart</Typography>}
-                />
+
+              {/* Quick Stats */}
+              <Card>
+                <CardHeader title="Quick Stats" />
                 <CardContent>
-                  <TableContainer component={Paper}>
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Product</TableCell>
-                          <TableCell>Price</TableCell>
-                          <TableCell>Quantity</TableCell>
-                          <TableCell>Total</TableCell>
-                          <TableCell>Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {cartData.map((item) => (
-                          <TableRow key={item.id}>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.price}</TableCell>
-                            <TableCell>{item.quantity}</TableCell>
-                            <TableCell>{item.price}</TableCell>
-                            <TableCell>
-                              <MuiButton color="error" size="small">
-                                Remove
-                              </MuiButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                  <Grid container spacing={2}>
+                    {/* Total Views Stat */}
+                    <Grid size={{ xs: 12 }}>
+                      <Paper
+                        elevation={1}
+                        sx={{
+                          p: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          backgroundColor: "#f8f9fa",
+                          border: "1px solid #e9ecef"
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              p: 1,
+                              borderRadius: 2,
+                              backgroundColor: "#e3f2fd"
+                            }}
+                          >
+                            <Eye size={20} color="#1976d2" />
+                          </Box>
+                          <Typography variant="body2" fontWeight="medium">
+                            Total Views
+                          </Typography>
+                        </Box>
+                        <Typography
+                          variant="h6"
+                          fontWeight="bold"
+                          color="primary"
+                        >
+                          {userData.totalViews.toLocaleString()}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+
+                    {/* Messages Stat */}
+                    <Grid size={{ xs: 12 }}>
+                      <Paper
+                        elevation={1}
+                        sx={{
+                          p: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          backgroundColor: "#f8f9fa",
+                          border: "1px solid #e9ecef"
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              p: 1,
+                              borderRadius: 2,
+                              backgroundColor: "#e8f5e9"
+                            }}
+                          >
+                            <MessageCircle size={20} color="#388e3c" />
+                          </Box>
+                          <Typography variant="body2" fontWeight="medium">
+                            Messages
+                          </Typography>
+                        </Box>
+                        <Typography
+                          variant="h6"
+                          fontWeight="bold"
+                          color="success.main"
+                        >
+                          {userData.totalMessages}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+
+                    {/* Likes Received Stat */}
+                    <Grid size={{ xs: 12 }}>
+                      <Paper
+                        elevation={1}
+                        sx={{
+                          p: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          backgroundColor: "#f8f9fa",
+                          border: "1px solid #e9ecef"
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              p: 1,
+                              borderRadius: 2,
+                              backgroundColor: "#fce4ec"
+                            }}
+                          >
+                            <Heart size={20} color="#c2185b" />
+                          </Box>
+                          <Typography variant="body2" fontWeight="medium">
+                            Likes Received
+                          </Typography>
+                        </Box>
+                        <Typography
+                          variant="h6"
+                          fontWeight="bold"
+                          color="error.main"
+                        >
+                          {userData.totalLikes}
+                        </Typography>
+                      </Paper>
+                    </Grid>
+                  </Grid>
                 </CardContent>
               </Card>
-            )}
-            {activeTab === "wishlist" && (
-              <Card sx={{ mb: 4 }}>
+            </Grid>
+
+            {/* Main Content */}
+            <Grid size={{ xs: 12, md: 8 }}>
+              {/* User Information */}
+              <Card sx={{ mb: 3 }}>
                 <CardHeader
-                  title={<Typography variant="h6">Wishlist</Typography>}
-                />
-                <CardContent>
-                  <TableContainer component={Paper}>
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Product</TableCell>
-                          <TableCell>Price</TableCell>
-                          <TableCell>Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {wishlistData.map((item) => (
-                          <TableRow key={item.id}>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.price}</TableCell>
-                            <TableCell>
-                              <MuiButton size="small">Add to Cart</MuiButton>
-                              <MuiButton size="small" color="error">
-                                Remove
-                              </MuiButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
-            )}
-            {activeTab === "orders" && (
-              <Card sx={{ mb: 4 }}>
-                <CardHeader
-                  title={<Typography variant="h6">Order History</Typography>}
-                />
-                <CardContent>
-                  <TableContainer component={Paper}>
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Order ID</TableCell>
-                          <TableCell>Date</TableCell>
-                          <TableCell>Total</TableCell>
-                          <TableCell>Items</TableCell>
-                          <TableCell>Status</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {orderData.map((order) => (
-                          <TableRow key={order.id}>
-                            <TableCell>{order.id}</TableCell>
-                            <TableCell>{order.date}</TableCell>
-                            <TableCell>{order.total}</TableCell>
-                            <TableCell>{order.items}</TableCell>
-                            <TableCell>
-                              <Chip
-                                label={order.status}
-                                color={
-                                  order.status === "Delivered"
-                                    ? "success"
-                                    : "default"
-                                }
-                                size="small"
-                              />
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
-            )}
-            {activeTab === "invoices" && (
-              <Card sx={{ mb: 4 }}>
-                <CardHeader
-                  title={<Typography variant="h6">Invoices</Typography>}
-                />
-                <CardContent>
-                  <TableContainer component={Paper}>
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Invoice ID</TableCell>
-                          <TableCell>Order ID</TableCell>
-                          <TableCell>Date</TableCell>
-                          <TableCell>Amount</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {invoiceData.map((invoice) => (
-                          <TableRow key={invoice.id}>
-                            <TableCell>{invoice.id}</TableCell>
-                            <TableCell>{invoice.orderId}</TableCell>
-                            <TableCell>{invoice.date}</TableCell>
-                            <TableCell>{invoice.amount}</TableCell>
-                            <TableCell>
-                              <Chip
-                                label={invoice.status}
-                                color={
-                                  invoice.status === "Paid"
-                                    ? "success"
-                                    : "default"
-                                }
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <MuiButton size="small">Download</MuiButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
-            )}
-            {activeTab === "returns" && (
-              <Card sx={{ mb: 4 }}>
-                <CardHeader
-                  title={
-                    <Typography variant="h6">Returns & Refunds</Typography>
+                  title="Personal Information"
+                  action={
+                    <IconButton onClick={() => setIsEditing(!isEditing)}>
+                      <Edit size={20} />
+                    </IconButton>
                   }
                 />
                 <CardContent>
-                  <TableContainer component={Paper}>
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Return ID</TableCell>
-                          <TableCell>Order ID</TableCell>
-                          <TableCell>Product</TableCell>
-                          <TableCell>Reason</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Date</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {returnData.map((returnItem) => (
-                          <TableRow key={returnItem.id}>
-                            <TableCell>{returnItem.id}</TableCell>
-                            <TableCell>{returnItem.orderId}</TableCell>
-                            <TableCell>{returnItem.product}</TableCell>
-                            <TableCell>{returnItem.reason}</TableCell>
-                            <TableCell>
-                              <Chip
-                                label={returnItem.status}
-                                color={
-                                  returnItem.status === "Approved"
-                                    ? "success"
-                                    : "default"
-                                }
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell>{returnItem.date}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
-            )}
-            {activeTab === "reviews" && (
-              <Card sx={{ mb: 4 }}>
-                <CardHeader
-                  title={<Typography variant="h6">Product Reviews</Typography>}
-                />
-                <CardContent>
-                  {reviewData.map((review) => (
-                    <Paper key={review.id} sx={{ p: 2, mb: 2 }}>
+                  <Grid container spacing={3}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "space-between",
                           alignItems: "center",
-                          mb: 1
+                          gap: 1.5,
+                          mb: 2
                         }}
                       >
-                        <Typography fontWeight={600}>
-                          {review.product}
+                        <Box
+                          sx={{
+                            p: 1,
+                            borderRadius: 2,
+                            backgroundColor: "#e3f2fd"
+                          }}
+                        >
+                          <Mail size={18} color="#1976d2" />
+                        </Box>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                        >
+                          Email
                         </Typography>
+                      </Box>
+                      {isEditing ? (
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          defaultValue={userData.email}
+                        />
+                      ) : (
+                        <Typography variant="body1">
+                          {userData.email}
+                        </Typography>
+                      )}
+                    </Grid>
+
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1.5,
+                          mb: 2
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            p: 1,
+                            borderRadius: 2,
+                            backgroundColor: "#e8f5e9"
+                          }}
+                        >
+                          <Phone size={18} color="#388e3c" />
+                        </Box>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                        >
+                          Phone
+                        </Typography>
+                      </Box>
+                      {isEditing ? (
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          defaultValue={userData.phone}
+                        />
+                      ) : (
+                        <Typography variant="body1">
+                          {userData.phone}
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+
+              {/* Address Information */}
+              <Card sx={{ mb: 3 }}>
+                <CardHeader title="Address Information" />
+                <CardContent>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 1.5,
+                      mb: 2
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        p: 1,
+                        borderRadius: 2,
+                        backgroundColor: "#fff3e0",
+                        mt: 0.25
+                      }}
+                    >
+                      <MapPin size={18} color="#f57c00" />
+                    </Box>
+                    <Box>
+                      <Typography variant="body1">
+                        {addressData.streetNumber} {addressData.streetName}
+                      </Typography>
+                      <Typography variant="body1">
+                        {addressData.suburb}, {addressData.city}
+                      </Typography>
+                      <Typography variant="body1">
+                        {addressData.province}, {addressData.country}
+                      </Typography>
+                      <Typography variant="body1">
+                        {addressData.postalCode}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {userLocation && (
+                    <Typography variant="caption" color="text.secondary">
+                      Location detected automatically • Accuracy:{" "}
+                      {userLocation.accuracy}m
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Recent Transactions */}
+              <Card sx={{ mb: 3 }}>
+                <CardHeader title="Recent Transactions" />
+                <CardContent>
+                  {transactionData.map((transaction) => (
+                    <Box
+                      key={transaction.id}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        py: 2,
+                        borderBottom: "1px solid #eee"
+                      }}
+                    >
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      >
+                        <Box
+                          sx={{
+                            p: 1,
+                            borderRadius: 2,
+                            bgcolor:
+                              transaction.type === "Sale"
+                                ? "#e8f5e8"
+                                : "#f3e5f5"
+                          }}
+                        >
+                          <DollarSign
+                            size={18}
+                            color={
+                              transaction.type === "Sale"
+                                ? "#4CAF50"
+                                : "#9C27B0"
+                            }
+                          />
+                        </Box>
                         <Box>
-                          {[...Array(5)].map((_, i) => (
-                            <StarIcon
-                              key={i}
-                              sx={{
-                                color:
-                                  i < review.rating ? "#FFD700" : "#E0E0E0",
-                                fontSize: 18
-                              }}
-                            />
-                          ))}
+                          <Typography variant="body2" fontWeight="medium">
+                            {transaction.description}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {transaction.date} • {transaction.type}
+                          </Typography>
                         </Box>
                       </Box>
-                      <Typography color="text.secondary" sx={{ mb: 1 }}>
-                        {review.review}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {review.date}
-                      </Typography>
-                    </Paper>
+                      <Box sx={{ textAlign: "right" }}>
+                        <Typography variant="body2" fontWeight="bold">
+                          {transaction.amount}
+                        </Typography>
+                        <Chip
+                          label={transaction.status}
+                          size="small"
+                          color={
+                            transaction.status === "Completed"
+                              ? "success"
+                              : "warning"
+                          }
+                          variant="outlined"
+                        />
+                      </Box>
+                    </Box>
                   ))}
                 </CardContent>
               </Card>
-            )}
-          </Box>
-        </Box>
-      </Box>
-      {/* Picks that you may like */}
-      <Box
-        sx={{ maxWidth: 1200, mx: "auto", px: { xs: 2, sm: 4 }, mt: 10, mb: 8 }}
-      >
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          sx={{ mb: 4, color: "primary.main", letterSpacing: 0.5 }}
-        >
-          Picks that you may like
-        </Typography>
-        <FeaturedListings />
+
+              {/* Listing Interactions */}
+              <Card>
+                <CardHeader title="My Listings Performance" />
+                <CardContent>
+                  {listingInteractions.map((listing) => (
+                    <Box
+                      key={listing.id}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                        py: 2,
+                        borderBottom: "1px solid #eee"
+                      }}
+                    >
+                      <Avatar
+                        src={listing.image}
+                        variant="rounded"
+                        sx={{ width: 60, height: 60 }}
+                      />
+                      <Box sx={{ flex: 1 }}>
+                        <Typography
+                          variant="body1"
+                          fontWeight="medium"
+                          sx={{ mb: 1 }}
+                        >
+                          {listing.title}
+                        </Typography>
+                        <Box sx={{ display: "flex", gap: 3 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5
+                            }}
+                          >
+                            <Eye size={14} color="#666" />
+                            <Typography variant="caption">
+                              {listing.views}
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5
+                            }}
+                          >
+                            <MessageCircle size={14} color="#666" />
+                            <Typography variant="caption">
+                              {listing.messages}
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5
+                            }}
+                          >
+                            <Heart size={14} color="#666" />
+                            <Typography variant="caption">
+                              {listing.likes}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                      <Chip
+                        label={listing.status}
+                        size="small"
+                        color={
+                          listing.status === "Active" ? "primary" : "default"
+                        }
+                        variant="outlined"
+                      />
+                    </Box>
+                  ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
       </Box>
     </Box>
   );

@@ -53,7 +53,7 @@ const sellerTypes = [
   { value: "registered", label: "Registered Business" }
 ];
 
-const StartSellingPage = () => {
+function StartSellingPage() {
   const navigate = useNavigate();
 
   return (

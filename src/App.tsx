@@ -21,6 +21,8 @@ import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 import AdvertiseShowcase from "./pages/AdvertiseShowcase";
 import BrowsePage from "./pages/BrowsePage";
+import { LocationProvider } from "./context/LocationProvider";
+import { LocationAlertBanner } from "./components/LocationAlertBanner";
 
 const queryClient = new QueryClient();
 
@@ -32,28 +34,35 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/start-selling" element={<StartSellingPage />} />
-              <Route path="/category/:category" element={<CategoryPage />} />
-              <Route path="/item/:id" element={<ItemDetailPage />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route
-                path="/seller-dashboard"
-                element={<SellerDashboardNew />}
-              />
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
-              <Route path="/messages" element={<Messages />} />
-              <Route path="/messages/:conversationId" element={<Messages />} />
-              <Route path="/advertise" element={<AdvertiseShowcase />} />
-              <Route path="/browse" element={<BrowsePage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <LocationProvider>
+            {/* Global location banner above all content */}
+            <LocationAlertBanner />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/start-selling" element={<StartSellingPage />} />
+                <Route path="/category/:category" element={<CategoryPage />} />
+                <Route path="/item/:id" element={<ItemDetailPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route
+                  path="/seller-dashboard"
+                  element={<SellerDashboardNew />}
+                />
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/messages" element={<Messages />} />
+                <Route
+                  path="/messages/:conversationId"
+                  element={<Messages />}
+                />
+                <Route path="/advertise" element={<AdvertiseShowcase />} />
+                <Route path="/browse" element={<BrowsePage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </LocationProvider>
         </TooltipProvider>
       </ThemeProvider>
     </NextThemeProvider>

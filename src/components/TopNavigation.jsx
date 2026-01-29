@@ -1,0 +1,124 @@
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  IconButton,
+  Typography,
+  Switch,
+  FormControlLabel,
+  Menu,
+  MenuItem
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  AccountCircle,
+  ExitToApp
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { LocationSelector } from "./LocationSelector";
+import { SearchWithCategories } from "./SearchWithCategories";
+import { ThemeToggle } from "./ThemeToggle";
+
+export const TopNavigation = ({
+  onMenuToggle,
+  userType,
+  onUserTypeChange
+}) => {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+    handleMenuClose();
+  };
+
+  const handleUserTypeToggle = (event) => {
+    const newType = event.target.checked ? "seller" : "user";
+    onUserTypeChange?.(newType);
+  };
+
+  return (
+    <AppBar
+      position="fixed"
+      color="primary"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={onMenuToggle}
+          sx={{ mr: 2 }}
+        >
+          <MenuIcon />
+        </IconButton>
+
+        <Typography variant="h6" sx={{ mr: 3, fontWeight: "bold" }}>
+          LocalMarket
+        </Typography>
+
+        {(userType === "seller" || userType === "admin") &&
+          onUserTypeChange && (
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={userType === "seller"}
+                  onChange={handleUserTypeToggle}
+                  color="default"
+                />
+              }
+              label={userType === "seller" ? "Seller Mode" : "User Mode"}
+              sx={{ mr: 2, color: "white" }}
+            />
+          )}
+
+        <Box
+          sx={{ flexGrow: 1, display: "flex", alignItems: "center", gap: 2 }}
+        >
+          <SearchWithCategories />
+          <LocationSelector
+            selectedLocation="Polokwane"
+            onLocationChange={(location) => console.log("Location:", location)}
+          />
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <ThemeToggle />
+          <IconButton
+            color="inherit"
+            size="small"
+            onClick={handleProfileMenuOpen}
+            sx={{ height: 32, width: 32 }} // match Button small height
+          >
+            <AccountCircle />
+          </IconButton>
+        </Box>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleMenuClose}>
+            <Typography>{user.name}</Typography>
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <ExitToApp sx={{ mr: 1 }} />
+            Logout
+          </MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
+  );
+};

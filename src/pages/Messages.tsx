@@ -31,7 +31,7 @@ import {
 import { MessageNavBar } from "@/components/MessageNavBar";
 
 // Utility functions for date formatting
-const formatTimeAgo = (dateString: string): string => {
+const formatTimeAgo = (dateString) => {
   try {
     return formatDistanceToNow(new Date(dateString), { addSuffix: true });
   } catch (e) {
@@ -40,7 +40,7 @@ const formatTimeAgo = (dateString: string): string => {
   }
 };
 
-const formatMessageTime = (dateString: string): string => {
+const formatMessageTime = (dateString) => {
   try {
     return new Date(dateString).toLocaleTimeString([], {
       hour: "2-digit",
@@ -64,7 +64,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const MessageBubble = styled(Box, {
   shouldForwardProp: (prop) => prop !== "isCurrentUser"
-})<{ isCurrentUser?: boolean }>(({ theme, isCurrentUser }) => ({
+})(({ theme, isCurrentUser }) => ({
   display: "inline-block",
   maxWidth: "70%",
   padding: theme.spacing(1.5, 2),
@@ -91,7 +91,7 @@ const MessageBubble = styled(Box, {
 
 const MessageTime = styled(Typography, {
   shouldForwardProp: (prop) => prop !== "isCurrentUser"
-})<{ isCurrentUser?: boolean }>(({ theme, isCurrentUser }) => ({
+})(({ theme, isCurrentUser }) => ({
   fontSize: "0.75rem",
   textAlign: isCurrentUser ? "right" : "left",
   color: isCurrentUser
@@ -100,39 +100,23 @@ const MessageTime = styled(Typography, {
   marginTop: theme.spacing(0.5)
 }));
 
-interface Message {
-  id: string;
-  text: string;
-  sender: "me" | "other";
-  timestamp: string;
-}
 
-interface Conversation {
-  id: string;
-  userName: string;
-  userAvatar: string;
-  lastMessage: string;
-  lastMessageTime: string;
-  unreadCount: number;
-}
 
-export const Messages = () => {
+function Messages() {
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery("(max-width: 600px)");
-  const [activeConversation, setActiveConversation] = useState<string | null>(
-    conversationId || null
-  );
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [messages, setMessages] = useState<Message[]>([]);
+    const [activeConversation, setActiveConversation] = useState(conversationId || null);
+  const [conversations, setConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [message, setMessage] = useState("");
 
   // Mock data - replace with actual API calls
   useEffect(() => {
     // Simulate loading conversations
-    const mockConversations: Conversation[] = [
+      const mockConversations = [
       {
         id: "1",
         userName: "John Doe",
@@ -219,11 +203,11 @@ export const Messages = () => {
 
   // Handle sending a new message
   const handleSendMessage = useCallback(
-    (e: React.FormEvent) => {
+    (e) => {
       e.preventDefault();
       if (!message.trim()) return;
 
-      const newMessage: Message = {
+      const newMessage = {
         id: Date.now().toString(),
         text: message,
         sender: "me",
@@ -236,7 +220,7 @@ export const Messages = () => {
     [message]
   );
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage(e);

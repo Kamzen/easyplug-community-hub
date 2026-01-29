@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, alpha } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
@@ -35,26 +35,62 @@ const theme = createTheme({
     h6: { fontWeight: 700 },
     button: { fontWeight: 700 }
   },
-  shape: {
-    borderRadius: 12
-  },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none",
-          borderRadius: 8,
-          fontWeight: 700
+          fontWeight: 700,
+          height: 40
         },
         containedPrimary: {
           background: "linear-gradient(90deg, #667eea 0%, #764ba2 100%)"
         }
       }
     },
-    MuiPaper: {
+    MuiTextField: {
       styleOverrides: {
         root: {
-          borderRadius: 16
+          borderRadius: 12,
+          transition: "all 0.3s ease",
+          // background: "rgba(255,255,255,0.98)",
+          boxShadow: "0 2px 8px 0 rgba(102,126,234,0.04)"
+        }
+      }
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          transition: "all 0.3s ease",
+          // background: "rgba(255,255,255,0.98)",
+          fontSize: 16,
+          fontWeight: 500,
+          boxShadow: "0 2px 8px 0 rgba(102,126,234,0.04)"
+        },
+        notchedOutline: {
+          borderColor: "#667eea",
+          borderWidth: 1
+        },
+        input: {
+          padding: "14px 16px",
+          fontSize: 16,
+          fontWeight: 500,
+          borderRadius: 12
+          // background: "rgba(255,255,255,0.98)"
+        }
+      }
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontWeight: 600,
+          fontSize: 15,
+          color: "#667eea",
+          letterSpacing: 0.2
+        },
+        shrink: {
+          color: "#764ba2",
+          fontWeight: 700
         }
       }
     }

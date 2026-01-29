@@ -51,7 +51,7 @@ import {
   Bar
 } from 'recharts';
 
-const AdminDashboard = () => {
+function AdminDashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -510,6 +510,6 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AdminDashboard;

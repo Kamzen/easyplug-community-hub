@@ -15,9 +15,13 @@ import {
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { NavBar } from "@/components/NavBar";
-import FeaturedListings, {
-  listings as baseListings
-} from "@/components/FeaturedListings";
+import FeaturedListings from "@/components/FeaturedListings";
+import { useQuery } from "@tanstack/react-query";
+import {
+  listingsService,
+  type ListingsListResponse
+} from "@/services/listingsService";
+import { toListingItem } from "@/lib/listingMapper";
 import {
   Carousel,
   CarouselContent,
@@ -114,12 +118,22 @@ const InFeedAdCard: React.FC<{ ad: Ad }> = ({ ad }) => {
 };
 
 const BrowsePage: React.FC = () => {
-  const adsPerRow = 4;
-  const insertAdsEvery = 8; // insert a full ads row after every 8 listings
+  const { data, isLoading, isError } = useQuery<ListingsListResponse>({
+    queryKey: ["listings", "browse"],
+    queryFn: () => listingsService.getAll()
+  });
+
+  // Compute items safely
+  const raw =
+    (data?.listings as unknown) ??
+    (data as unknown as { data?: unknown })?.data ??
+    [];
+  const arr = Array.isArray(raw) ? (raw as unknown[]) : [];
+  const items = arr.map((r) => toListingItem(r as Record<string, unknown>));
 
   return (
     <Box mt={10}>
-      <NavBar isLoggedIn={false} onAuthClick={() => {}} onLogout={() => {}} />
+      <NavBar onLogout={() => {}} />
       <Box sx={{ pt: 10, pb: { xs: 3, md: 6 } }}>
         <Container maxWidth="lg">
           <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
@@ -128,40 +142,53 @@ const BrowsePage: React.FC = () => {
           <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
             Discover listings and sponsored promotions tailored to you.
           </Typography>
-
-          {/* Listings - same component as home with a mid-stream sponsored row */}
-          <FeaturedListings
-            items={baseListings}
-            sponsoredRow={{
-              after: 8,
-              items: [
-                {
-                  id: "browse-mid-1",
-                  title: "Local Pro Cleaning",
-                  image:
-                    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200&auto=format&fit=crop"
-                },
-                {
-                  id: "browse-mid-2",
-                  title: "Mobile Mechanics",
-                  image:
-                    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&auto=format&fit=crop"
-                },
-                {
-                  id: "browse-mid-3",
-                  title: "Chef at Home",
-                  image:
-                    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&auto=format&fit=crop"
-                },
-                {
-                  id: "browse-mid-4",
-                  title: "Handyman Special",
-                  image:
-                    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&auto=format&fit=crop"
-                }
-              ]
-            }}
-          />
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-64 bg-gray-100 animate-pulse rounded"
+                />
+              ))}
+            </div>
+          ) : isError || !data || items.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              No listings found.
+            </div>
+          ) : (
+            <FeaturedListings
+              items={items}
+              sponsoredRow={{
+                after: 8,
+                items: [
+                  {
+                    id: "browse-mid-1",
+                    title: "Local Pro Cleaning",
+                    image:
+                      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200&auto=format&fit=crop"
+                  },
+                  {
+                    id: "browse-mid-2",
+                    title: "Mobile Mechanics",
+                    image:
+                      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&auto=format&fit=crop"
+                  },
+                  {
+                    id: "browse-mid-3",
+                    title: "Chef at Home",
+                    image:
+                      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&auto=format&fit=crop"
+                  },
+                  {
+                    id: "browse-mid-4",
+                    title: "Handyman Special",
+                    image:
+                      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&auto=format&fit=crop"
+                  }
+                ]
+              }}
+            />
+          )}
         </Container>
       </Box>
     </Box>

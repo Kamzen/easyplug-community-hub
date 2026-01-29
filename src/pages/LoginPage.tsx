@@ -7,7 +7,6 @@ import {
   Typography,
   TextField,
   Button,
-  Alert,
   Paper
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
@@ -15,11 +14,20 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import GoogleIcon from "@mui/icons-material/Google";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "@/services/authService";
+import ToastAlert from "@/components/ToastAlert";
 
 interface LoginCredentials {
   email: string;
   password: string;
 }
+
+type LoginResult = {
+  token?: string;
+  accessToken?: string;
+  message?: string;
+};
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -30,54 +38,38 @@ const validationSchema = Yup.object({
     .required("Password is required")
 });
 
-// Dummy user data
-const dummyUsers = {
-  "user@example.com": { password: "user123", role: "user", name: "John Doe" },
-  "seller@example.com": {
-    password: "seller123",
-    role: "seller",
-    name: "Jane Smith"
-  },
-  "admin@example.com": {
-    password: "admin123",
-    role: "admin",
-    name: "Admin User"
-  }
-};
-
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [error, setError] = React.useState("");
-
-  const handleSubmit = (values: LoginCredentials) => {
-    const user = dummyUsers[values.email as keyof typeof dummyUsers];
-
-    if (user && user.password === values.password) {
-      // Store user data in localStorage (in a real app, use proper auth)
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: values.email,
-          role: user.role,
-          name: user.name
-        })
-      );
-
-      // Redirect based on role
-      switch (user.role) {
-        case "admin":
-          navigate("/admin-dashboard");
-          break;
-        case "seller":
-          navigate("/seller-dashboard");
-          break;
-        default:
-          navigate("/user-dashboard");
+  // Single toast state powered by ToastAlert component
+  const [toast, setToast] = React.useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "info" | "warning" | "error";
+  }>({ open: false, message: "", severity: "info" });
+  const loginMutation = useMutation<LoginResult, unknown, LoginCredentials>({
+    mutationFn: async (payload: LoginCredentials) => authService.login(payload),
+    onSuccess: (data) => {
+      const token = data?.token;
+      if (token) {
+        localStorage.setItem("token", token);
       }
-    } else {
-      setError("Invalid email or password");
+      const successMsg = data?.message || "Signed in successfully";
+      setToast({ open: true, severity: "success", message: successMsg });
+      // If you want to navigate shortly after so the user sees the toast, uncomment below:
+      // setTimeout(() => navigate("/user-dashboard"), 700);
+    },
+    onError: (err: unknown) => {
+      console.error("Login failed", err);
+      const e = err as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const msg = e?.response?.data?.message || e?.message || "Login failed";
+      setToast({ open: true, severity: "error", message: msg });
     }
-  };
+  });
+
+  // no separate submit handler; we'll call mutate inline in Formik onSubmit
 
   return (
     <Box
@@ -145,11 +137,7 @@ const LoginPage = () => {
               </Typography>
             </Box>
 
-            {error && (
-              <Alert severity="error" sx={{ mb: 3 }}>
-                {error}
-              </Alert>
-            )}
+            {/* Errors and success messages are surfaced via ToastAlert below */}
 
             <Paper
               elevation={0}
@@ -172,7 +160,7 @@ const LoginPage = () => {
             <Formik
               initialValues={{ email: "", password: "" }}
               validationSchema={validationSchema}
-              onSubmit={handleSubmit}
+              onSubmit={(values) => loginMutation.mutate(values)}
             >
               {({ errors, touched, values, handleChange }) => (
                 <Form>
@@ -220,14 +208,21 @@ const LoginPage = () => {
                           "linear-gradient(90deg, #764ba2 0%, #667eea 100%)"
                       }
                     }}
+                    disabled={loginMutation.isPending}
                   >
-                    Sign In
+                    {loginMutation.isPending ? "Signing in..." : "Sign In"}
                   </Button>
                 </Form>
               )}
             </Formik>
           </CardContent>
         </Card>
+        <ToastAlert
+          open={toast.open}
+          message={toast.message}
+          severity={toast.severity}
+          onClose={() => setToast((t) => ({ ...t, open: false }))}
+        />
       </Container>
     </Box>
   );

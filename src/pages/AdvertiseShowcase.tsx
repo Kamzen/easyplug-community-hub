@@ -15,19 +15,14 @@ import {
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 
-type AdCardProps = {
-  title: string;
-  description: string;
-  imageUrl: string;
-  ctaLabel: string;
-};
 
-const AdCard: React.FC<AdCardProps> = ({
+
+function AdCard({
   title,
   description,
   imageUrl,
   ctaLabel
-}) => {
+}) {
   return (
     <Card sx={{ borderRadius: 3, overflow: "hidden", height: "100%" }}>
       <CardMedia
@@ -52,21 +47,16 @@ const AdCard: React.FC<AdCardProps> = ({
       </CardContent>
     </Card>
   );
-};
+}
 
-type AdSpotlightProps = {
-  headline: string;
-  subheadline: string;
-  ctaLabel: string;
-  imageUrl: string;
-};
 
-const AdSpotlight: React.FC<AdSpotlightProps> = ({
+
+function AdSpotlight({
   headline,
   subheadline,
   ctaLabel,
   imageUrl
-}) => {
+}) {
   return (
     <Paper
       elevation={0}
@@ -125,9 +115,9 @@ const AdSpotlight: React.FC<AdSpotlightProps> = ({
       </Box>
     </Paper>
   );
-};
+}
 
-const AdvertiseShowcase: React.FC = () => {
+function AdvertiseShowcase() {
   return (
     <Box
       sx={{
@@ -212,6 +202,6 @@ const AdvertiseShowcase: React.FC = () => {
       </Container>
     </Box>
   );
-};
+}
 
 export default AdvertiseShowcase;

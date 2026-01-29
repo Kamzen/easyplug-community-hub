@@ -4,9 +4,6 @@ import {
   Box,
   Container,
   Typography,
-  Grid,
-  Card,
-  CardMedia,
   Button,
   Chip,
   Avatar,
@@ -16,32 +13,40 @@ import {
   Tab,
   Rating,
   IconButton,
-  Badge,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
-  Stack
+  Stack,
+  Card
 } from "@mui/material";
+// Using Box for layout instead of MUI Grid to avoid version/type mismatches
 import {
   ArrowLeft,
-  Star,
   Share,
   CheckCircle,
   Favorite,
   FavoriteBorder,
   Verified,
-  Message
+  Message,
+  KeyboardArrowUp,
+  KeyboardArrowDown,
+  KeyboardArrowLeft,
+  KeyboardArrowRight
 } from "@mui/icons-material";
-import { MapPin, Clock, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { NavBar } from "../components/NavBar";
 import FeaturedListings, {
-  listings,
   type ListingItem
 } from "../components/FeaturedListings";
+import { useQuery } from "@tanstack/react-query";
+import {
+  listingsService,
+  type ListingDetailResponse
+} from "@/services/listingsService";
+import { toListingItem, toListingImages } from "@/lib/listingMapper";
 import type { SponsoredItem } from "@/components/SponsoredListingCard";
 
-// Type definitions
 interface Review {
   id: number;
   user: string;
@@ -64,7 +69,7 @@ interface Seller {
 }
 
 interface ItemData {
-  id: number;
+  id: string | number;
   title: string;
   price: string;
   originalPrice?: string;
@@ -91,23 +96,96 @@ const ItemDetailPage = () => {
   // State for NavBar
   const [selectedLocation, setSelectedLocation] = React.useState("Polokwane");
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [showAuthModal, setShowAuthModal] = React.useState(false);
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const isLoggedIn = !!user;
 
-  const handleProfileAction = (action: string) => {
-    navigate(`/profile?tab=${action}`);
-  };
   const handleLogout = () => {
     localStorage.removeItem("user");
     window.location.reload();
   };
 
-  // Find the listing from FeaturedListings
-  const listing = listings.find((item) => item.id === Number(id));
+  // Fetch listing by id (raw) and map locally
+  const { data: detail } = useQuery<ListingDetailResponse>({
+    queryKey: ["listings", id],
+    queryFn: () => listingsService.getById(String(id)),
+    enabled: Boolean(id)
+  });
+  const rawListing =
+    (detail?.listing as unknown) ?? (detail?.data as unknown) ?? null;
+  const mappedListing: ListingItem | null = rawListing
+    ? toListingItem(rawListing as Record<string, unknown>)
+    : null;
+  const galleryImages: string[] = rawListing
+    ? toListingImages(rawListing as Record<string, unknown>)
+    : [];
+
+  // Prefer description from the API response when it exists
+  const extractApiDescription = (obj: unknown): string | undefined => {
+    if (!obj || typeof obj !== "object") return undefined;
+    const rec = obj as Record<string, unknown>;
+    const keys = ["description", "details", "content", "body", "summary"];
+    for (const k of keys) {
+      const v = rec[k];
+      if (typeof v === "string" && v.trim().length > 0) return v.trim();
+    }
+    return undefined;
+  };
+  const apiDescription = extractApiDescription(rawListing);
 
   // Generate dynamic data based on category
-  const generateItemData = (listing: (typeof listings)[0]): ItemData => {
+  const generateItemData = (
+    listing: ListingItem,
+    imagesParam?: string[],
+    sellerRawParam?: Record<string, unknown>,
+    descriptionOverride?: string
+  ): ItemData => {
+    const images =
+      imagesParam && imagesParam.length > 0 ? imagesParam : [listing.image];
+    const sellerRaw = (sellerRawParam ?? {}) as Record<string, unknown>;
+    const sellerName =
+      (sellerRaw.name as string) ||
+      [sellerRaw.firstName as string, sellerRaw.lastName as string]
+        .filter(Boolean)
+        .join(" ") ||
+      (listing.category === "Services"
+        ? "Professional Service Provider"
+        : listing.category === "Property"
+        ? "Property Agent"
+        : listing.category === "Vehicles"
+        ? "Vehicle Dealer"
+        : listing.category === "Food"
+        ? "Local Farmer"
+        : "Seller");
+    const sellerAvatar =
+      (sellerRaw.profilePicture as string) ||
+      (sellerRaw.avatarUrl as string) ||
+      (sellerRaw.photoUrl as string) ||
+      (sellerRaw.avatar as string) ||
+      (sellerRaw.profileImageUrl as string) ||
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face";
+    const sellerRating =
+      Number(
+        (sellerRaw.rating as number) ||
+          (sellerRaw.averageRating as number) ||
+          listing.rating
+      ) || listing.rating;
+    const sellerTotalSales =
+      Number(
+        (sellerRaw.totalSales as number) ||
+          (sellerRaw.salesCount as number) ||
+          0
+      ) || 0;
+    const sellerMemberSince = (() => {
+      const created = sellerRaw.createdAt as string | undefined;
+      const d = created ? new Date(created) : undefined;
+      return d && !isNaN(d.getTime()) ? String(d.getFullYear()) : "";
+    })();
+    const sellerResponseTime =
+      (sellerRaw.responseTime as string) || "Usually responds within 2 hours";
+    const sellerVerified = Boolean(
+      (sellerRaw.verified as boolean) ||
+        (sellerRaw.isVerified as boolean) ||
+        listing.verified
+    );
+
     const baseData = {
       id: listing.id,
       title: listing.title,
@@ -120,25 +198,15 @@ const ItemDetailPage = () => {
       category: listing.category,
       seller: {
         id: `seller_${listing.id}`,
-        name:
-          listing.category === "Services"
-            ? "Professional Service Provider"
-            : listing.category === "Property"
-            ? "Property Agent"
-            : listing.category === "Vehicles"
-            ? "Vehicle Dealer"
-            : listing.category === "Food"
-            ? "Local Farmer"
-            : "TechHub Store",
-        avatar:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-        rating: 4.9,
-        totalSales: Math.floor(Math.random() * 200) + 50,
-        memberSince: "2022",
-        responseTime: "Usually responds within 2 hours",
-        verified: listing.verified
+        name: sellerName,
+        avatar: sellerAvatar,
+        rating: sellerRating,
+        totalSales: sellerTotalSales,
+        memberSince: sellerMemberSince,
+        responseTime: sellerResponseTime,
+        verified: sellerVerified
       }
-    };
+    } as const;
 
     switch (listing.category) {
       case "Electronics":
@@ -150,14 +218,10 @@ const ItemDetailPage = () => {
               )}`
             : listing.price,
           discount: "31% OFF",
-          images: [
-            listing.image,
-            "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=600&h=400&fit=crop"
-          ],
+          images,
           colors: ["Black", "White", "Blue", "Red"],
           description:
+            descriptionOverride ??
             "Experience premium quality with our latest electronics. Featuring cutting-edge technology, superior performance, and sleek design. Perfect for both personal and professional use.",
           features: [
             "Latest Technology",
@@ -192,20 +256,12 @@ const ItemDetailPage = () => {
             }
           ]
         };
-
       case "Property":
         return {
           ...baseData,
-          originalPrice: undefined,
-          discount: undefined,
-          images: [
-            listing.image,
-            "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1464983953574-0892a716854b?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600&h=400&fit=crop"
-          ],
-          colors: undefined,
+          images,
           description:
+            descriptionOverride ??
             "Beautiful property in a prime location. This well-maintained space offers modern amenities, convenient access to local facilities, and a comfortable living environment.",
           features: [
             "Prime Location",
@@ -230,7 +286,6 @@ const ItemDetailPage = () => {
             }
           ]
         };
-
       case "Vehicles":
         return {
           ...baseData,
@@ -240,14 +295,10 @@ const ItemDetailPage = () => {
               )}`
             : listing.price,
           discount: "20% OFF",
-          images: [
-            listing.image,
-            "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=400&fit=crop"
-          ],
+          images,
           colors: ["White", "Black", "Silver", "Blue"],
           description:
+            descriptionOverride ??
             "Well-maintained vehicle with excellent performance and reliability. This vehicle comes with full service history and is ready for immediate use.",
           features: [
             "Full Service History",
@@ -272,20 +323,12 @@ const ItemDetailPage = () => {
             }
           ]
         };
-
       case "Services":
         return {
           ...baseData,
-          originalPrice: undefined,
-          discount: undefined,
-          images: [
-            listing.image,
-            "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
-          ],
-          colors: undefined,
+          images,
           description:
+            descriptionOverride ??
             "Professional service delivered with expertise and attention to detail. Our experienced team ensures high-quality results and customer satisfaction.",
           features: [
             "Professional Service",
@@ -310,20 +353,12 @@ const ItemDetailPage = () => {
             }
           ]
         };
-
       case "Food":
         return {
           ...baseData,
-          originalPrice: undefined,
-          discount: undefined,
-          images: [
-            listing.image,
-            "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=600&h=400&fit=crop",
-            "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=400&fit=crop"
-          ],
-          colors: undefined,
+          images,
           description:
+            descriptionOverride ??
             "Fresh, organic produce grown locally with care. Our products are harvested at peak freshness to ensure the best taste and nutritional value.",
           features: [
             "Fresh & Organic",
@@ -347,15 +382,12 @@ const ItemDetailPage = () => {
             }
           ]
         };
-
       default:
         return {
           ...baseData,
-          originalPrice: undefined,
-          discount: undefined,
-          images: [listing.image],
-          colors: undefined,
-          description: "Quality item available for purchase.",
+          images,
+          description:
+            descriptionOverride ?? "Quality item available for purchase.",
           features: ["Quality Guaranteed", "Good Condition"],
           condition: "Good",
           reviewList: []
@@ -363,16 +395,19 @@ const ItemDetailPage = () => {
     }
   };
 
-  const item = listing ? generateItemData(listing) : null;
+  const item = mappedListing
+    ? generateItemData(
+        mappedListing,
+        galleryImages,
+        (rawListing as Record<string, unknown> | null | undefined)?.seller as
+          | Record<string, unknown>
+          | undefined,
+        apiDescription
+      )
+    : null;
 
   // Similar items data (reuse normal listing UI)
-  const similarListingItems: ListingItem[] = item
-    ? listings
-        .filter((i) => i.category === item.category && i.id !== Number(id))
-        .slice(0, 8)
-    : [];
-
-  // Ads for similar items: inline and a sponsored row
+  const similarListingItems: ListingItem[] = [];
   const similarInlineAds: SponsoredItem[] = [
     {
       id: "sim-inline-1",
@@ -387,7 +422,6 @@ const ItemDetailPage = () => {
         "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200&auto=format&fit=crop"
     }
   ];
-
   const similarSponsoredItems: SponsoredItem[] = [
     {
       id: "sim-spons-1",
@@ -421,6 +455,18 @@ const ItemDetailPage = () => {
   );
   const [isWishlisted, setIsWishlisted] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
+  const thumbsRef = React.useRef<HTMLDivElement | null>(null);
+  const THUMB_STEP = 88; // px per item (thumb + gap)
+  const scrollThumbsVertical = (delta: number) => {
+    const el = thumbsRef.current;
+    if (!el) return;
+    el.scrollBy({ top: delta, behavior: "smooth" });
+  };
+  const scrollThumbsHorizontal = (delta: number) => {
+    const el = thumbsRef.current;
+    if (!el) return;
+    el.scrollBy({ left: delta, behavior: "smooth" });
+  };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -446,12 +492,8 @@ const ItemDetailPage = () => {
     <Box sx={{ minHeight: "100vh", bgcolor: "#fafafa" }}>
       <NavBar
         selectedLocation={selectedLocation}
-        onLocationChange={setSelectedLocation}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        isLoggedIn={isLoggedIn}
-        user={user}
-        onAuthClick={() => setShowAuthModal(true)}
         onLogout={handleLogout}
       />
 
@@ -464,17 +506,21 @@ const ItemDetailPage = () => {
             color: "#666",
             textTransform: "none",
             fontSize: "16px",
-            "&:hover": {
-              backgroundColor: "#f0f0f0"
-            }
+            "&:hover": { backgroundColor: "#f0f0f0" }
           }}
         >
           Back to Browse
         </Button>
 
-        <Grid container spacing={4}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            gap: 4
+          }}
+        >
           {/* Image Gallery */}
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Box>
             <Box
               sx={{
                 display: "flex",
@@ -482,49 +528,136 @@ const ItemDetailPage = () => {
                 gap: 2
               }}
             >
-              {/* Thumbnails - left on desktop, below on mobile */}
+              {/* Thumbnails with arrow scroller */}
               <Box
                 sx={{
-                  display: "flex",
-                  flexDirection: { xs: "row", md: "column" },
-                  gap: 1,
+                  position: "relative",
                   width: { xs: "100%", md: "80px" },
                   order: { xs: 2, md: 1 }
                 }}
               >
-                {item.images.map((image, index) => (
-                  <Card
-                    key={index}
-                    sx={{
-                      cursor: "pointer",
-                      border:
-                        selectedImage === index
-                          ? "2px solid #1976d2"
-                          : "2px solid transparent",
-                      borderRadius: 0,
-                      overflow: "hidden",
-                      transition: "all 0.2s ease",
-                      boxShadow: "none",
-                      width: { xs: "80px", md: "100%" },
-                      flexShrink: 0,
-                      "&:hover": {
-                        transform: "scale(1.02)"
-                      }
-                    }}
-                    onClick={() => setSelectedImage(index)}
-                  >
-                    <Box
-                      component="img"
-                      src={image}
-                      alt={`${item.title} ${index + 1}`}
+                <Box
+                  ref={thumbsRef}
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "row", md: "column" },
+                    gap: 1,
+                    width: "100%",
+                    maxHeight: { xs: "auto", md: 500 },
+                    overflowY: { xs: "hidden", md: "auto" },
+                    overflowX: { xs: "auto", md: "hidden" },
+                    // hide scrollbars cross-browser, keep scroll functional
+                    msOverflowStyle: "none", // IE/Edge
+                    scrollbarWidth: "none", // Firefox
+                    "&::-webkit-scrollbar": { display: "none" } // WebKit
+                  }}
+                >
+                  {item.images.map((image, index) => (
+                    <Card
+                      key={index}
                       sx={{
-                        objectFit: "cover",
-                        height: { xs: "80px", md: "80px" },
-                        width: "100%"
+                        cursor: "pointer",
+                        border:
+                          selectedImage === index
+                            ? "2px solid #1976d2"
+                            : "2px solid transparent",
+                        borderRadius: 0,
+                        overflow: "hidden",
+                        transition: "all 0.2s ease",
+                        boxShadow: "none",
+                        width: { xs: "80px", md: "100%" },
+                        flexShrink: 0,
+                        "&:hover": { transform: "scale(1.02)" }
                       }}
-                    />
-                  </Card>
-                ))}
+                      onClick={() => setSelectedImage(index)}
+                    >
+                      <Box
+                        component="img"
+                        src={image}
+                        alt={`${item.title} ${index + 1}`}
+                        sx={{
+                          objectFit: "cover",
+                          height: { xs: "80px", md: "80px" },
+                          width: "100%"
+                        }}
+                      />
+                    </Card>
+                  ))}
+                </Box>
+                {/* Desktop up/down arrows */}
+                <IconButton
+                  size="small"
+                  onClick={() => scrollThumbsVertical(-THUMB_STEP)}
+                  sx={{
+                    display: { xs: "none", md: "flex" },
+                    position: "absolute",
+                    top: 4,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    bgcolor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    boxShadow: 1,
+                    zIndex: 3
+                  }}
+                >
+                  <KeyboardArrowUp />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => scrollThumbsVertical(THUMB_STEP)}
+                  sx={{
+                    display: { xs: "none", md: "flex" },
+                    position: "absolute",
+                    bottom: 4,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    bgcolor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    boxShadow: 1,
+                    zIndex: 3
+                  }}
+                >
+                  <KeyboardArrowDown />
+                </IconButton>
+                {/* Mobile left/right arrows */}
+                <IconButton
+                  size="small"
+                  onClick={() => scrollThumbsHorizontal(-THUMB_STEP)}
+                  sx={{
+                    display: { xs: "flex", md: "none" },
+                    position: "absolute",
+                    left: 4,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    bgcolor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    boxShadow: 1,
+                    zIndex: 3
+                  }}
+                >
+                  <KeyboardArrowLeft />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => scrollThumbsHorizontal(THUMB_STEP)}
+                  sx={{
+                    display: { xs: "flex", md: "none" },
+                    position: "absolute",
+                    right: 4,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    bgcolor: "background.paper",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    boxShadow: 1,
+                    zIndex: 3
+                  }}
+                >
+                  <KeyboardArrowRight />
+                </IconButton>
               </Box>
 
               {/* Main image */}
@@ -550,10 +683,10 @@ const ItemDetailPage = () => {
                 />
               </Card>
             </Box>
-          </Grid>
+          </Box>
 
           {/* Item Details */}
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Box>
             <Paper
               sx={{ p: 4, borderRadius: 0, boxShadow: "none", border: "none" }}
             >
@@ -573,20 +706,14 @@ const ItemDetailPage = () => {
                 <Chip
                   label={item.category}
                   size="small"
-                  sx={{
-                    bgcolor: "#e3f2fd",
-                    color: "#1976d2"
-                  }}
+                  sx={{ bgcolor: "#e3f2fd", color: "#1976d2" }}
                 />
                 {item.verified && (
                   <Chip
                     label="Verified"
                     size="small"
                     icon={<Verified />}
-                    sx={{
-                      bgcolor: "#4caf50",
-                      color: "white"
-                    }}
+                    sx={{ bgcolor: "#4caf50", color: "white" }}
                   />
                 )}
               </Stack>
@@ -684,9 +811,7 @@ const ItemDetailPage = () => {
                     textTransform: "none",
                     fontWeight: "bold",
                     fontSize: "16px",
-                    "&:hover": {
-                      bgcolor: "#1565c0"
-                    }
+                    "&:hover": { bgcolor: "#1565c0" }
                   }}
                 >
                   Contact Seller
@@ -793,8 +918,8 @@ const ItemDetailPage = () => {
                 Message Seller
               </Button>
             </Paper>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         {/* Tabs Section */}
         <Paper
@@ -846,18 +971,25 @@ const ItemDetailPage = () => {
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Key Features
               </Typography>
-              <Grid container spacing={2}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 2,
+                  gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }
+                }}
+              >
                 {item.features.map((feature, index) => (
-                  <Grid size={{ xs: 12, sm: 6 }} key={index}>
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <CheckCircle
-                        sx={{ color: "#4caf50", mr: 1, fontSize: 20 }}
-                      />
-                      <Typography variant="body2">{feature}</Typography>
-                    </Box>
-                  </Grid>
+                  <Box
+                    key={index}
+                    sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                  >
+                    <CheckCircle
+                      sx={{ color: "#4caf50", mr: 1, fontSize: 20 }}
+                    />
+                    <Typography variant="body2">{feature}</Typography>
+                  </Box>
                 ))}
-              </Grid>
+              </Box>
 
               <Box sx={{ mt: 3, p: 3, bgcolor: "#f8f9fa", borderRadius: 0 }}>
                 <Typography variant="body2" fontWeight="bold">

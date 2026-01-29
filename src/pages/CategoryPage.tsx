@@ -29,9 +29,13 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { Input } from "@/components/ui/input";
 import { Search, Zap } from "lucide-react";
 // Import the listings array from FeaturedListings
-import FeaturedListings, {
-  listings as allListings
-} from "../components/FeaturedListings";
+import FeaturedListings from "../components/FeaturedListings";
+import { useQuery } from "@tanstack/react-query";
+import {
+  listingsService,
+  type ListingsListResponse
+} from "@/services/listingsService";
+import { toListingItem } from "@/lib/listingMapper";
 import { Button as MuiButton } from "@mui/material";
 import { Button } from "@/components/ui/button";
 import { NavBar } from "../components/NavBar";
@@ -75,11 +79,20 @@ const CategoryPage = () => {
   const [selectedLocation, setSelectedLocation] = useState("Polokwane");
   const [searchValue, setSearchValue] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const isLoggedIn = !!user;
 
-  // Filter listings by category param (case-insensitive)
-  const filteredListings = allListings.filter(
+  // Fetch and filter listings by category param (case-insensitive)
+  const { data, isLoading, isError } = useQuery<ListingsListResponse>({
+    queryKey: ["listings", "category", category],
+    queryFn: () => listingsService.getAll({ category }),
+    enabled: Boolean(category)
+  });
+  const raw =
+    (data?.listings as unknown) ??
+    (data as unknown as { data?: unknown })?.data ??
+    [];
+  const arr = Array.isArray(raw) ? (raw as unknown[]) : [];
+  const items = arr.map((r) => toListingItem(r as Record<string, unknown>));
+  const filteredListings = items.filter(
     (item) =>
       item.category.toLowerCase() === (category || "").toLowerCase() &&
       item.title.toLowerCase().includes(searchValue.toLowerCase())
@@ -98,12 +111,8 @@ const CategoryPage = () => {
     <Box sx={{ minHeight: "100vh", bgcolor: "white" }}>
       <NavBar
         selectedLocation={selectedLocation}
-        onLocationChange={setSelectedLocation}
         searchQuery={searchValue}
         onSearchChange={setSearchValue}
-        isLoggedIn={isLoggedIn}
-        user={user}
-        onAuthClick={() => setShowAuthModal(true)}
         onLogout={handleLogout}
       />
       <Container maxWidth="lg" sx={{ py: 4, pt: 16 }}>
@@ -120,9 +129,23 @@ const CategoryPage = () => {
           {categoryName}
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
-          {filteredListings.length} items available in this category
+          {isLoading
+            ? "Loading..."
+            : `${filteredListings.length} items available in this category`}
         </Typography>
-        <FeaturedListings items={filteredListings as never[]} />
+        {isLoading ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="h-64 bg-gray-100 animate-pulse rounded" />
+            ))}
+          </div>
+        ) : isError || filteredListings.length === 0 ? (
+          <div className="text-center text-gray-500 py-8">
+            No listings found.
+          </div>
+        ) : (
+          <FeaturedListings items={filteredListings as never[]} />
+        )}
       </Container>
     </Box>
   );

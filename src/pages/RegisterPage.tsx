@@ -17,6 +17,11 @@ import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import GoogleIcon from "@mui/icons-material/Google";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authService } from "@/services/authService";
+import { getUserInfoQuery } from "@/services/authQueries";
+import SelectFieldWrapper from "@/components/forms/SelectFieldWrapper";
+import TextFieldWrapper from "@/components/forms/TextFieldWrapper";
 
 type RegisterFormValues = {
   name: string;
@@ -42,12 +47,39 @@ const validationSchema = Yup.object({
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const registerMutation = useMutation({
+    mutationFn: async (payload: {
+      name: string;
+      email: string;
+      password: string;
+      userType?: string;
+    }) => authService.register(payload),
+    onSuccess: ({ user }) => {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  });
 
-  const handleSubmit = (values: RegisterFormValues) => {
-    console.log("Registration data:", values);
-    // In a real app, you'd send this to your backend
-    alert("Registration successful! Please login.");
-    navigate("/login");
+  const handleSubmit = async (values: RegisterFormValues) => {
+    try {
+      await registerMutation.mutateAsync({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        userType: values.userType
+      });
+      // Try to populate user from /auth/me in case token is issued
+      try {
+        const me = await queryClient.fetchQuery(getUserInfoQuery());
+        localStorage.setItem("user", JSON.stringify(me));
+      } catch (err) {
+        console.warn("/auth/me after register failed:", err);
+      }
+      navigate("/login");
+    } catch (e) {
+      // Optionally show error UI
+      console.error(e);
+    }
   };
 
   return (
@@ -129,71 +161,41 @@ const RegisterPage = () => {
             >
               {({ errors, touched, values, handleChange }) => (
                 <Form>
-                  <Field
-                    as={TextField}
-                    fullWidth
+                  <TextFieldWrapper
                     name="name"
                     label="Full Name"
-                    value={values.name}
-                    onChange={handleChange}
-                    error={touched.name && errors.name}
-                    helperText={touched.name && errors.name}
                     sx={{ mb: 3 }}
                   />
 
-                  <Field
-                    as={TextField}
-                    fullWidth
+                  <TextFieldWrapper
                     name="email"
                     label="Email"
                     type="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    error={touched.email && errors.email}
-                    helperText={touched.email && errors.email}
                     sx={{ mb: 3 }}
                   />
 
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <InputLabel>I want to</InputLabel>
-                    <Select
-                      name="userType"
-                      value={values.userType}
-                      onChange={handleChange}
-                      label="I want to"
-                      error={touched.userType && !!errors.userType}
-                    >
-                      <MenuItem value="buyer">Buy items</MenuItem>
-                      <MenuItem value="seller">Sell items</MenuItem>
-                      <MenuItem value="both">Both buy and sell</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <SelectFieldWrapper
+                    name="userType"
+                    label="I want to"
+                    options={[
+                      { value: "buyer", label: "Buy items" },
+                      { value: "seller", label: "Sell items" },
+                      { value: "both", label: "Both buy and sell" }
+                    ]}
+                    sx={{ mb: 3 }}
+                  />
 
-                  <Field
-                    as={TextField}
-                    fullWidth
+                  <TextFieldWrapper
                     name="password"
                     label="Password"
                     type="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    error={touched.password && errors.password}
-                    helperText={touched.password && errors.password}
                     sx={{ mb: 3 }}
                   />
 
-                  <Field
-                    as={TextField}
-                    fullWidth
+                  <TextFieldWrapper
                     name="confirmPassword"
                     label="Confirm Password"
                     type="password"
-                    value={values.confirmPassword}
-                    onChange={handleChange}
-                    error={touched.confirmPassword && errors.confirmPassword}
-                    helperText={
-                      touched.confirmPassword && errors.confirmPassword
-                    }
                     sx={{ mb: 4 }}
                   />
 
@@ -215,8 +217,11 @@ const RegisterPage = () => {
                           "linear-gradient(90deg, #764ba2 0%, #667eea 100%)"
                       }
                     }}
+                    disabled={registerMutation.isPending}
                   >
-                    Create Account
+                    {registerMutation.isPending
+                      ? "Creating..."
+                      : "Create Account"}
                   </Button>
                 </Form>
               )}

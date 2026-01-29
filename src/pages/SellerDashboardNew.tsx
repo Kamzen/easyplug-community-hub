@@ -52,8 +52,8 @@ import {
   Cell
 } from 'recharts';
 
-const SellerDashboardNew = () => {
-  const [userType, setUserType] = useState<'user' | 'seller'>('seller');
+function SellerDashboardNew() {
+  const [userType, setUserType] = useState('seller');
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -87,7 +87,7 @@ const SellerDashboardNew = () => {
     { id: 'ORD003', customer: 'Mike Johnson', product: 'Samsung Watch', amount: 'R 3,499', status: 'Delivered', date: '2024-01-13' },
   ];
 
-  const handleUserTypeChange = (type: 'user' | 'seller') => {
+  const handleUserTypeChange = (type) => {
     setUserType(type);
     if (type === 'user') {
       navigate('/');
